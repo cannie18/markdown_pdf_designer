@@ -90,7 +90,8 @@ La app permite, de momento:
 - ver el PDF generado dentro de la propia app;
 - abrir el PDF generado en el visor predeterminado de Windows;
 - elegir fuente, tamano base y colores de titulos antes de generar;
-- recordar posicion, monitor, tamano de ventana y division entre paneles.
+- recordar posicion, monitor y tamano de ventana;
+- mantener el area de trabajo dividida en 45% para controles y 55% para vista previa.
 
 Las opciones visuales de la app se aplican generando una plantilla Typst
 temporal a partir de `app/templates/estudio.typ`. La plantilla portable

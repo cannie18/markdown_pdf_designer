@@ -11,8 +11,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import QSettings, Qt, QThread, Signal
-from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent
+from PySide6.QtCore import QSettings, Qt, QThread, QTimer, Signal
+from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent, QResizeEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
@@ -76,12 +76,13 @@ class DropZone(QFrame):
     self.setMinimumHeight(110)
 
     layout = QVBoxLayout(self)
-    title = QLabel('Arrastra aqui un archivo Markdown')
+    title = QLabel('Arrastra aqui un Markdown')
     title.setAlignment(Qt.AlignmentFlag.AlignCenter)
     title.setObjectName('dropTitle')
 
-    subtitle = QLabel('Tambien puedes usar el boton Abrir')
+    subtitle = QLabel('Tambien puedes usar Abrir')
     subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    subtitle.setWordWrap(True)
     subtitle.setObjectName('dropSubtitle')
 
     layout.addStretch()
@@ -127,11 +128,15 @@ class MainWindow(QMainWindow):
     }
     self.setWindowTitle('Markdown PDF Designer')
     self.resize(1180, 720)
-    self.setMinimumSize(860, 520)
+    self.setMinimumSize(1120, 640)
 
     self.file_input = QComboBox()
     self.file_input.setEditable(True)
     self.file_input.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+    self.file_input.setMinimumContentsLength(14)
+    self.file_input.setSizeAdjustPolicy(
+      QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon
+    )
     self.file_input.lineEdit().setPlaceholderText('Selecciona o arrastra un archivo .md')
     self.file_input.activated.connect(self.open_recent_markdown)
     self.load_recent_markdowns()
@@ -139,7 +144,7 @@ class MainWindow(QMainWindow):
     open_button = QPushButton('Abrir')
     open_button.clicked.connect(self.choose_file)
 
-    new_button = QPushButton('Nuevo Markdown')
+    new_button = QPushButton('Nuevo')
     new_button.clicked.connect(self.create_markdown_file)
 
     self.edit_button = QPushButton('Cerrar')
@@ -275,8 +280,8 @@ class MainWindow(QMainWindow):
     templates_card = QFrame()
     templates_card.setObjectName('placeholderCard')
     templates_card_layout = QVBoxLayout(templates_card)
-    templates_card_layout.addWidget(QLabel('Plantilla activa: estudio'))
-    templates_card_layout.addWidget(QLabel('Creacion de plantillas: pendiente'))
+    templates_card_layout.addWidget(QLabel('Activa: estudio'))
+    templates_card_layout.addWidget(QLabel('Nuevas plantillas: pendiente'))
     templates_layout.addWidget(templates_title)
     templates_layout.addWidget(templates_help)
     templates_layout.addWidget(templates_card)
@@ -287,19 +292,23 @@ class MainWindow(QMainWindow):
     self.left_stack.addWidget(design_page)
     self.left_stack.addWidget(templates_page)
 
-    actions_row = QHBoxLayout()
-    actions_row.addWidget(self.edit_button)
-    actions_row.addWidget(self.save_button)
-    actions_row.addWidget(self.save_as_button)
-    actions_row.addStretch()
-    actions_row.addWidget(self.open_pdf_button)
-    actions_row.addWidget(self.build_button)
+    editor_actions_row = QHBoxLayout()
+    editor_actions_row.addWidget(self.edit_button)
+    editor_actions_row.addWidget(self.save_button)
+    editor_actions_row.addWidget(self.save_as_button)
+    editor_actions_row.addStretch()
+
+    pdf_actions_row = QHBoxLayout()
+    pdf_actions_row.addStretch()
+    pdf_actions_row.addWidget(self.open_pdf_button)
+    pdf_actions_row.addWidget(self.build_button)
 
     left_panel = QWidget()
     left_layout = QVBoxLayout(left_panel)
     left_layout.setContentsMargins(16, 16, 16, 16)
     app_title = QLabel('Markdown PDF Designer')
     app_title.setObjectName('appTitle')
+    app_title.setWordWrap(True)
     app_subtitle = QLabel('Convierte Markdown en PDF ajustados al estilo que necesitas.')
     app_subtitle.setObjectName('appSubtitle')
     app_subtitle.setWordWrap(True)
@@ -307,13 +316,18 @@ class MainWindow(QMainWindow):
     left_layout.addWidget(app_subtitle)
     left_layout.addLayout(nav_row)
     left_layout.addWidget(self.left_stack, 1)
-    left_layout.addLayout(actions_row)
+    left_layout.addLayout(editor_actions_row)
+    left_layout.addLayout(pdf_actions_row)
     left_layout.addWidget(self.status_label)
 
     self.splitter = QSplitter(Qt.Orientation.Horizontal)
     self.splitter.addWidget(left_panel)
     self.splitter.addWidget(self.pdf_panel)
-    self.splitter.setSizes([470, 710])
+    self.splitter.setStretchFactor(0, 45)
+    self.splitter.setStretchFactor(1, 55)
+    self.splitter.setCollapsible(0, False)
+    self.splitter.setCollapsible(1, False)
+    self.apply_splitter_ratio()
 
     container = QWidget()
     layout = QVBoxLayout()
@@ -323,6 +337,8 @@ class MainWindow(QMainWindow):
     self.apply_styles()
 
     self.restore_window_settings()
+    self.apply_splitter_ratio()
+    QTimer.singleShot(0, self.apply_splitter_ratio)
     if initial_file:
       self.set_markdown_file(initial_file)
     self.select_left_section(0)
@@ -523,8 +539,27 @@ class MainWindow(QMainWindow):
     '''Carga en el desplegable las ultimas rutas Markdown usadas.'''
 
     recent = self.settings.value('recent_markdowns', [], list)
+    self.file_input.blockSignals(True)
     self.file_input.clear()
     self.file_input.addItems([str(path) for path in recent[:10]])
+    self.file_input.setCurrentText('')
+    self.file_input.blockSignals(False)
+
+  def apply_splitter_ratio(self) -> None:
+    '''Aplica la proporcion 45/55 entre controles y vista previa.'''
+
+    total_width = self.splitter.width()
+    if total_width <= 0:
+      return
+
+    left_width = round(total_width * 0.45)
+    self.splitter.setSizes([left_width, total_width - left_width])
+
+  def resizeEvent(self, event: QResizeEvent) -> None:
+    '''Mantiene la proporcion de paneles cuando cambia el tamano de ventana.'''
+
+    super().resizeEvent(event)
+    QTimer.singleShot(0, self.apply_splitter_ratio)
 
   def remember_markdown(self, path: Path) -> None:
     '''Guarda una ruta Markdown en el historial de las 10 ultimas opciones.'''
@@ -552,19 +587,14 @@ class MainWindow(QMainWindow):
     if geometry:
       self.restoreGeometry(geometry)
 
-    splitter_sizes = self.settings.value('splitter_sizes')
-    if splitter_sizes:
-      self.splitter.setSizes([int(size) for size in splitter_sizes])
-
   def closeEvent(self, event: QCloseEvent) -> None:
-    '''Guarda geometria de ventana y divisor antes de cerrar la app.'''
+    '''Guarda geometria de ventana antes de cerrar la app.'''
 
     if self.editor_dirty and not self.confirm_save_before_close_editor():
       event.ignore()
       return
 
     self.settings.setValue('window_geometry', self.saveGeometry())
-    self.settings.setValue('splitter_sizes', self.splitter.sizes())
     event.accept()
 
   def choose_file(self) -> None:
@@ -863,7 +893,16 @@ class MainWindow(QMainWindow):
 
     if self.current_pdf is None:
       return
-    subprocess.Popen(['cmd', '/c', 'start', '', str(self.current_pdf)], shell=False)
+
+    self.status_label.setText('Abriendo PDF en el visor predeterminado de Windows...')
+    try:
+      subprocess.Popen(['cmd', '/c', 'start', '', str(self.current_pdf)], shell=False)
+    except OSError as exc:
+      self.status_label.setText('No se pudo abrir el PDF en Windows.')
+      QMessageBox.critical(self, 'Error', f'No se pudo abrir el PDF:\n{exc}')
+      return
+
+    self.status_label.setText(f'PDF abierto en Windows: {self.current_pdf}')
 
   def on_error(self, message: str) -> None:
     '''Muestra en la interfaz un error de conversion controlado.'''
