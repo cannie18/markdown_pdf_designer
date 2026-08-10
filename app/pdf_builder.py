@@ -143,11 +143,13 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
 def run_command(command: list[str | Path]) -> None:
   '''Ejecuta un comando externo y convierte errores en `PdfBuildError`.'''
 
+  creation_flags = subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
   completed = subprocess.run(
     [str(part) for part in command],
     cwd=ROOT_DIR,
     text=True,
     capture_output=True,
+    creationflags=creation_flags,
   )
   if completed.returncode == 0:
     return
