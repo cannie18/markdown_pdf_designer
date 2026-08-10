@@ -30,8 +30,10 @@ from PySide6.QtWidgets import (
   QPlainTextEdit,
   QPushButton,
   QScrollArea,
+  QSizePolicy,
   QSplitter,
   QStackedWidget,
+  QStyle,
   QVBoxLayout,
   QWidget,
 )
@@ -39,7 +41,6 @@ from PySide6.QtWidgets import (
 from .pdf_builder import PdfBuildError, PdfStyleOptions, build_pdf
 
 
-LEFT_PANEL_MIN_WIDTH = 500
 PREVIEW_PANEL_MIN_WIDTH = 320
 WINDOW_MIN_HEIGHT = 480
 
@@ -84,11 +85,16 @@ class DropZone(QFrame):
     layout = QVBoxLayout(self)
     title = QLabel('Arrastra aqui un Markdown')
     title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    title.setMinimumWidth(0)
+    title.setWordWrap(True)
+    title.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
     title.setObjectName('dropTitle')
 
     subtitle = QLabel('Tambien puedes usar Abrir')
     subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    subtitle.setMinimumWidth(0)
     subtitle.setWordWrap(True)
+    subtitle.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
     subtitle.setObjectName('dropSubtitle')
 
     layout.addStretch()
@@ -134,12 +140,14 @@ class MainWindow(QMainWindow):
     }
     self.setWindowTitle('Markdown PDF Designer')
     self.resize(1180, 720)
-    self.setMinimumSize(LEFT_PANEL_MIN_WIDTH + PREVIEW_PANEL_MIN_WIDTH, WINDOW_MIN_HEIGHT)
+    self.setMinimumSize(PREVIEW_PANEL_MIN_WIDTH, WINDOW_MIN_HEIGHT)
 
     self.file_input = QComboBox()
     self.file_input.setEditable(True)
     self.file_input.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
-    self.file_input.setMinimumContentsLength(14)
+    self.file_input.setMinimumContentsLength(8)
+    self.file_input.setMinimumWidth(0)
+    self.file_input.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed)
     self.file_input.setSizeAdjustPolicy(
       QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon
     )
@@ -183,6 +191,7 @@ class MainWindow(QMainWindow):
 
     self.editor = QPlainTextEdit()
     self.editor.setPlaceholderText('El contenido del Markdown aparecera aqui.')
+    self.editor.setMinimumWidth(0)
     self.editor.setVisible(False)
     self.editor.textChanged.connect(self.mark_editor_dirty)
 
@@ -224,6 +233,7 @@ class MainWindow(QMainWindow):
     self.pdf_view.setVisible(False)
 
     drop_zone = DropZone()
+    drop_zone.setMinimumWidth(0)
     drop_zone.file_dropped.connect(self.set_markdown_file)
 
     self.file_tab_button = self.create_nav_button('Archivo', 0)
@@ -299,6 +309,7 @@ class MainWindow(QMainWindow):
     self.left_stack.addWidget(templates_page)
 
     editor_actions_row = QHBoxLayout()
+    self.editor_actions_row = editor_actions_row
     editor_actions_row.addWidget(self.edit_button)
     editor_actions_row.addWidget(self.save_button)
     editor_actions_row.addWidget(self.save_as_button)
@@ -309,8 +320,8 @@ class MainWindow(QMainWindow):
     pdf_actions_row.addWidget(self.build_button)
     pdf_actions_row.addStretch()
 
-    left_content = QWidget()
-    left_layout = QVBoxLayout(left_content)
+    self.left_content = QWidget()
+    left_layout = QVBoxLayout(self.left_content)
     left_layout.setContentsMargins(16, 16, 16, 16)
     app_title = QLabel('Markdown PDF Designer')
     app_title.setObjectName('appTitle')
@@ -326,15 +337,14 @@ class MainWindow(QMainWindow):
     left_layout.addLayout(pdf_actions_row)
     left_layout.addWidget(self.status_label)
 
-    left_panel = QScrollArea()
-    left_panel.setWidget(left_content)
-    left_panel.setWidgetResizable(True)
-    left_panel.setMinimumWidth(LEFT_PANEL_MIN_WIDTH)
-    left_panel.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-    left_panel.setFrameShape(QFrame.Shape.NoFrame)
+    self.left_panel = QScrollArea()
+    self.left_panel.setWidget(self.left_content)
+    self.left_panel.setWidgetResizable(True)
+    self.left_panel.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    self.left_panel.setFrameShape(QFrame.Shape.NoFrame)
 
     self.splitter = QSplitter(Qt.Orientation.Horizontal)
-    self.splitter.addWidget(left_panel)
+    self.splitter.addWidget(self.left_panel)
     self.splitter.addWidget(self.pdf_panel)
     self.pdf_panel.setMinimumWidth(PREVIEW_PANEL_MIN_WIDTH)
     self.splitter.setStretchFactor(0, 0)
@@ -349,6 +359,7 @@ class MainWindow(QMainWindow):
     container.setLayout(layout)
     self.setCentralWidget(container)
     self.apply_styles()
+    self.update_left_panel_min_width()
 
     self.restore_window_settings()
     if initial_file:
@@ -560,7 +571,27 @@ class MainWindow(QMainWindow):
   def set_initial_splitter_sizes(self) -> None:
     '''Asigna un ancho inicial estable al panel izquierdo.'''
 
-    self.splitter.setSizes([LEFT_PANEL_MIN_WIDTH, self.width() - LEFT_PANEL_MIN_WIDTH])
+    left_width = self.left_panel.minimumWidth()
+    self.splitter.setSizes([left_width, self.width() - left_width])
+
+  def update_left_panel_min_width(self) -> None:
+    '''Calcula el minimo del panel izquierdo desde la fila de botones Markdown.'''
+
+    margins = self.left_content.layout().contentsMargins()
+    spacing = self.editor_actions_row.spacing()
+    if spacing < 0:
+      spacing = self.style().pixelMetric(QStyle.PixelMetric.PM_LayoutHorizontalSpacing)
+
+    buttons_width = sum(
+      button.sizeHint().width()
+      for button in (self.edit_button, self.save_button, self.save_as_button)
+    )
+    scroll_width = self.style().pixelMetric(QStyle.PixelMetric.PM_ScrollBarExtent)
+    left_width = buttons_width + (spacing * 2) + margins.left() + margins.right() + scroll_width
+
+    self.left_panel.setMinimumWidth(left_width)
+    self.setMinimumWidth(left_width + PREVIEW_PANEL_MIN_WIDTH)
+    self.set_initial_splitter_sizes()
 
   def remember_markdown(self, path: Path) -> None:
     '''Guarda una ruta Markdown en el historial de las 10 ultimas opciones.'''
