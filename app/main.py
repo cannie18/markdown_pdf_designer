@@ -135,6 +135,9 @@ class MainWindow(QMainWindow):
     open_button = QPushButton('Abrir')
     open_button.clicked.connect(self.choose_file)
 
+    new_button = QPushButton('Nuevo Markdown')
+    new_button.clicked.connect(self.create_markdown_file)
+
     self.edit_button = QPushButton('Ver/editar')
     self.edit_button.clicked.connect(self.toggle_editor)
     self.edit_button.setEnabled(False)
@@ -145,8 +148,9 @@ class MainWindow(QMainWindow):
 
     self.build_button = QPushButton('Generar PDF')
     self.build_button.clicked.connect(self.generate_pdf)
+    self.build_button.setEnabled(False)
 
-    self.open_pdf_button = QPushButton('Abrir PDF')
+    self.open_pdf_button = QPushButton('Abrir PDF en Windows')
     self.open_pdf_button.clicked.connect(self.open_current_pdf)
     self.open_pdf_button.setEnabled(False)
 
@@ -210,6 +214,7 @@ class MainWindow(QMainWindow):
 
     file_row = QHBoxLayout()
     file_row.addWidget(self.file_input, 1)
+    file_row.addWidget(new_button)
     file_row.addWidget(open_button)
 
     file_page = QWidget()
@@ -505,6 +510,33 @@ class MainWindow(QMainWindow):
     if filename:
       self.set_markdown_file(filename)
 
+  def create_markdown_file(self) -> None:
+    '''Crea un archivo Markdown vacio y lo abre en el editor.'''
+
+    if not self.confirm_discard_unsaved_changes():
+      return
+
+    filename, _ = QFileDialog.getSaveFileName(
+      self,
+      'Crear Markdown',
+      str(Path.home() / 'nuevo_apunte.md'),
+      'Markdown (*.md);;Todos los archivos (*.*)',
+    )
+    if not filename:
+      return
+
+    path = Path(filename)
+    if path.suffix.lower() != '.md':
+      path = path.with_suffix('.md')
+
+    try:
+      path.write_text('', encoding='utf-8')
+    except OSError as exc:
+      QMessageBox.critical(self, 'Error', f'No se pudo crear el archivo:\n{exc}')
+      return
+
+    self.set_markdown_file(str(path))
+
   def set_markdown_file(self, filename: str) -> None:
     '''Registra un Markdown seleccionado o arrastrado y reinicia la vista.'''
 
@@ -530,10 +562,11 @@ class MainWindow(QMainWindow):
     self.pdf_view.setVisible(False)
     self.empty_preview_label.setVisible(True)
     self.editor_dirty = False
-    self.edit_button.setText('Ocultar')
+    self.edit_button.setText('Cerrar')
     self.edit_button.setEnabled(True)
     self.save_button.setEnabled(False)
     self.open_pdf_button.setEnabled(False)
+    self.build_button.setEnabled(True)
     self.status_label.setText('Archivo seleccionado. Pulsa Generar PDF.')
 
   def load_markdown_into_editor(self) -> bool:
@@ -562,6 +595,8 @@ class MainWindow(QMainWindow):
       return
 
     if self.editor.isVisible():
+      if not self.confirm_save_before_close_editor():
+        return
       self.editor.setVisible(False)
       self.edit_button.setText('Ver/editar')
       return
@@ -572,7 +607,7 @@ class MainWindow(QMainWindow):
       self.save_button.setEnabled(False)
 
     self.editor.setVisible(True)
-    self.edit_button.setText('Ocultar')
+    self.edit_button.setText('Cerrar')
 
   def mark_editor_dirty(self) -> None:
     '''Marca el editor como modificado para proteger cambios sin guardar.'''
@@ -625,6 +660,25 @@ class MainWindow(QMainWindow):
       self,
       'Cambios sin guardar',
       'Hay cambios sin guardar. ¿Quieres guardarlos antes de generar el PDF?',
+      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No | QMessageBox.StandardButton.Cancel,
+      QMessageBox.StandardButton.Yes,
+    )
+    if answer == QMessageBox.StandardButton.Cancel:
+      return False
+    if answer == QMessageBox.StandardButton.Yes:
+      return self.save_editor()
+    return True
+
+  def confirm_save_before_close_editor(self) -> bool:
+    '''Pregunta que hacer con cambios pendientes antes de cerrar el editor.'''
+
+    if not self.editor_dirty:
+      return True
+
+    answer = QMessageBox.question(
+      self,
+      'Cambios sin guardar',
+      'Hay cambios sin guardar. ¿Quieres guardarlos antes de cerrar el editor?',
       QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No | QMessageBox.StandardButton.Cancel,
       QMessageBox.StandardButton.Yes,
     )

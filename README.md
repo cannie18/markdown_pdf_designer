@@ -80,10 +80,13 @@ Tambien puedes arrastrar un archivo Markdown sobre `abrir_app.bat`.
 
 La app permite, de momento:
 
+- crear un archivo Markdown nuevo;
 - abrir un archivo `.md`;
 - arrastrar un archivo `.md`;
+- cargar el Markdown directamente en el editor al abrirlo;
 - generar el PDF con un boton;
 - ver el PDF generado dentro de la propia app;
+- abrir el PDF generado en el visor predeterminado de Windows;
 - elegir fuente, tamano base y colores de titulos antes de generar.
 
 Las opciones visuales de la app se aplican generando una plantilla Typst
