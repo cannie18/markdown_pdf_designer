@@ -184,9 +184,16 @@ class MainWindow(QMainWindow):
     pdf_panel_layout.setContentsMargins(0, 0, 0, 0)
     preview_label = QLabel('Vista previa del PDF')
     preview_label.setObjectName('previewTitle')
+    self.empty_preview_label = QLabel(
+      'La vista previa aparecera aqui cuando generes el primer PDF.'
+    )
+    self.empty_preview_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    self.empty_preview_label.setWordWrap(True)
+    self.empty_preview_label.setObjectName('emptyPreview')
     pdf_panel_layout.addWidget(preview_label)
+    pdf_panel_layout.addWidget(self.empty_preview_label, 1)
     pdf_panel_layout.addWidget(self.pdf_view, 1)
-    self.pdf_panel.setVisible(False)
+    self.pdf_view.setVisible(False)
 
     drop_zone = DropZone()
     drop_zone.file_dropped.connect(self.set_markdown_file)
@@ -377,6 +384,13 @@ class MainWindow(QMainWindow):
         font-weight: 600;
         color: #26364a;
       }
+      #emptyPreview {
+        color: #737686;
+        border: 1px dashed #c3c6d7;
+        border-radius: 6px;
+        background: #ffffff;
+        padding: 24px;
+      }
       #appTitle {
         font-size: 18pt;
         font-weight: 700;
@@ -511,7 +525,8 @@ class MainWindow(QMainWindow):
     self.editor.clear()
     self.editor.setVisible(False)
     self.pdf_document.close()
-    self.pdf_panel.setVisible(False)
+    self.pdf_view.setVisible(False)
+    self.empty_preview_label.setVisible(True)
     self.editor_dirty = False
     self.edit_button.setText('Ver/editar')
     self.edit_button.setEnabled(True)
@@ -638,7 +653,8 @@ class MainWindow(QMainWindow):
     self.pdf_document.close()
     error = self.pdf_document.load(str(pdf_file))
     if error != QPdfDocument.Error.None_:
-      self.pdf_panel.setVisible(False)
+      self.pdf_view.setVisible(False)
+      self.empty_preview_label.setVisible(True)
       self.open_pdf_button.setEnabled(True)
       QMessageBox.warning(
         self,
@@ -647,7 +663,8 @@ class MainWindow(QMainWindow):
       )
       return
 
-    self.pdf_panel.setVisible(True)
+    self.empty_preview_label.setVisible(False)
+    self.pdf_view.setVisible(True)
     self.open_pdf_button.setEnabled(True)
     self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
 
