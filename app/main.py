@@ -11,8 +11,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import QSettings, Qt, QThread, QTimer, Signal
-from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent, QResizeEvent
+from PySide6.QtCore import QSettings, Qt, QThread, Signal
+from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
@@ -36,6 +36,11 @@ from PySide6.QtWidgets import (
 )
 
 from .pdf_builder import PdfBuildError, PdfStyleOptions, build_pdf
+
+
+LEFT_PANEL_MIN_WIDTH = 420
+PREVIEW_PANEL_MIN_WIDTH = 320
+WINDOW_MIN_HEIGHT = 640
 
 
 class BuildWorker(QThread):
@@ -128,7 +133,7 @@ class MainWindow(QMainWindow):
     }
     self.setWindowTitle('Markdown PDF Designer')
     self.resize(1180, 720)
-    self.setMinimumSize(1120, 640)
+    self.setMinimumSize(LEFT_PANEL_MIN_WIDTH + PREVIEW_PANEL_MIN_WIDTH, WINDOW_MIN_HEIGHT)
 
     self.file_input = QComboBox()
     self.file_input.setEditable(True)
@@ -304,6 +309,7 @@ class MainWindow(QMainWindow):
     pdf_actions_row.addWidget(self.build_button)
 
     left_panel = QWidget()
+    left_panel.setMinimumWidth(LEFT_PANEL_MIN_WIDTH)
     left_layout = QVBoxLayout(left_panel)
     left_layout.setContentsMargins(16, 16, 16, 16)
     app_title = QLabel('Markdown PDF Designer')
@@ -323,11 +329,12 @@ class MainWindow(QMainWindow):
     self.splitter = QSplitter(Qt.Orientation.Horizontal)
     self.splitter.addWidget(left_panel)
     self.splitter.addWidget(self.pdf_panel)
-    self.splitter.setStretchFactor(0, 45)
-    self.splitter.setStretchFactor(1, 55)
+    self.pdf_panel.setMinimumWidth(PREVIEW_PANEL_MIN_WIDTH)
+    self.splitter.setStretchFactor(0, 0)
+    self.splitter.setStretchFactor(1, 1)
     self.splitter.setCollapsible(0, False)
     self.splitter.setCollapsible(1, False)
-    self.apply_splitter_ratio()
+    self.set_initial_splitter_sizes()
 
     container = QWidget()
     layout = QVBoxLayout()
@@ -337,8 +344,6 @@ class MainWindow(QMainWindow):
     self.apply_styles()
 
     self.restore_window_settings()
-    self.apply_splitter_ratio()
-    QTimer.singleShot(0, self.apply_splitter_ratio)
     if initial_file:
       self.set_markdown_file(initial_file)
     self.select_left_section(0)
@@ -545,21 +550,10 @@ class MainWindow(QMainWindow):
     self.file_input.setCurrentText('')
     self.file_input.blockSignals(False)
 
-  def apply_splitter_ratio(self) -> None:
-    '''Aplica la proporcion 45/55 entre controles y vista previa.'''
+  def set_initial_splitter_sizes(self) -> None:
+    '''Asigna un ancho inicial estable al panel izquierdo.'''
 
-    total_width = self.splitter.width()
-    if total_width <= 0:
-      return
-
-    left_width = round(total_width * 0.45)
-    self.splitter.setSizes([left_width, total_width - left_width])
-
-  def resizeEvent(self, event: QResizeEvent) -> None:
-    '''Mantiene la proporcion de paneles cuando cambia el tamano de ventana.'''
-
-    super().resizeEvent(event)
-    QTimer.singleShot(0, self.apply_splitter_ratio)
+    self.splitter.setSizes([LEFT_PANEL_MIN_WIDTH, self.width() - LEFT_PANEL_MIN_WIDTH])
 
   def remember_markdown(self, path: Path) -> None:
     '''Guarda una ruta Markdown en el historial de las 10 ultimas opciones.'''
