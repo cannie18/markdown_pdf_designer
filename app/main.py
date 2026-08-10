@@ -6,6 +6,8 @@ from pathlib import Path
 
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QDragEnterEvent, QDropEvent
+from PySide6.QtPdf import QPdfDocument
+from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
   QApplication,
   QFileDialog,
@@ -17,6 +19,7 @@ from PySide6.QtWidgets import (
   QMessageBox,
   QPlainTextEdit,
   QPushButton,
+  QSplitter,
   QVBoxLayout,
   QWidget,
 )
@@ -84,10 +87,11 @@ class MainWindow(QMainWindow):
     super().__init__()
     self.worker: BuildWorker | None = None
     self.current_file: Path | None = None
+    self.current_pdf: Path | None = None
     self.editor_dirty = False
     self.setWindowTitle('PDF Apuntes')
-    self.resize(760, 520)
-    self.setMinimumSize(680, 380)
+    self.resize(1040, 680)
+    self.setMinimumSize(780, 460)
 
     self.file_input = QLineEdit()
     self.file_input.setPlaceholderText('Selecciona o arrastra un archivo .md')
@@ -106,6 +110,10 @@ class MainWindow(QMainWindow):
     self.build_button = QPushButton('Generar PDF')
     self.build_button.clicked.connect(self.generate_pdf)
 
+    self.open_pdf_button = QPushButton('Abrir PDF')
+    self.open_pdf_button.clicked.connect(self.open_current_pdf)
+    self.open_pdf_button.setEnabled(False)
+
     self.status_label = QLabel('Listo.')
     self.status_label.setWordWrap(True)
 
@@ -113,6 +121,21 @@ class MainWindow(QMainWindow):
     self.editor.setPlaceholderText('El contenido del Markdown aparecera aqui.')
     self.editor.setVisible(False)
     self.editor.textChanged.connect(self.mark_editor_dirty)
+
+    self.pdf_document = QPdfDocument(self)
+    self.pdf_view = QPdfView()
+    self.pdf_view.setDocument(self.pdf_document)
+    self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
+    self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+
+    self.pdf_panel = QWidget()
+    pdf_panel_layout = QVBoxLayout(self.pdf_panel)
+    pdf_panel_layout.setContentsMargins(0, 0, 0, 0)
+    preview_label = QLabel('Vista previa del PDF')
+    preview_label.setObjectName('previewTitle')
+    pdf_panel_layout.addWidget(preview_label)
+    pdf_panel_layout.addWidget(self.pdf_view, 1)
+    self.pdf_panel.setVisible(False)
 
     drop_zone = DropZone()
     drop_zone.file_dropped.connect(self.set_markdown_file)
@@ -126,15 +149,25 @@ class MainWindow(QMainWindow):
     actions_row.addWidget(self.edit_button)
     actions_row.addWidget(self.save_button)
     actions_row.addWidget(self.build_button)
+    actions_row.addWidget(self.open_pdf_button)
 
-    layout = QVBoxLayout()
-    layout.addWidget(drop_zone)
-    layout.addLayout(file_row)
-    layout.addWidget(self.editor, 1)
-    layout.addLayout(actions_row)
-    layout.addWidget(self.status_label)
+    left_panel = QWidget()
+    left_layout = QVBoxLayout(left_panel)
+    left_layout.setContentsMargins(0, 0, 0, 0)
+    left_layout.addWidget(drop_zone)
+    left_layout.addLayout(file_row)
+    left_layout.addWidget(self.editor, 1)
+    left_layout.addLayout(actions_row)
+    left_layout.addWidget(self.status_label)
+
+    self.splitter = QSplitter(Qt.Orientation.Horizontal)
+    self.splitter.addWidget(left_panel)
+    self.splitter.addWidget(self.pdf_panel)
+    self.splitter.setSizes([420, 580])
 
     container = QWidget()
+    layout = QVBoxLayout()
+    layout.addWidget(self.splitter, 1)
     container.setLayout(layout)
     self.setCentralWidget(container)
     self.apply_styles()
@@ -173,6 +206,11 @@ class MainWindow(QMainWindow):
       #dropSubtitle {
         color: #66717d;
       }
+      #previewTitle {
+        font-size: 11pt;
+        font-weight: 600;
+        color: #26364a;
+      }
       '''
     )
 
@@ -199,13 +237,17 @@ class MainWindow(QMainWindow):
       return
 
     self.current_file = path
+    self.current_pdf = None
     self.file_input.setText(str(path))
     self.editor.clear()
     self.editor.setVisible(False)
+    self.pdf_document.close()
+    self.pdf_panel.setVisible(False)
     self.editor_dirty = False
     self.edit_button.setText('Ver/editar')
     self.edit_button.setEnabled(True)
     self.save_button.setEnabled(False)
+    self.open_pdf_button.setEnabled(False)
     self.status_label.setText('Archivo seleccionado. Pulsa Generar PDF.')
 
   def toggle_editor(self) -> None:
@@ -303,14 +345,31 @@ class MainWindow(QMainWindow):
     self.worker.start()
 
   def on_success(self, pdf_file: str) -> None:
+    self.current_pdf = Path(pdf_file)
     self.status_label.setText(f'PDF generado: {pdf_file}')
-    answer = QMessageBox.question(
-      self,
-      'PDF generado',
-      'El PDF se genero correctamente. ¿Quieres abrirlo?',
-    )
-    if answer == QMessageBox.StandardButton.Yes:
-      subprocess.Popen(['cmd', '/c', 'start', '', pdf_file], shell=False)
+    self.load_pdf_preview(self.current_pdf)
+
+  def load_pdf_preview(self, pdf_file: Path) -> None:
+    self.pdf_document.close()
+    error = self.pdf_document.load(str(pdf_file))
+    if error != QPdfDocument.Error.None_:
+      self.pdf_panel.setVisible(False)
+      self.open_pdf_button.setEnabled(True)
+      QMessageBox.warning(
+        self,
+        'Vista previa',
+        'El PDF se genero, pero no se pudo cargar la vista previa.',
+      )
+      return
+
+    self.pdf_panel.setVisible(True)
+    self.open_pdf_button.setEnabled(True)
+    self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+
+  def open_current_pdf(self) -> None:
+    if self.current_pdf is None:
+      return
+    subprocess.Popen(['cmd', '/c', 'start', '', str(self.current_pdf)], shell=False)
 
   def on_error(self, message: str) -> None:
     self.status_label.setText('Error al generar el PDF.')

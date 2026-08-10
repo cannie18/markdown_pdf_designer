@@ -81,7 +81,8 @@ La app permite, de momento:
 
 - abrir un archivo `.md`;
 - arrastrar un archivo `.md`;
-- generar el PDF con un boton.
+- generar el PDF con un boton;
+- ver el PDF generado dentro de la propia app.
 
 ## Estructura
 
