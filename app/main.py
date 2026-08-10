@@ -1,3 +1,10 @@
+'''Interfaz grafica PySide6 para generar PDF desde Markdown.
+
+La ventana permite abrir o arrastrar un Markdown, editarlo opcionalmente,
+configurar estilos basicos, generar el PDF y ver la vista previa real dentro
+de la app. La conversion se delega en `app.pdf_builder`.
+'''
+
 from __future__ import annotations
 
 import subprocess
@@ -32,15 +39,21 @@ from .pdf_builder import PdfBuildError, PdfStyleOptions, build_pdf
 
 
 class BuildWorker(QThread):
+  '''Ejecuta la conversion en segundo plano para no bloquear la interfaz.'''
+
   succeeded = Signal(str)
   failed = Signal(str)
 
   def __init__(self, markdown_file: str, style: PdfStyleOptions) -> None:
+    '''Guarda el archivo y las opciones visuales que se usaran al generar.'''
+
     super().__init__()
     self.markdown_file = markdown_file
     self.style = style
 
   def run(self) -> None:
+    '''Lanza la generacion del PDF y emite una senal de exito o error.'''
+
     try:
       result = build_pdf(self.markdown_file, style=self.style)
     except PdfBuildError as exc:
@@ -50,9 +63,13 @@ class BuildWorker(QThread):
 
 
 class DropZone(QFrame):
+  '''Zona visual que acepta archivos Markdown arrastrados desde Windows.'''
+
   file_dropped = Signal(str)
 
   def __init__(self) -> None:
+    '''Construye el area de arrastre con textos centrados.'''
+
     super().__init__()
     self.setAcceptDrops(True)
     self.setObjectName('dropZone')
@@ -73,12 +90,16 @@ class DropZone(QFrame):
     layout.addStretch()
 
   def dragEnterEvent(self, event: QDragEnterEvent) -> None:
+    '''Acepta el arrastre si contiene URLs de archivos.'''
+
     if event.mimeData().hasUrls():
       event.acceptProposedAction()
     else:
       event.ignore()
 
   def dropEvent(self, event: QDropEvent) -> None:
+    '''Emite la ruta local del primer archivo soltado.'''
+
     urls = event.mimeData().urls()
     if not urls:
       return
@@ -88,7 +109,11 @@ class DropZone(QFrame):
 
 
 class MainWindow(QMainWindow):
+  '''Ventana principal de la app de escritorio.'''
+
   def __init__(self, initial_file: str | None = None) -> None:
+    '''Crea la interfaz y carga un Markdown inicial si se arrastro al `.bat`.'''
+
     super().__init__()
     self.worker: BuildWorker | None = None
     self.current_file: Path | None = None
@@ -212,6 +237,8 @@ class MainWindow(QMainWindow):
       self.set_markdown_file(initial_file)
 
   def apply_styles(self) -> None:
+    '''Aplica estilos visuales de la interfaz, no del PDF generado.'''
+
     self.setStyleSheet(
       '''
       QWidget {
@@ -258,11 +285,15 @@ class MainWindow(QMainWindow):
     self.refresh_color_buttons()
 
   def create_color_button(self, color_key: str) -> QPushButton:
+    '''Crea un boton que abre el selector para un color de titulo.'''
+
     button = QPushButton()
     button.clicked.connect(lambda: self.choose_heading_color(color_key))
     return button
 
   def choose_heading_color(self, color_key: str) -> None:
+    '''Permite escoger un color de titulo con el dialogo nativo de Qt.'''
+
     current = QColor(self.heading_colors[color_key])
     color = QColorDialog.getColor(current, self, 'Elegir color')
     if not color.isValid():
@@ -272,6 +303,8 @@ class MainWindow(QMainWindow):
     self.refresh_color_buttons()
 
   def refresh_color_buttons(self) -> None:
+    '''Actualiza texto y fondo de los botones de color.'''
+
     buttons = {
       'h1': self.h1_color_button,
       'h2': self.h2_color_button,
@@ -285,6 +318,8 @@ class MainWindow(QMainWindow):
       )
 
   def text_color_for_background(self, color: str) -> str:
+    '''Elige texto blanco o negro segun la luminosidad del color de fondo.'''
+
     value = color.lstrip('#')
     red = int(value[0:2], 16)
     green = int(value[2:4], 16)
@@ -293,6 +328,8 @@ class MainWindow(QMainWindow):
     return '#000000' if brightness > 150 else '#ffffff'
 
   def current_style_options(self) -> PdfStyleOptions:
+    '''Construye las opciones visuales actuales para el generador de PDF.'''
+
     return PdfStyleOptions(
       font_family=self.font_combo.currentText(),
       body_font_size=self.body_size_input.value(),
@@ -302,6 +339,8 @@ class MainWindow(QMainWindow):
     )
 
   def choose_file(self) -> None:
+    '''Abre un dialogo para seleccionar un archivo Markdown.'''
+
     filename, _ = QFileDialog.getOpenFileName(
       self,
       'Abrir Markdown',
@@ -312,6 +351,8 @@ class MainWindow(QMainWindow):
       self.set_markdown_file(filename)
 
   def set_markdown_file(self, filename: str) -> None:
+    '''Registra un Markdown seleccionado o arrastrado y reinicia la vista.'''
+
     path = Path(filename).resolve()
     if not path.exists():
       QMessageBox.warning(self, 'Archivo no encontrado', f'No existe el archivo:\n{path}')
@@ -338,6 +379,8 @@ class MainWindow(QMainWindow):
     self.status_label.setText('Archivo seleccionado. Pulsa Generar PDF.')
 
   def toggle_editor(self) -> None:
+    '''Muestra u oculta la revision editable del Markdown seleccionado.'''
+
     if self.current_file is None:
       QMessageBox.warning(self, 'Falta archivo', 'Selecciona un archivo Markdown.')
       return
@@ -364,6 +407,8 @@ class MainWindow(QMainWindow):
     self.edit_button.setText('Ocultar')
 
   def mark_editor_dirty(self) -> None:
+    '''Marca el editor como modificado para proteger cambios sin guardar.'''
+
     if self.current_file is None:
       return
     self.editor_dirty = True
@@ -371,6 +416,8 @@ class MainWindow(QMainWindow):
     self.status_label.setText('Hay cambios sin guardar.')
 
   def save_editor(self) -> bool:
+    '''Guarda el contenido del editor en el Markdown actual.'''
+
     if self.current_file is None:
       return True
 
@@ -386,6 +433,8 @@ class MainWindow(QMainWindow):
     return True
 
   def confirm_discard_unsaved_changes(self) -> bool:
+    '''Pregunta antes de cambiar de archivo si hay cambios sin guardar.'''
+
     if not self.editor_dirty:
       return True
 
@@ -399,6 +448,8 @@ class MainWindow(QMainWindow):
     return answer == QMessageBox.StandardButton.Yes
 
   def confirm_save_before_build(self) -> bool:
+    '''Pregunta que hacer con cambios pendientes antes de generar el PDF.'''
+
     if not self.editor_dirty:
       return True
 
@@ -416,6 +467,8 @@ class MainWindow(QMainWindow):
     return True
 
   def generate_pdf(self) -> None:
+    '''Inicia la generacion del PDF con los valores actuales de la interfaz.'''
+
     markdown_file = self.file_input.text().strip()
     if not markdown_file:
       QMessageBox.warning(self, 'Falta archivo', 'Selecciona un archivo Markdown.')
@@ -432,11 +485,15 @@ class MainWindow(QMainWindow):
     self.worker.start()
 
   def on_success(self, pdf_file: str) -> None:
+    '''Actualiza la interfaz cuando el PDF se ha generado correctamente.'''
+
     self.current_pdf = Path(pdf_file)
     self.status_label.setText(f'PDF generado: {pdf_file}')
     self.load_pdf_preview(self.current_pdf)
 
   def load_pdf_preview(self, pdf_file: Path) -> None:
+    '''Carga el PDF generado en el visor embebido de Qt.'''
+
     self.pdf_document.close()
     error = self.pdf_document.load(str(pdf_file))
     if error != QPdfDocument.Error.None_:
@@ -454,16 +511,22 @@ class MainWindow(QMainWindow):
     self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
 
   def open_current_pdf(self) -> None:
+    '''Abre el PDF generado en el visor externo predeterminado de Windows.'''
+
     if self.current_pdf is None:
       return
     subprocess.Popen(['cmd', '/c', 'start', '', str(self.current_pdf)], shell=False)
 
   def on_error(self, message: str) -> None:
+    '''Muestra en la interfaz un error de conversion controlado.'''
+
     self.status_label.setText('Error al generar el PDF.')
     QMessageBox.critical(self, 'Error', message)
 
 
 def main() -> int:
+  '''Punto de entrada de la app cuando se ejecuta `python -m app.main`.'''
+
   app = QApplication(sys.argv)
   initial_file = sys.argv[1] if len(sys.argv) > 1 else None
   window = MainWindow(initial_file)

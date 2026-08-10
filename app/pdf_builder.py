@@ -1,3 +1,10 @@
+'''Conversion Markdown -> Typst -> PDF usada por la app PySide6.
+
+Este modulo contiene la logica no visual de la aplicacion. La version portable
+por `crear_pdf.bat` queda separada: aqui solo se usa la plantilla de la app y
+una plantilla temporal generada con las opciones escogidas en la interfaz.
+'''
+
 from __future__ import annotations
 
 import os
@@ -15,6 +22,8 @@ APP_TEMPLATES_DIR = APP_DIR / 'templates'
 
 @dataclass(frozen=True)
 class PdfStyleOptions:
+  '''Opciones visuales que la app inyecta en la plantilla Typst temporal.'''
+
   font_family: str = 'Arial'
   body_font_size: float = 10.5
   heading_1_color: str = '#1f3552'
@@ -24,6 +33,8 @@ class PdfStyleOptions:
 
 @dataclass(frozen=True)
 class PdfResult:
+  '''Rutas importantes resultantes de una generacion de PDF.'''
+
   input_file: Path
   template_file: Path
   pdf_file: Path
@@ -31,10 +42,20 @@ class PdfResult:
 
 
 class PdfBuildError(RuntimeError):
+  '''Error controlado que puede mostrarse de forma legible en la interfaz.'''
+
   pass
 
 
 def find_executable(name: str) -> Path | str:
+  '''Busca un ejecutable priorizando la version portable del proyecto.
+
+  Orden de busqueda:
+  1. `bin/<name>/<name>.exe`, para mantener portabilidad local.
+  2. Ubicacion de usuario de Pandoc, si se busca `pandoc`.
+  3. PATH del sistema.
+  '''
+
   local_exe = ROOT_DIR / 'bin' / name / f'{name}.exe'
   if local_exe.exists():
     return local_exe
@@ -57,6 +78,12 @@ def find_executable(name: str) -> Path | str:
 
 
 def default_template() -> Path:
+  '''Devuelve la plantilla base de la app.
+
+  No usa `templates/apuntes.typ`, porque esa plantilla pertenece al flujo
+  portable por `.bat`.
+  '''
+
   template = APP_TEMPLATES_DIR / 'estudio.typ'
   if not template.exists():
     raise PdfBuildError(f'No existe la plantilla de la app: {template}')
@@ -64,6 +91,8 @@ def default_template() -> Path:
 
 
 def normalize_hex_color(color: str) -> str:
+  '''Valida y normaliza colores hexadecimales en formato `#rrggbb`.'''
+
   value = color.strip()
   if not value.startswith('#'):
     value = f'#{value}'
@@ -77,6 +106,13 @@ def normalize_hex_color(color: str) -> str:
 
 
 def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
+  '''Crea una plantilla Typst temporal con los valores visuales de la app.
+
+  Pandoc necesita recibir una plantilla fisica en disco. Por eso no se modifica
+  `app/templates/estudio.typ`; se copia su contenido, se sustituyen marcadores
+  y se escribe un `.typ` temporal que se borra tras la conversion.
+  '''
+
   template_text = template_file.read_text(encoding='utf-8')
   replacements = {
     '__BODY_FONT__': style.font_family,
@@ -105,6 +141,8 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
 
 
 def run_command(command: list[str | Path]) -> None:
+  '''Ejecuta un comando externo y convierte errores en `PdfBuildError`.'''
+
   completed = subprocess.run(
     [str(part) for part in command],
     cwd=ROOT_DIR,
@@ -124,6 +162,12 @@ def build_pdf(
   input_file: str | Path,
   style: PdfStyleOptions | None = None,
 ) -> PdfResult:
+  '''Genera un PDF desde un archivo Markdown usando Pandoc y Typst.
+
+  El archivo `.typ` intermedio y la plantilla temporal se eliminan al terminar.
+  El PDF final se escribe junto al Markdown de entrada.
+  '''
+
   source = Path(input_file).resolve()
   if not source.exists():
     raise PdfBuildError(f'No existe el archivo: {source}')
