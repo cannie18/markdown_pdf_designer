@@ -523,16 +523,36 @@ class MainWindow(QMainWindow):
     self.current_pdf = None
     self.file_input.setText(str(path))
     self.editor.clear()
-    self.editor.setVisible(False)
+    if not self.load_markdown_into_editor():
+      return
+    self.editor.setVisible(True)
     self.pdf_document.close()
     self.pdf_view.setVisible(False)
     self.empty_preview_label.setVisible(True)
     self.editor_dirty = False
-    self.edit_button.setText('Ver/editar')
+    self.edit_button.setText('Ocultar')
     self.edit_button.setEnabled(True)
     self.save_button.setEnabled(False)
     self.open_pdf_button.setEnabled(False)
     self.status_label.setText('Archivo seleccionado. Pulsa Generar PDF.')
+
+  def load_markdown_into_editor(self) -> bool:
+    '''Carga el Markdown actual en el editor sin marcarlo como modificado.'''
+
+    if self.current_file is None:
+      return False
+
+    try:
+      content = self.current_file.read_text(encoding='utf-8')
+    except OSError as exc:
+      QMessageBox.critical(self, 'Error', f'No se pudo leer el archivo:\n{exc}')
+      return False
+
+    self.editor.blockSignals(True)
+    self.editor.setPlainText(content)
+    self.editor.blockSignals(False)
+    self.editor_dirty = False
+    return True
 
   def toggle_editor(self) -> None:
     '''Muestra u oculta la revision editable del Markdown seleccionado.'''
@@ -547,16 +567,8 @@ class MainWindow(QMainWindow):
       return
 
     if self.editor.document().isEmpty() and not self.editor_dirty:
-      try:
-        content = self.current_file.read_text(encoding='utf-8')
-      except OSError as exc:
-        QMessageBox.critical(self, 'Error', f'No se pudo leer el archivo:\n{exc}')
+      if not self.load_markdown_into_editor():
         return
-
-      self.editor.blockSignals(True)
-      self.editor.setPlainText(content)
-      self.editor.blockSignals(False)
-      self.editor_dirty = False
       self.save_button.setEnabled(False)
 
     self.editor.setVisible(True)
