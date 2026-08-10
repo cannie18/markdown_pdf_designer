@@ -5,12 +5,16 @@ import sys
 from pathlib import Path
 
 from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtGui import QDragEnterEvent, QDropEvent
+from PySide6.QtGui import QColor, QDragEnterEvent, QDropEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
   QApplication,
+  QColorDialog,
+  QComboBox,
+  QDoubleSpinBox,
   QFileDialog,
+  QFormLayout,
   QFrame,
   QHBoxLayout,
   QLabel,
@@ -24,20 +28,21 @@ from PySide6.QtWidgets import (
   QWidget,
 )
 
-from .pdf_builder import PdfBuildError, build_pdf
+from .pdf_builder import PdfBuildError, PdfStyleOptions, build_pdf
 
 
 class BuildWorker(QThread):
   succeeded = Signal(str)
   failed = Signal(str)
 
-  def __init__(self, markdown_file: str) -> None:
+  def __init__(self, markdown_file: str, style: PdfStyleOptions) -> None:
     super().__init__()
     self.markdown_file = markdown_file
+    self.style = style
 
   def run(self) -> None:
     try:
-      result = build_pdf(self.markdown_file)
+      result = build_pdf(self.markdown_file, style=self.style)
     except PdfBuildError as exc:
       self.failed.emit(str(exc))
       return
@@ -89,6 +94,11 @@ class MainWindow(QMainWindow):
     self.current_file: Path | None = None
     self.current_pdf: Path | None = None
     self.editor_dirty = False
+    self.heading_colors = {
+      'h1': '#1f3552',
+      'h2': '#2e6f73',
+      'h3': '#7a3f3f',
+    }
     self.setWindowTitle('PDF Apuntes')
     self.resize(1040, 680)
     self.setMinimumSize(780, 460)
@@ -121,6 +131,31 @@ class MainWindow(QMainWindow):
     self.editor.setPlaceholderText('El contenido del Markdown aparecera aqui.')
     self.editor.setVisible(False)
     self.editor.textChanged.connect(self.mark_editor_dirty)
+
+    self.font_combo = QComboBox()
+    self.font_combo.addItems(['Arial', 'Aptos', 'Calibri', 'Segoe UI', 'Times New Roman'])
+    self.font_combo.setCurrentText('Arial')
+
+    self.body_size_input = QDoubleSpinBox()
+    self.body_size_input.setRange(8, 18)
+    self.body_size_input.setSingleStep(0.5)
+    self.body_size_input.setDecimals(1)
+    self.body_size_input.setSuffix(' pt')
+    self.body_size_input.setValue(10.5)
+
+    self.h1_color_button = self.create_color_button('h1')
+    self.h2_color_button = self.create_color_button('h2')
+    self.h3_color_button = self.create_color_button('h3')
+
+    style_panel = QFrame()
+    style_panel.setObjectName('stylePanel')
+    style_layout = QFormLayout(style_panel)
+    style_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
+    style_layout.addRow('Fuente', self.font_combo)
+    style_layout.addRow('Tamano texto', self.body_size_input)
+    style_layout.addRow('Titulo 1', self.h1_color_button)
+    style_layout.addRow('Titulo 2', self.h2_color_button)
+    style_layout.addRow('Titulo 3', self.h3_color_button)
 
     self.pdf_document = QPdfDocument(self)
     self.pdf_view = QPdfView()
@@ -156,6 +191,7 @@ class MainWindow(QMainWindow):
     left_layout.setContentsMargins(0, 0, 0, 0)
     left_layout.addWidget(drop_zone)
     left_layout.addLayout(file_row)
+    left_layout.addWidget(style_panel)
     left_layout.addWidget(self.editor, 1)
     left_layout.addLayout(actions_row)
     left_layout.addWidget(self.status_label)
@@ -193,6 +229,12 @@ class MainWindow(QMainWindow):
       QPushButton {
         padding: 8px 14px;
       }
+      #stylePanel {
+        border: 1px solid #d7dde3;
+        border-radius: 6px;
+        background: #fbfcfd;
+        padding: 8px;
+      }
       #dropZone {
         border: 1px dashed #7a8a99;
         border-radius: 6px;
@@ -212,6 +254,51 @@ class MainWindow(QMainWindow):
         color: #26364a;
       }
       '''
+    )
+    self.refresh_color_buttons()
+
+  def create_color_button(self, color_key: str) -> QPushButton:
+    button = QPushButton()
+    button.clicked.connect(lambda: self.choose_heading_color(color_key))
+    return button
+
+  def choose_heading_color(self, color_key: str) -> None:
+    current = QColor(self.heading_colors[color_key])
+    color = QColorDialog.getColor(current, self, 'Elegir color')
+    if not color.isValid():
+      return
+
+    self.heading_colors[color_key] = color.name()
+    self.refresh_color_buttons()
+
+  def refresh_color_buttons(self) -> None:
+    buttons = {
+      'h1': self.h1_color_button,
+      'h2': self.h2_color_button,
+      'h3': self.h3_color_button,
+    }
+    for color_key, button in buttons.items():
+      color = self.heading_colors[color_key]
+      button.setText(color)
+      button.setStyleSheet(
+        f'background: {color}; color: {self.text_color_for_background(color)};'
+      )
+
+  def text_color_for_background(self, color: str) -> str:
+    value = color.lstrip('#')
+    red = int(value[0:2], 16)
+    green = int(value[2:4], 16)
+    blue = int(value[4:6], 16)
+    brightness = (red * 299 + green * 587 + blue * 114) / 1000
+    return '#000000' if brightness > 150 else '#ffffff'
+
+  def current_style_options(self) -> PdfStyleOptions:
+    return PdfStyleOptions(
+      font_family=self.font_combo.currentText(),
+      body_font_size=self.body_size_input.value(),
+      heading_1_color=self.heading_colors['h1'],
+      heading_2_color=self.heading_colors['h2'],
+      heading_3_color=self.heading_colors['h3'],
     )
 
   def choose_file(self) -> None:
@@ -338,7 +425,7 @@ class MainWindow(QMainWindow):
 
     self.build_button.setEnabled(False)
     self.status_label.setText('Generando PDF...')
-    self.worker = BuildWorker(markdown_file)
+    self.worker = BuildWorker(markdown_file, self.current_style_options())
     self.worker.succeeded.connect(self.on_success)
     self.worker.failed.connect(self.on_error)
     self.worker.finished.connect(lambda: self.build_button.setEnabled(True))

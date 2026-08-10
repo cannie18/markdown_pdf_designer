@@ -82,7 +82,12 @@ La app permite, de momento:
 - abrir un archivo `.md`;
 - arrastrar un archivo `.md`;
 - generar el PDF con un boton;
-- ver el PDF generado dentro de la propia app.
+- ver el PDF generado dentro de la propia app;
+- elegir fuente, tamano base y colores de titulos antes de generar.
+
+Las opciones visuales de la app se aplican generando una plantilla Typst
+temporal a partir de `app/templates/estudio.typ`. La plantilla portable
+`templates/apuntes.typ` no se modifica.
 
 ## Estructura
 

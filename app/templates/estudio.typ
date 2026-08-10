@@ -12,10 +12,10 @@ $definitions.typst()$
 )
 
 // Texto base.
-// En una fase posterior Python podra generar este valor dinamicamente.
+// Estos valores los rellena la app antes de llamar a Pandoc.
 #set text(
-  font: "Arial",
-  size: 10.5pt,
+  font: "__BODY_FONT__",
+  size: __BODY_FONT_SIZE__pt,
   lang: "es",
 )
 
@@ -31,23 +31,23 @@ $definitions.typst()$
 
 #show heading.where(level: 1): it => block(
   below: 1.1em,
-  text(size: 24pt, weight: "bold", fill: rgb("#1f3552"), it.body),
+  text(size: 24pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body),
 )
 
 #show heading.where(level: 2): it => block(
   above: 1.2em,
   below: 0.55em,
-  text(size: 16pt, weight: "bold", fill: rgb("#2e6f73"), it.body),
+  text(size: 16pt, weight: "bold", fill: rgb("__H2_COLOR__"), it.body),
 )
 
 #show heading.where(level: 3): it => block(
   above: 0.9em,
   below: 0.35em,
-  text(size: 12.5pt, weight: "bold", fill: rgb("#7a3f3f"), it.body),
+  text(size: 12.5pt, weight: "bold", fill: rgb("__H3_COLOR__"), it.body),
 )
 
 // Enfasis.
-#show strong: it => text(weight: "bold", fill: rgb("#1f3552"), it.body)
+#show strong: it => text(weight: "bold", fill: rgb("__H1_COLOR__"), it.body)
 #show emph: it => text(style: "italic", it.body)
 
 // Listas.
