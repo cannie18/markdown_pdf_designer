@@ -138,13 +138,15 @@ class MainWindow(QMainWindow):
     new_button = QPushButton('Nuevo Markdown')
     new_button.clicked.connect(self.create_markdown_file)
 
-    self.edit_button = QPushButton('Ver/editar')
-    self.edit_button.clicked.connect(self.toggle_editor)
+    self.edit_button = QPushButton('Cerrar')
+    self.edit_button.clicked.connect(self.close_markdown_file)
     self.edit_button.setEnabled(False)
+    self.edit_button.setVisible(False)
 
     self.save_button = QPushButton('Guardar')
     self.save_button.clicked.connect(self.save_editor)
     self.save_button.setEnabled(False)
+    self.save_button.setVisible(False)
 
     self.build_button = QPushButton('Generar PDF')
     self.build_button.clicked.connect(self.generate_pdf)
@@ -564,7 +566,9 @@ class MainWindow(QMainWindow):
     self.editor_dirty = False
     self.edit_button.setText('Cerrar')
     self.edit_button.setEnabled(True)
+    self.edit_button.setVisible(True)
     self.save_button.setEnabled(False)
+    self.save_button.setVisible(True)
     self.open_pdf_button.setEnabled(False)
     self.build_button.setEnabled(True)
     self.status_label.setText('Archivo seleccionado. Pulsa Generar PDF.')
@@ -587,27 +591,32 @@ class MainWindow(QMainWindow):
     self.editor_dirty = False
     return True
 
-  def toggle_editor(self) -> None:
-    '''Muestra u oculta la revision editable del Markdown seleccionado.'''
+  def close_markdown_file(self) -> None:
+    '''Cierra el Markdown actual y vuelve al estado inicial de la app.'''
 
     if self.current_file is None:
-      QMessageBox.warning(self, 'Falta archivo', 'Selecciona un archivo Markdown.')
       return
 
-    if self.editor.isVisible():
-      if not self.confirm_save_before_close_editor():
-        return
-      self.editor.setVisible(False)
-      self.edit_button.setText('Ver/editar')
+    if not self.confirm_save_before_close_editor():
       return
 
-    if self.editor.document().isEmpty() and not self.editor_dirty:
-      if not self.load_markdown_into_editor():
-        return
-      self.save_button.setEnabled(False)
-
-    self.editor.setVisible(True)
+    self.current_file = None
+    self.current_pdf = None
+    self.file_input.clear()
+    self.editor.clear()
+    self.editor.setVisible(False)
+    self.pdf_document.close()
+    self.pdf_view.setVisible(False)
+    self.empty_preview_label.setVisible(True)
+    self.editor_dirty = False
     self.edit_button.setText('Cerrar')
+    self.edit_button.setEnabled(False)
+    self.edit_button.setVisible(False)
+    self.save_button.setEnabled(False)
+    self.save_button.setVisible(False)
+    self.open_pdf_button.setEnabled(False)
+    self.build_button.setEnabled(False)
+    self.status_label.setText('Listo.')
 
   def mark_editor_dirty(self) -> None:
     '''Marca el editor como modificado para proteger cambios sin guardar.'''
