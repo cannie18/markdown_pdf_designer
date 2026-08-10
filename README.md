@@ -83,11 +83,14 @@ La app permite, de momento:
 - crear un archivo Markdown nuevo;
 - abrir un archivo `.md`;
 - arrastrar un archivo `.md`;
+- elegir entre los ultimos Markdown usados desde el desplegable de ruta;
 - cargar el Markdown directamente en el editor al abrirlo;
+- guardar o guardar como el Markdown;
 - generar el PDF con un boton;
 - ver el PDF generado dentro de la propia app;
 - abrir el PDF generado en el visor predeterminado de Windows;
-- elegir fuente, tamano base y colores de titulos antes de generar.
+- elegir fuente, tamano base y colores de titulos antes de generar;
+- recordar posicion, monitor, tamano de ventana y division entre paneles.
 
 Las opciones visuales de la app se aplican generando una plantilla Typst
 temporal a partir de `app/templates/estudio.typ`. La plantilla portable

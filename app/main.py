@@ -11,8 +11,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtGui import QColor, QDragEnterEvent, QDropEvent
+from PySide6.QtCore import QSettings, Qt, QThread, Signal
+from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
@@ -25,7 +25,6 @@ from PySide6.QtWidgets import (
   QFrame,
   QHBoxLayout,
   QLabel,
-  QLineEdit,
   QMainWindow,
   QMessageBox,
   QPlainTextEdit,
@@ -120,6 +119,7 @@ class MainWindow(QMainWindow):
     self.current_file: Path | None = None
     self.current_pdf: Path | None = None
     self.editor_dirty = False
+    self.settings = QSettings('pdf_apuntes', 'Markdown PDF Designer')
     self.heading_colors = {
       'h1': '#1f3552',
       'h2': '#2e6f73',
@@ -129,8 +129,12 @@ class MainWindow(QMainWindow):
     self.resize(1180, 720)
     self.setMinimumSize(860, 520)
 
-    self.file_input = QLineEdit()
-    self.file_input.setPlaceholderText('Selecciona o arrastra un archivo .md')
+    self.file_input = QComboBox()
+    self.file_input.setEditable(True)
+    self.file_input.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+    self.file_input.lineEdit().setPlaceholderText('Selecciona o arrastra un archivo .md')
+    self.file_input.activated.connect(self.open_recent_markdown)
+    self.load_recent_markdowns()
 
     open_button = QPushButton('Abrir')
     open_button.clicked.connect(self.choose_file)
@@ -148,13 +152,20 @@ class MainWindow(QMainWindow):
     self.save_button.setEnabled(False)
     self.save_button.setVisible(False)
 
+    self.save_as_button = QPushButton('Guardar como')
+    self.save_as_button.clicked.connect(self.save_editor_as)
+    self.save_as_button.setEnabled(False)
+    self.save_as_button.setVisible(False)
+
     self.build_button = QPushButton('Generar PDF')
     self.build_button.clicked.connect(self.generate_pdf)
     self.build_button.setEnabled(False)
+    self.build_button.setVisible(False)
 
     self.open_pdf_button = QPushButton('Abrir PDF en Windows')
     self.open_pdf_button.clicked.connect(self.open_current_pdf)
     self.open_pdf_button.setEnabled(False)
+    self.open_pdf_button.setVisible(False)
 
     self.status_label = QLabel('Listo.')
     self.status_label.setWordWrap(True)
@@ -279,6 +290,7 @@ class MainWindow(QMainWindow):
     actions_row = QHBoxLayout()
     actions_row.addWidget(self.edit_button)
     actions_row.addWidget(self.save_button)
+    actions_row.addWidget(self.save_as_button)
     actions_row.addStretch()
     actions_row.addWidget(self.open_pdf_button)
     actions_row.addWidget(self.build_button)
@@ -310,6 +322,7 @@ class MainWindow(QMainWindow):
     self.setCentralWidget(container)
     self.apply_styles()
 
+    self.restore_window_settings()
     if initial_file:
       self.set_markdown_file(initial_file)
     self.select_left_section(0)
@@ -327,6 +340,12 @@ class MainWindow(QMainWindow):
       }
       QLineEdit {
         padding: 8px;
+        border: 1px solid #c3c6d7;
+        border-radius: 4px;
+        background: #ffffff;
+      }
+      QComboBox {
+        padding: 6px;
         border: 1px solid #c3c6d7;
         border-radius: 4px;
         background: #ffffff;
@@ -500,6 +519,54 @@ class MainWindow(QMainWindow):
       heading_3_color=self.heading_colors['h3'],
     )
 
+  def load_recent_markdowns(self) -> None:
+    '''Carga en el desplegable las ultimas rutas Markdown usadas.'''
+
+    recent = self.settings.value('recent_markdowns', [], list)
+    self.file_input.clear()
+    self.file_input.addItems([str(path) for path in recent[:10]])
+
+  def remember_markdown(self, path: Path) -> None:
+    '''Guarda una ruta Markdown en el historial de las 10 ultimas opciones.'''
+
+    path_text = str(path)
+    recent = [str(item) for item in self.settings.value('recent_markdowns', [], list)]
+    recent = [item for item in recent if item != path_text]
+    recent.insert(0, path_text)
+    recent = recent[:10]
+    self.settings.setValue('recent_markdowns', recent)
+    self.load_recent_markdowns()
+    self.file_input.setCurrentText(path_text)
+
+  def open_recent_markdown(self, _index: int | None = None) -> None:
+    '''Abre la ruta seleccionada desde el historial del desplegable.'''
+
+    filename = self.file_input.currentText().strip()
+    if filename:
+      self.set_markdown_file(filename)
+
+  def restore_window_settings(self) -> None:
+    '''Restaura posicion, monitor y tamano de la ventana si existen.'''
+
+    geometry = self.settings.value('window_geometry')
+    if geometry:
+      self.restoreGeometry(geometry)
+
+    splitter_sizes = self.settings.value('splitter_sizes')
+    if splitter_sizes:
+      self.splitter.setSizes([int(size) for size in splitter_sizes])
+
+  def closeEvent(self, event: QCloseEvent) -> None:
+    '''Guarda geometria de ventana y divisor antes de cerrar la app.'''
+
+    if self.editor_dirty and not self.confirm_save_before_close_editor():
+      event.ignore()
+      return
+
+    self.settings.setValue('window_geometry', self.saveGeometry())
+    self.settings.setValue('splitter_sizes', self.splitter.sizes())
+    event.accept()
+
   def choose_file(self) -> None:
     '''Abre un dialogo para seleccionar un archivo Markdown.'''
 
@@ -555,7 +622,7 @@ class MainWindow(QMainWindow):
 
     self.current_file = path
     self.current_pdf = None
-    self.file_input.setText(str(path))
+    self.remember_markdown(path)
     self.editor.clear()
     if not self.load_markdown_into_editor():
       return
@@ -569,8 +636,12 @@ class MainWindow(QMainWindow):
     self.edit_button.setVisible(True)
     self.save_button.setEnabled(False)
     self.save_button.setVisible(True)
+    self.save_as_button.setEnabled(True)
+    self.save_as_button.setVisible(True)
     self.open_pdf_button.setEnabled(False)
+    self.open_pdf_button.setVisible(False)
     self.build_button.setEnabled(True)
+    self.build_button.setVisible(True)
     self.status_label.setText('Archivo seleccionado. Pulsa Generar PDF.')
 
   def load_markdown_into_editor(self) -> bool:
@@ -602,7 +673,7 @@ class MainWindow(QMainWindow):
 
     self.current_file = None
     self.current_pdf = None
-    self.file_input.clear()
+    self.file_input.setCurrentText('')
     self.editor.clear()
     self.editor.setVisible(False)
     self.pdf_document.close()
@@ -614,8 +685,12 @@ class MainWindow(QMainWindow):
     self.edit_button.setVisible(False)
     self.save_button.setEnabled(False)
     self.save_button.setVisible(False)
+    self.save_as_button.setEnabled(False)
+    self.save_as_button.setVisible(False)
     self.open_pdf_button.setEnabled(False)
+    self.open_pdf_button.setVisible(False)
     self.build_button.setEnabled(False)
+    self.build_button.setVisible(False)
     self.status_label.setText('Listo.')
 
   def mark_editor_dirty(self) -> None:
@@ -642,6 +717,44 @@ class MainWindow(QMainWindow):
     self.editor_dirty = False
     self.save_button.setEnabled(False)
     self.status_label.setText('Cambios guardados.')
+    return True
+
+  def save_editor_as(self) -> bool:
+    '''Guarda el Markdown actual en una ruta nueva y cambia a ese archivo.'''
+
+    if self.current_file is None:
+      return False
+
+    filename, _ = QFileDialog.getSaveFileName(
+      self,
+      'Guardar Markdown como',
+      str(self.current_file),
+      'Markdown (*.md);;Todos los archivos (*.*)',
+    )
+    if not filename:
+      return False
+
+    path = Path(filename)
+    if path.suffix.lower() != '.md':
+      path = path.with_suffix('.md')
+
+    try:
+      path.write_text(self.editor.toPlainText(), encoding='utf-8')
+    except OSError as exc:
+      QMessageBox.critical(self, 'Error', f'No se pudo guardar el archivo:\n{exc}')
+      return False
+
+    self.current_file = path.resolve()
+    self.current_pdf = None
+    self.remember_markdown(self.current_file)
+    self.pdf_document.close()
+    self.pdf_view.setVisible(False)
+    self.empty_preview_label.setVisible(True)
+    self.open_pdf_button.setEnabled(False)
+    self.open_pdf_button.setVisible(False)
+    self.editor_dirty = False
+    self.save_button.setEnabled(False)
+    self.status_label.setText('Markdown guardado como archivo nuevo.')
     return True
 
   def confirm_discard_unsaved_changes(self) -> bool:
@@ -700,7 +813,7 @@ class MainWindow(QMainWindow):
   def generate_pdf(self) -> None:
     '''Inicia la generacion del PDF con los valores actuales de la interfaz.'''
 
-    markdown_file = self.file_input.text().strip()
+    markdown_file = self.file_input.currentText().strip()
     if not markdown_file:
       QMessageBox.warning(self, 'Falta archivo', 'Selecciona un archivo Markdown.')
       return
@@ -731,6 +844,7 @@ class MainWindow(QMainWindow):
       self.pdf_view.setVisible(False)
       self.empty_preview_label.setVisible(True)
       self.open_pdf_button.setEnabled(True)
+      self.open_pdf_button.setVisible(True)
       QMessageBox.warning(
         self,
         'Vista previa',
@@ -741,6 +855,7 @@ class MainWindow(QMainWindow):
     self.empty_preview_label.setVisible(False)
     self.pdf_view.setVisible(True)
     self.open_pdf_button.setEnabled(True)
+    self.open_pdf_button.setVisible(True)
     self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
 
   def open_current_pdf(self) -> None:
