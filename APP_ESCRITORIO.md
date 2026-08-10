@@ -1,9 +1,10 @@
-# App de escritorio PDF Apuntes
+# Markdown PDF Designer
 
 ## Que es
 
-La app de escritorio es una interfaz local para generar PDF de apuntes a partir
-de archivos Markdown.
+Markdown PDF Designer es una app de escritorio local para generar PDF de
+apuntes a partir de archivos Markdown, ajustando el resultado a necesidades de
+diseno concretas.
 
 Su objetivo no es sustituir al Markdown ni convertir la herramienta en un
 editor complejo. La idea principal es facilitar este flujo:
@@ -17,6 +18,24 @@ ver el resultado dentro de la app
 ```
 
 La app esta creada con Python y PySide6.
+
+## Estructura visual deseada
+
+La app se organiza con una vista previa PDF permanente a la derecha y un panel
+de trabajo cambiante a la izquierda.
+
+```text
+panel izquierdo cambiante | vista previa PDF
+```
+
+El panel izquierdo tiene tres secciones:
+
+- `Archivo`: abrir o arrastrar Markdown, revisar contenido y generar PDF.
+- `Diseno`: ajustar fuente, tamano y colores antes de volver a generar.
+- `Plantillas`: preparar seleccion y creacion de plantillas visuales.
+
+La vista previa no es una pestana separada: debe estar siempre disponible para
+comprobar el PDF real generado.
 
 ## Principio de diseno
 
@@ -53,6 +72,8 @@ La app permite:
 - generar el PDF;
 - mostrar el PDF generado dentro de la propia app;
 - abrir el PDF en el visor externo de Windows.
+- cambiar entre secciones `Archivo`, `Diseno` y `Plantillas` en el panel
+  izquierdo.
 
 ## Relacion con la version portable
 

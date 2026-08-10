@@ -31,6 +31,7 @@ from PySide6.QtWidgets import (
   QPlainTextEdit,
   QPushButton,
   QSplitter,
+  QStackedWidget,
   QVBoxLayout,
   QWidget,
 )
@@ -124,9 +125,9 @@ class MainWindow(QMainWindow):
       'h2': '#2e6f73',
       'h3': '#7a3f3f',
     }
-    self.setWindowTitle('PDF Apuntes')
-    self.resize(1040, 680)
-    self.setMinimumSize(780, 460)
+    self.setWindowTitle('Markdown PDF Designer')
+    self.resize(1180, 720)
+    self.setMinimumSize(860, 520)
 
     self.file_input = QLineEdit()
     self.file_input.setPlaceholderText('Selecciona o arrastra un archivo .md')
@@ -172,16 +173,6 @@ class MainWindow(QMainWindow):
     self.h2_color_button = self.create_color_button('h2')
     self.h3_color_button = self.create_color_button('h3')
 
-    style_panel = QFrame()
-    style_panel.setObjectName('stylePanel')
-    style_layout = QFormLayout(style_panel)
-    style_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
-    style_layout.addRow('Fuente', self.font_combo)
-    style_layout.addRow('Tamano texto', self.body_size_input)
-    style_layout.addRow('Titulo 1', self.h1_color_button)
-    style_layout.addRow('Titulo 2', self.h2_color_button)
-    style_layout.addRow('Titulo 3', self.h3_color_button)
-
     self.pdf_document = QPdfDocument(self)
     self.pdf_view = QPdfView()
     self.pdf_view.setDocument(self.pdf_document)
@@ -200,31 +191,103 @@ class MainWindow(QMainWindow):
     drop_zone = DropZone()
     drop_zone.file_dropped.connect(self.set_markdown_file)
 
+    self.file_tab_button = self.create_nav_button('Archivo', 0)
+    self.design_tab_button = self.create_nav_button('Diseno', 1)
+    self.templates_tab_button = self.create_nav_button('Plantillas', 2)
+
+    nav_row = QHBoxLayout()
+    nav_row.addWidget(self.file_tab_button)
+    nav_row.addWidget(self.design_tab_button)
+    nav_row.addWidget(self.templates_tab_button)
+    nav_row.addStretch()
+
     file_row = QHBoxLayout()
     file_row.addWidget(self.file_input, 1)
     file_row.addWidget(open_button)
 
+    file_page = QWidget()
+    file_layout = QVBoxLayout(file_page)
+    file_layout.setContentsMargins(0, 0, 0, 0)
+    file_layout.addWidget(drop_zone)
+    file_layout.addLayout(file_row)
+    file_layout.addWidget(self.editor, 1)
+
+    design_page = QWidget()
+    design_layout = QVBoxLayout(design_page)
+    design_layout.setContentsMargins(0, 0, 0, 0)
+    design_title = QLabel('Ajustes de diseno')
+    design_title.setObjectName('sectionTitle')
+    design_help = QLabel(
+      'Modifica la fuente, el tamano base y los colores. Luego vuelve a generar el PDF.'
+    )
+    design_help.setObjectName('sectionHelp')
+    design_help.setWordWrap(True)
+    style_panel = QFrame()
+    style_panel.setObjectName('stylePanel')
+    style_layout = QFormLayout(style_panel)
+    style_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
+    style_layout.addRow('Fuente', self.font_combo)
+    style_layout.addRow('Tamano texto', self.body_size_input)
+    style_layout.addRow('Titulo 1', self.h1_color_button)
+    style_layout.addRow('Titulo 2', self.h2_color_button)
+    style_layout.addRow('Titulo 3', self.h3_color_button)
+    design_layout.addWidget(design_title)
+    design_layout.addWidget(design_help)
+    design_layout.addWidget(style_panel)
+    design_layout.addStretch()
+
+    templates_page = QWidget()
+    templates_layout = QVBoxLayout(templates_page)
+    templates_layout.setContentsMargins(0, 0, 0, 0)
+    templates_title = QLabel('Plantillas')
+    templates_title.setObjectName('sectionTitle')
+    templates_help = QLabel(
+      'Aqui prepararemos plantillas base como estudio, compacto o tesis. '
+      'De momento la app usa la plantilla estudio.'
+    )
+    templates_help.setObjectName('sectionHelp')
+    templates_help.setWordWrap(True)
+    templates_card = QFrame()
+    templates_card.setObjectName('placeholderCard')
+    templates_card_layout = QVBoxLayout(templates_card)
+    templates_card_layout.addWidget(QLabel('Plantilla activa: estudio'))
+    templates_card_layout.addWidget(QLabel('Creacion de plantillas: pendiente'))
+    templates_layout.addWidget(templates_title)
+    templates_layout.addWidget(templates_help)
+    templates_layout.addWidget(templates_card)
+    templates_layout.addStretch()
+
+    self.left_stack = QStackedWidget()
+    self.left_stack.addWidget(file_page)
+    self.left_stack.addWidget(design_page)
+    self.left_stack.addWidget(templates_page)
+
     actions_row = QHBoxLayout()
-    actions_row.addStretch()
     actions_row.addWidget(self.edit_button)
     actions_row.addWidget(self.save_button)
-    actions_row.addWidget(self.build_button)
+    actions_row.addStretch()
     actions_row.addWidget(self.open_pdf_button)
+    actions_row.addWidget(self.build_button)
 
     left_panel = QWidget()
     left_layout = QVBoxLayout(left_panel)
-    left_layout.setContentsMargins(0, 0, 0, 0)
-    left_layout.addWidget(drop_zone)
-    left_layout.addLayout(file_row)
-    left_layout.addWidget(style_panel)
-    left_layout.addWidget(self.editor, 1)
+    left_layout.setContentsMargins(16, 16, 16, 16)
+    app_title = QLabel('Markdown PDF Designer')
+    app_title.setObjectName('appTitle')
+    app_subtitle = QLabel('Convierte Markdown en PDF ajustados al estilo que necesitas.')
+    app_subtitle.setObjectName('appSubtitle')
+    app_subtitle.setWordWrap(True)
+    left_layout.addWidget(app_title)
+    left_layout.addWidget(app_subtitle)
+    left_layout.addLayout(nav_row)
+    left_layout.addWidget(self.left_stack, 1)
     left_layout.addLayout(actions_row)
     left_layout.addWidget(self.status_label)
 
     self.splitter = QSplitter(Qt.Orientation.Horizontal)
     self.splitter.addWidget(left_panel)
     self.splitter.addWidget(self.pdf_panel)
-    self.splitter.setSizes([420, 580])
+    self.splitter.setSizes([470, 710])
 
     container = QWidget()
     layout = QVBoxLayout()
@@ -235,6 +298,7 @@ class MainWindow(QMainWindow):
 
     if initial_file:
       self.set_markdown_file(initial_file)
+    self.select_left_section(0)
 
   def apply_styles(self) -> None:
     '''Aplica estilos visuales de la interfaz, no del PDF generado.'''
@@ -244,28 +308,61 @@ class MainWindow(QMainWindow):
       QWidget {
         font-family: Segoe UI;
         font-size: 10.5pt;
+        color: #131b2e;
+        background: #faf8ff;
       }
       QLineEdit {
         padding: 8px;
+        border: 1px solid #c3c6d7;
+        border-radius: 4px;
+        background: #ffffff;
       }
       QPlainTextEdit {
         font-family: Consolas;
         font-size: 10pt;
         padding: 8px;
+        border: 1px solid #c3c6d7;
+        border-radius: 6px;
+        background: #ffffff;
       }
       QPushButton {
         padding: 8px 14px;
+        border: 1px solid #c3c6d7;
+        border-radius: 4px;
+        background: #ffffff;
+      }
+      QPushButton:hover {
+        background: #f2f3ff;
+      }
+      QPushButton#primaryButton {
+        color: #ffffff;
+        background: #004ac6;
+        border-color: #004ac6;
+      }
+      QPushButton#primaryButton:hover {
+        background: #003ea8;
+      }
+      QPushButton#navButton {
+        text-align: left;
+        font-weight: 600;
+        border: 1px solid transparent;
+        background: transparent;
+      }
+      QPushButton#navButton[active='true'] {
+        color: #00174b;
+        background: #dbe1ff;
+        border-color: #b4c5ff;
       }
       #stylePanel {
         border: 1px solid #d7dde3;
         border-radius: 6px;
-        background: #fbfcfd;
+        background: #ffffff;
         padding: 8px;
       }
       #dropZone {
         border: 1px dashed #7a8a99;
         border-radius: 6px;
-        background: #f7f9fb;
+        background: #ffffff;
       }
       #dropTitle {
         font-size: 13pt;
@@ -280,9 +377,53 @@ class MainWindow(QMainWindow):
         font-weight: 600;
         color: #26364a;
       }
+      #appTitle {
+        font-size: 18pt;
+        font-weight: 700;
+        color: #004ac6;
+      }
+      #appSubtitle {
+        color: #434655;
+      }
+      #sectionTitle {
+        font-size: 16pt;
+        font-weight: 700;
+      }
+      #sectionHelp {
+        color: #434655;
+      }
+      #placeholderCard {
+        border: 1px solid #d7dde3;
+        border-radius: 6px;
+        background: #ffffff;
+        padding: 12px;
+      }
       '''
     )
+    self.build_button.setObjectName('primaryButton')
     self.refresh_color_buttons()
+
+  def create_nav_button(self, text: str, index: int) -> QPushButton:
+    '''Crea un boton de navegacion para cambiar el panel izquierdo.'''
+
+    button = QPushButton(text)
+    button.setObjectName('navButton')
+    button.clicked.connect(lambda: self.select_left_section(index))
+    return button
+
+  def select_left_section(self, index: int) -> None:
+    '''Muestra una de las secciones principales del panel izquierdo.'''
+
+    self.left_stack.setCurrentIndex(index)
+    buttons = [
+      self.file_tab_button,
+      self.design_tab_button,
+      self.templates_tab_button,
+    ]
+    for button_index, button in enumerate(buttons):
+      button.setProperty('active', button_index == index)
+      button.style().unpolish(button)
+      button.style().polish(button)
 
   def create_color_button(self, color_key: str) -> QPushButton:
     '''Crea un boton que abre el selector para un color de titulo.'''

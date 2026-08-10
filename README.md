@@ -66,8 +66,9 @@ modo instalado o al modo portable.
 
 ## App de escritorio
 
-La app Python vive en `app/` y usa sus propias plantillas en `app/templates/`.
-Esto evita que los cambios de la app rompan la version portable por `.bat`.
+La app Python se llama Markdown PDF Designer. Vive en `app/` y usa sus propias
+plantillas en `app/templates/`. Esto evita que los cambios de la app rompan la
+version portable por `.bat`.
 
 Para abrirla:
 
