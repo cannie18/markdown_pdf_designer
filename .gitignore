@@ -1,0 +1,15 @@
+# Generated outputs
+*.pdf
+*.typ
+!templates/*.typ
+
+# Optional local portable binaries
+bin/pandoc/*
+bin/typst/*
+!bin/pandoc/.gitkeep
+!bin/typst/.gitkeep
+
+# Temporary files
+*.log
+*.tmp
+tmp/
