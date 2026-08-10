@@ -13,3 +13,6 @@ bin/typst/*
 *.log
 *.tmp
 tmp/
+
+# Python environment
+.venv/
