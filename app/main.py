@@ -29,6 +29,7 @@ from PySide6.QtWidgets import (
   QMessageBox,
   QPlainTextEdit,
   QPushButton,
+  QScrollArea,
   QSplitter,
   QStackedWidget,
   QVBoxLayout,
@@ -38,9 +39,9 @@ from PySide6.QtWidgets import (
 from .pdf_builder import PdfBuildError, PdfStyleOptions, build_pdf
 
 
-LEFT_PANEL_MIN_WIDTH = 420
+LEFT_PANEL_MIN_WIDTH = 500
 PREVIEW_PANEL_MIN_WIDTH = 320
-WINDOW_MIN_HEIGHT = 640
+WINDOW_MIN_HEIGHT = 480
 
 
 class BuildWorker(QThread):
@@ -172,7 +173,7 @@ class MainWindow(QMainWindow):
     self.build_button.setEnabled(False)
     self.build_button.setVisible(False)
 
-    self.open_pdf_button = QPushButton('Abrir PDF en Windows')
+    self.open_pdf_button = QPushButton('Abrir en Windows')
     self.open_pdf_button.clicked.connect(self.open_current_pdf)
     self.open_pdf_button.setEnabled(False)
     self.open_pdf_button.setVisible(False)
@@ -304,13 +305,12 @@ class MainWindow(QMainWindow):
     editor_actions_row.addStretch()
 
     pdf_actions_row = QHBoxLayout()
-    pdf_actions_row.addStretch()
     pdf_actions_row.addWidget(self.open_pdf_button)
     pdf_actions_row.addWidget(self.build_button)
+    pdf_actions_row.addStretch()
 
-    left_panel = QWidget()
-    left_panel.setMinimumWidth(LEFT_PANEL_MIN_WIDTH)
-    left_layout = QVBoxLayout(left_panel)
+    left_content = QWidget()
+    left_layout = QVBoxLayout(left_content)
     left_layout.setContentsMargins(16, 16, 16, 16)
     app_title = QLabel('Markdown PDF Designer')
     app_title.setObjectName('appTitle')
@@ -325,6 +325,13 @@ class MainWindow(QMainWindow):
     left_layout.addLayout(editor_actions_row)
     left_layout.addLayout(pdf_actions_row)
     left_layout.addWidget(self.status_label)
+
+    left_panel = QScrollArea()
+    left_panel.setWidget(left_content)
+    left_panel.setWidgetResizable(True)
+    left_panel.setMinimumWidth(LEFT_PANEL_MIN_WIDTH)
+    left_panel.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    left_panel.setFrameShape(QFrame.Shape.NoFrame)
 
     self.splitter = QSplitter(Qt.Orientation.Horizontal)
     self.splitter.addWidget(left_panel)
