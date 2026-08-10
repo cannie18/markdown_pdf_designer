@@ -83,7 +83,7 @@ class DropZone(QFrame):
     self.setMinimumHeight(110)
 
     layout = QVBoxLayout(self)
-    title = QLabel('Arrastra aqui un Markdown')
+    title = QLabel('Arrastra aquí un Markdown')
     title.setAlignment(Qt.AlignmentFlag.AlignCenter)
     title.setMinimumWidth(0)
     title.setWordWrap(True)
@@ -232,9 +232,9 @@ class MainWindow(QMainWindow):
     pdf_panel_layout.addWidget(self.pdf_view, 1)
     self.pdf_view.setVisible(False)
 
-    drop_zone = DropZone()
-    drop_zone.setMinimumWidth(0)
-    drop_zone.file_dropped.connect(self.set_markdown_file)
+    self.drop_zone = DropZone()
+    self.drop_zone.setMinimumWidth(0)
+    self.drop_zone.file_dropped.connect(self.set_markdown_file)
 
     self.file_tab_button = self.create_nav_button('Archivo', 0)
     self.design_tab_button = self.create_nav_button('Diseno', 1)
@@ -254,7 +254,7 @@ class MainWindow(QMainWindow):
     file_page = QWidget()
     file_layout = QVBoxLayout(file_page)
     file_layout.setContentsMargins(0, 0, 0, 0)
-    file_layout.addWidget(drop_zone)
+    file_layout.addWidget(self.drop_zone)
     file_layout.addLayout(file_row)
     file_layout.addWidget(self.editor, 1)
 
@@ -688,6 +688,7 @@ class MainWindow(QMainWindow):
     self.editor.clear()
     if not self.load_markdown_into_editor():
       return
+    self.drop_zone.setVisible(False)
     self.editor.setVisible(True)
     self.pdf_document.close()
     self.pdf_view.setVisible(False)
@@ -736,6 +737,7 @@ class MainWindow(QMainWindow):
     self.current_file = None
     self.current_pdf = None
     self.file_input.setCurrentText('')
+    self.drop_zone.setVisible(True)
     self.editor.clear()
     self.editor.setVisible(False)
     self.pdf_document.close()
