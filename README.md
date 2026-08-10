@@ -64,10 +64,35 @@ ejemplos\prueba_apuntes.typ
 Ese archivo permite comprobar la salida de Pandoc antes de anadir Typst al
 modo instalado o al modo portable.
 
+## App de escritorio
+
+La app Python vive en `app/` y usa sus propias plantillas en `app/templates/`.
+Esto evita que los cambios de la app rompan la version portable por `.bat`.
+
+Para abrirla:
+
+```bat
+abrir_app.bat
+```
+
+Tambien puedes arrastrar un archivo Markdown sobre `abrir_app.bat`.
+
+La app permite, de momento:
+
+- abrir un archivo `.md`;
+- arrastrar un archivo `.md`;
+- generar el PDF con un boton.
+
 ## Estructura
 
 ```text
 pdf_apuntes/
+├── abrir_app.bat
+├── app/
+│   ├── main.py
+│   ├── pdf_builder.py
+│   └── templates/
+│       └── estudio.typ
 ├── crear_pdf.bat
 ├── bin/
 │   ├── pandoc/
