@@ -333,6 +333,12 @@ class MainWindow(QMainWindow):
     design_layout.addWidget(style_panel)
     design_layout.addStretch()
 
+    self.design_scroll = QScrollArea()
+    self.design_scroll.setWidget(design_page)
+    self.design_scroll.setWidgetResizable(True)
+    self.design_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    self.design_scroll.setFrameShape(QFrame.Shape.NoFrame)
+
     templates_page = QWidget()
     templates_layout = QVBoxLayout(templates_page)
     templates_layout.setContentsMargins(0, 0, 0, 0)
@@ -354,10 +360,16 @@ class MainWindow(QMainWindow):
     templates_layout.addWidget(templates_card)
     templates_layout.addStretch()
 
+    self.templates_scroll = QScrollArea()
+    self.templates_scroll.setWidget(templates_page)
+    self.templates_scroll.setWidgetResizable(True)
+    self.templates_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    self.templates_scroll.setFrameShape(QFrame.Shape.NoFrame)
+
     self.left_stack = QStackedWidget()
     self.left_stack.addWidget(file_page)
-    self.left_stack.addWidget(design_page)
-    self.left_stack.addWidget(templates_page)
+    self.left_stack.addWidget(self.design_scroll)
+    self.left_stack.addWidget(self.templates_scroll)
 
     editor_actions_row = QHBoxLayout()
     self.editor_actions_row = editor_actions_row
@@ -371,28 +383,14 @@ class MainWindow(QMainWindow):
     pdf_actions_row.addWidget(self.build_button)
     pdf_actions_row.addStretch()
 
-    self.left_content = QWidget()
-    left_layout = QVBoxLayout(self.left_content)
+    self.left_panel = QWidget()
+    left_layout = QVBoxLayout(self.left_panel)
     left_layout.setContentsMargins(16, 16, 16, 16)
-    app_title = QLabel('Markdown PDF Designer')
-    app_title.setObjectName('appTitle')
-    app_title.setWordWrap(True)
-    app_subtitle = QLabel('Convierte Markdown en PDF ajustados al estilo que necesitas.')
-    app_subtitle.setObjectName('appSubtitle')
-    app_subtitle.setWordWrap(True)
-    left_layout.addWidget(app_title)
-    left_layout.addWidget(app_subtitle)
     left_layout.addLayout(nav_row)
     left_layout.addWidget(self.left_stack, 1)
     left_layout.addLayout(editor_actions_row)
     left_layout.addLayout(pdf_actions_row)
     left_layout.addWidget(self.status_label)
-
-    self.left_panel = QScrollArea()
-    self.left_panel.setWidget(self.left_content)
-    self.left_panel.setWidgetResizable(True)
-    self.left_panel.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-    self.left_panel.setFrameShape(QFrame.Shape.NoFrame)
 
     self.splitter = QSplitter(Qt.Orientation.Horizontal)
     self.splitter.addWidget(self.left_panel)
@@ -637,7 +635,7 @@ class MainWindow(QMainWindow):
   def update_left_panel_min_width(self) -> None:
     '''Calcula el minimo del panel izquierdo desde la fila de botones Markdown.'''
 
-    margins = self.left_content.layout().contentsMargins()
+    margins = self.left_panel.layout().contentsMargins()
     spacing = self.editor_actions_row.spacing()
     if spacing < 0:
       spacing = self.style().pixelMetric(QStyle.PixelMetric.PM_LayoutHorizontalSpacing)

@@ -28,6 +28,9 @@
 ## Interfaz
 
 - Seguir puliendo el panel izquierdo con scroll y ancho minimo calculado desde los botones Markdown.
+- Valorar una ventana sin barra nativa de Windows al final del desarrollo.
+  - Habria que crear botones propios para cerrar, minimizar y maximizar.
+  - Habria que implementar arrastre manual de ventana.
 - Revisar el comportamiento de la vista previa con PDFs largos.
 - Mejorar la pestana de diseno para que permita regenerar el PDF sin perder contexto.
 - Dejar la pestana de plantillas preparada para seleccionar, duplicar y editar plantillas.
