@@ -216,14 +216,12 @@ class MainWindow(QMainWindow):
     self.paragraph_leading_input.setRange(0.35, 2.5)
     self.paragraph_leading_input.setSingleStep(0.05)
     self.paragraph_leading_input.setDecimals(2)
-    self.paragraph_leading_input.setSuffix(' em')
     self.paragraph_leading_input.setValue(0.62)
 
     self.paragraph_spacing_input = QDoubleSpinBox()
     self.paragraph_spacing_input.setRange(0.2, 3.0)
     self.paragraph_spacing_input.setSingleStep(0.05)
     self.paragraph_spacing_input.setDecimals(2)
-    self.paragraph_spacing_input.setSuffix(' em')
     self.paragraph_spacing_input.setValue(0.82)
 
     self.margin_x_input = QDoubleSpinBox()
