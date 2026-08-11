@@ -348,14 +348,21 @@ class MainWindow(QMainWindow):
 
     self.create_template_button = QPushButton('Crear nueva plantilla')
     self.create_template_button.clicked.connect(self.create_custom_template)
+    self.create_template_button.setSizePolicy(
+      QSizePolicy.Policy.Expanding,
+      QSizePolicy.Policy.Fixed,
+    )
     self.update_template_button = QPushButton('Guardar cambios')
     self.update_template_button.clicked.connect(self.update_custom_template)
+    self.update_template_button.setSizePolicy(
+      QSizePolicy.Policy.Expanding,
+      QSizePolicy.Policy.Fixed,
+    )
     self.template_actions = QWidget()
     template_actions_layout = QHBoxLayout(self.template_actions)
     template_actions_layout.setContentsMargins(0, 0, 0, 0)
     template_actions_layout.addWidget(self.create_template_button)
     template_actions_layout.addWidget(self.update_template_button)
-    template_actions_layout.addStretch()
 
     self.template_combo = QComboBox()
     for template_id in self.template_ids:
@@ -434,16 +441,7 @@ class MainWindow(QMainWindow):
     self.template_status_label = QLabel()
     self.template_status_label.setObjectName('sectionHelp')
     self.template_status_label.setWordWrap(True)
-    style_panel_layout.addLayout(
-      self.create_design_group(
-        'Plantilla visual',
-        [
-          ('Plantilla', self.template_combo),
-          ('Definición', self.template_status_label),
-          ('', self.template_actions),
-        ],
-      )
-    )
+    style_panel_layout.addLayout(self.create_template_group())
     style_panel_layout.addLayout(
       self.create_design_group(
         'Base',
@@ -711,6 +709,30 @@ class MainWindow(QMainWindow):
       button.setProperty('active', button_index == index)
       button.style().unpolish(button)
       button.style().polish(button)
+
+  def create_template_group(self) -> QVBoxLayout:
+    '''Crea la sección de selección y acciones de plantilla.'''
+
+    group_layout = QVBoxLayout()
+    group_layout.setContentsMargins(0, 0, 0, 0)
+    group_layout.setSpacing(5)
+
+    group_title = QLabel('Plantilla visual')
+    group_title.setObjectName('designGroupTitle')
+    group_layout.addWidget(group_title)
+
+    template_row = QHBoxLayout()
+    template_row.setContentsMargins(0, 0, 0, 0)
+    template_row.setSpacing(8)
+    template_label_widget = QLabel('Plantilla')
+    template_label_widget.setAlignment(Qt.AlignmentFlag.AlignRight)
+    template_row.addWidget(template_label_widget)
+    template_row.addWidget(self.template_combo, 1)
+
+    group_layout.addLayout(template_row)
+    group_layout.addWidget(self.template_status_label)
+    group_layout.addWidget(self.template_actions)
+    return group_layout
 
   def create_design_group(self, title: str, rows: list[tuple[str, QWidget]]) -> QVBoxLayout:
     '''Crea una sección compacta para opciones de diseño relacionadas.'''
