@@ -1,7 +1,7 @@
-'''Conversion Markdown -> Typst -> PDF usada por la app PySide6.
+'''Conversión Markdown -> Typst -> PDF usada por la app PySide6.
 
-Este modulo contiene la logica no visual de la aplicacion. La version portable
-por `crear_pdf.bat` queda separada: aqui solo se usa la plantilla de la app y
+Este módulo contiene la lógica no visual de la aplicación. La versión portable
+por `crear_pdf.bat` queda separada: aquí solo se usa la plantilla de la app y
 una plantilla temporal generada con las opciones escogidas en la interfaz.
 '''
 
@@ -47,7 +47,7 @@ class PdfStyleOptions:
 
 @dataclass(frozen=True)
 class PdfResult:
-  '''Rutas importantes resultantes de una generacion de PDF.'''
+  '''Rutas importantes resultantes de una generación de PDF.'''
 
   input_file: Path
   template_file: Path
@@ -198,16 +198,16 @@ TEMPLATE_STYLE_PRESETS = {
 
 
 def template_style_preset(template_id: str) -> PdfStyleOptions:
-  '''Devuelve los ajustes de diseno iniciales de una plantilla.'''
+  '''Devuelve los ajustes de diseño iniciales de una plantilla.'''
 
   normalized_id = template_id.strip().lower() or DEFAULT_TEMPLATE_ID
   return TEMPLATE_STYLE_PRESETS.get(normalized_id, PdfStyleOptions())
 
 
 def find_executable(name: str) -> Path | str:
-  '''Busca un ejecutable priorizando la version portable del proyecto.
+  '''Busca un ejecutable priorizando la versión portable del proyecto.
 
-  Orden de busqueda:
+  Orden de búsqueda:
   1. `bin/<name>/<name>.exe`, para mantener portabilidad local.
   2. Ubicacion de usuario de Pandoc, si se busca `pandoc`.
   3. PATH del sistema.
@@ -229,7 +229,7 @@ def find_executable(name: str) -> Path | str:
     return found
 
   raise PdfBuildError(
-    f'No se encontro {name}. Usa la version portable en bin\\{name}\\{name}.exe '
+    f'No se encontró {name}. Usa la versión portable en bin\\{name}\\{name}.exe '
     f'o instala {name} en Windows.'
   )
 
@@ -269,20 +269,20 @@ def normalize_hex_color(color: str) -> str:
   if not value.startswith('#'):
     value = f'#{value}'
   if len(value) != 7:
-    raise PdfBuildError(f'Color no valido: {color}')
+    raise PdfBuildError(f'Color no válido: {color}')
   try:
     int(value[1:], 16)
   except ValueError as exc:
-    raise PdfBuildError(f'Color no valido: {color}') from exc
+    raise PdfBuildError(f'Color no válido: {color}') from exc
   return value.lower()
 
 
 def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
   '''Crea una plantilla Typst temporal con los valores visuales de la app.
 
-  Pandoc necesita recibir una plantilla fisica en disco. Por eso no se modifica
+  Pandoc necesita recibir una plantilla física en disco. Por eso no se modifica
   `app/templates/estudio.typ`; se copia su contenido, se sustituyen marcadores
-  y se escribe un `.typ` temporal que se borra tras la conversion.
+  y se escribe un `.typ` temporal que se borra tras la conversión.
   '''
 
   template_text = template_file.read_text(encoding='utf-8')
@@ -342,7 +342,7 @@ def run_command(command: list[str | Path]) -> None:
   details = '\n'.join(
     part for part in (completed.stdout.strip(), completed.stderr.strip()) if part
   )
-  raise PdfBuildError(details or 'El comando de conversion fallo sin detalles.')
+  raise PdfBuildError(details or 'El comando de conversión falló sin detalles.')
 
 
 def build_pdf(
@@ -360,7 +360,7 @@ def build_pdf(
   if not source.exists():
     raise PdfBuildError(f'No existe el archivo: {source}')
   if source.suffix.lower() not in {'.md', '.markdown'}:
-    raise PdfBuildError('Selecciona un archivo Markdown con extension .md o .markdown.')
+    raise PdfBuildError('Selecciona un archivo Markdown con extensión .md o .markdown.')
 
   source_template_file = template_path(template_id)
   template_file = render_template(source_template_file, style or PdfStyleOptions())

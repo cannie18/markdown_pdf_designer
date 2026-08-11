@@ -1,8 +1,8 @@
-'''Interfaz grafica PySide6 para generar PDF desde Markdown.
+'''Interfaz gráfica PySide6 para generar PDF desde Markdown.
 
 La ventana permite abrir o arrastrar un Markdown, editarlo opcionalmente,
-configurar estilos basicos, generar el PDF y ver la vista previa real dentro
-de la app. La conversion se delega en `app.pdf_builder`.
+configurar estilos básicos, generar el PDF y ver la vista previa real dentro
+de la app. La conversión se delega en `app.pdf_builder`.
 '''
 
 from __future__ import annotations
@@ -54,10 +54,10 @@ TEMPLATE_LABELS = {
   'estudio': 'Estudio',
   'profesional': 'Profesional',
   'compacto': 'Compacto',
-  'latex_clasico': 'LaTeX clasico',
+  'latex_clasico': 'LaTeX clásico',
   'apa_mla': 'Ensayo APA / MLA',
   'informe_ejecutivo': 'Informe ejecutivo',
-  'manual_tecnico': 'Manual tecnico',
+  'manual_tecnico': 'Manual técnico',
   'manuscrito_novela': 'Manuscrito / novela',
 }
 TEMPLATE_ORDER = [
@@ -73,7 +73,7 @@ TEMPLATE_ORDER = [
 
 
 class BuildWorker(QThread):
-  '''Ejecuta la conversion en segundo plano para no bloquear la interfaz.'''
+  '''Ejecuta la conversión en segundo plano para no bloquear la interfaz.'''
 
   succeeded = Signal(str)
   failed = Signal(str)
@@ -84,7 +84,7 @@ class BuildWorker(QThread):
     style: PdfStyleOptions,
     template_id: str,
   ) -> None:
-    '''Guarda el archivo y las opciones visuales que se usaran al generar.'''
+    '''Guarda el archivo y las opciones visuales que se usarán al generar.'''
 
     super().__init__()
     self.markdown_file = markdown_file
@@ -92,7 +92,7 @@ class BuildWorker(QThread):
     self.template_id = template_id
 
   def run(self) -> None:
-    '''Lanza la generacion del PDF y emite una senal de exito o error.'''
+    '''Lanza la generación del PDF y emite una señal de éxito o error.'''
 
     try:
       result = build_pdf(
@@ -127,7 +127,7 @@ class DropZone(QFrame):
     title.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
     title.setObjectName('dropTitle')
 
-    subtitle = QLabel('Tambien puedes usar Abrir')
+    subtitle = QLabel('También puedes usar Abrir')
     subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
     subtitle.setMinimumWidth(0)
     subtitle.setWordWrap(True)
@@ -225,7 +225,7 @@ class MainWindow(QMainWindow):
     self.build_button.setEnabled(False)
     self.build_button.setVisible(False)
 
-    self.open_pdf_button = QPushButton('Abrir en Windows')
+    self.open_pdf_button = QPushButton('Abrir PDF en Windows')
     self.open_pdf_button.clicked.connect(self.open_current_pdf)
     self.open_pdf_button.setEnabled(False)
     self.open_pdf_button.setVisible(False)
@@ -236,7 +236,7 @@ class MainWindow(QMainWindow):
     self.status_label.setWordWrap(True)
 
     self.editor = QPlainTextEdit()
-    self.editor.setPlaceholderText('El contenido del Markdown aparecera aqui.')
+    self.editor.setPlaceholderText('El contenido del Markdown aparecerá aquí.')
     self.editor.setMinimumWidth(0)
     self.editor.setVisible(False)
     self.editor.textChanged.connect(self.mark_editor_dirty)
@@ -348,7 +348,7 @@ class MainWindow(QMainWindow):
     preview_label = QLabel('Vista previa del PDF')
     preview_label.setObjectName('previewTitle')
     self.empty_preview_label = QLabel(
-      'La vista previa aparecera aqui cuando generes el primer PDF.'
+      'La vista previa aparecerá aquí cuando generes el primer PDF.'
     )
     self.empty_preview_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
     self.empty_preview_label.setWordWrap(True)
@@ -363,7 +363,7 @@ class MainWindow(QMainWindow):
     self.drop_zone.file_dropped.connect(self.set_markdown_file)
 
     self.file_tab_button = self.create_nav_button('Archivo', 0)
-    self.design_tab_button = self.create_nav_button('Diseno', 1)
+    self.design_tab_button = self.create_nav_button('Diseño', 1)
     self.templates_tab_button = self.create_nav_button('Plantillas', 2)
 
     nav_row = QHBoxLayout()
@@ -387,10 +387,10 @@ class MainWindow(QMainWindow):
     design_page = QWidget()
     design_layout = QVBoxLayout(design_page)
     design_layout.setContentsMargins(0, 0, 0, 0)
-    design_title = QLabel('Ajustes de diseno')
+    design_title = QLabel('Ajustes de diseño')
     design_title.setObjectName('sectionTitle')
     design_help = QLabel(
-      'Modifica la fuente, el tamano base y los colores. Luego vuelve a generar el PDF.'
+      'Modifica la fuente, el tamaño base y los colores. Luego vuelve a generar el PDF.'
     )
     design_help.setObjectName('sectionHelp')
     design_help.setWordWrap(True)
@@ -406,16 +406,16 @@ class MainWindow(QMainWindow):
         'Base',
         [
           ('Fuente', self.font_combo),
-          ('Tamano texto', self.body_size_input),
+          ('Tamaño texto', self.body_size_input),
           ('Color texto', self.body_color_button),
           ('Interlineado', self.paragraph_leading_input),
-          ('Espacio parrafos', self.paragraph_spacing_input),
+          ('Espacio párrafos', self.paragraph_spacing_input),
         ],
       )
     )
     style_panel_layout.addLayout(
       self.create_design_group(
-        'Pagina',
+        'Página',
         [
           ('Margen lateral', self.margin_x_input),
           ('Margen vertical', self.margin_y_input),
@@ -424,14 +424,14 @@ class MainWindow(QMainWindow):
     )
     style_panel_layout.addLayout(
       self.create_design_group(
-        'Titulos',
+        'Títulos',
         [
-          ('Tamano titulo 1', self.h1_size_input),
-          ('Tamano titulo 2', self.h2_size_input),
-          ('Tamano titulo 3', self.h3_size_input),
-          ('Titulo 1', self.h1_color_button),
-          ('Titulo 2', self.h2_color_button),
-          ('Titulo 3', self.h3_color_button),
+          ('Tamaño título 1', self.h1_size_input),
+          ('Tamaño título 2', self.h2_size_input),
+          ('Tamaño título 3', self.h3_size_input),
+          ('Título 1', self.h1_color_button),
+          ('Título 2', self.h2_color_button),
+          ('Título 3', self.h3_color_button),
         ],
       )
     )
@@ -446,11 +446,11 @@ class MainWindow(QMainWindow):
     )
     style_panel_layout.addLayout(
       self.create_design_group(
-        'Codigo',
+        'Código',
         [
-          ('Fuente codigo', self.code_font_combo),
-          ('Tamano codigo', self.code_size_input),
-          ('Fondo codigo', self.code_background_color_button),
+          ('Fuente código', self.code_font_combo),
+          ('Tamaño código', self.code_size_input),
+          ('Fondo código', self.code_background_color_button),
         ],
       )
     )
@@ -470,7 +470,7 @@ class MainWindow(QMainWindow):
     templates_layout.setContentsMargins(0, 0, 0, 0)
     templates_title = QLabel('Plantillas')
     templates_title.setObjectName('sectionTitle')
-    templates_help = QLabel('Elige la plantilla visual que se usara al generar el PDF.')
+    templates_help = QLabel('Elige la plantilla visual que se usará al generar el PDF.')
     templates_help.setObjectName('sectionHelp')
     templates_help.setWordWrap(True)
     templates_card = QFrame()
@@ -700,7 +700,7 @@ class MainWindow(QMainWindow):
       button.style().polish(button)
 
   def create_design_group(self, title: str, rows: list[tuple[str, QWidget]]) -> QVBoxLayout:
-    '''Crea una seccion compacta para opciones de diseno relacionadas.'''
+    '''Crea una sección compacta para opciones de diseño relacionadas.'''
 
     group_layout = QVBoxLayout()
     group_layout.setContentsMargins(0, 0, 0, 0)
@@ -730,7 +730,7 @@ class MainWindow(QMainWindow):
     return button
 
   def choose_heading_color(self, color_key: str) -> None:
-    '''Permite escoger un color del PDF con el dialogo nativo de Qt.'''
+    '''Permite escoger un color del PDF con el diálogo nativo de Qt.'''
 
     current = QColor(self.heading_colors[color_key])
     color = QColorDialog.getColor(current, self, 'Elegir color')
@@ -770,7 +770,7 @@ class MainWindow(QMainWindow):
     return '#000000' if brightness > 150 else '#ffffff'
 
   def apply_style_options(self, style: PdfStyleOptions) -> None:
-    '''Carga un conjunto de opciones visuales en los controles de Diseno.'''
+    '''Carga un conjunto de opciones visuales en los controles de Diseño.'''
 
     controlled_widgets = [
       self.font_combo,
@@ -864,14 +864,14 @@ class MainWindow(QMainWindow):
 
     template_id = self.current_template_id()
     descriptions = {
-      'apa_mla': 'Ensayo universitario con margenes de 1 pulgada e interlineado doble.',
-      'compacto': 'Usa dos columnas y reduce espacios para ahorrar paginas.',
-      'estudio': 'Equilibrada para apuntes claros y lectura comoda.',
-      'informe_ejecutivo': 'Corporativa, con titulos destacados y bloques de decision.',
-      'latex_clasico': 'Academica, monocromatica, con margenes amplios y titulos numerados.',
-      'manual_tecnico': 'Documentacion tecnica con codigo oscuro y bloques destacados.',
-      'manuscrito_novela': 'Formato A5 para capitulos, relatos y lectura prolongada.',
-      'profesional': 'Mas formal, con bloques de titulo y acentos de informe.',
+      'apa_mla': 'Ensayo universitario con márgenes de 1 pulgada e interlineado doble.',
+      'compacto': 'Usa dos columnas y reduce espacios para ahorrar páginas.',
+      'estudio': 'Equilibrada para apuntes claros y lectura cómoda.',
+      'informe_ejecutivo': 'Corporativa, con títulos destacados y bloques de decisión.',
+      'latex_clasico': 'Académica, monocromática, con márgenes amplios y títulos numerados.',
+      'manual_tecnico': 'Documentación técnica con código oscuro y bloques destacados.',
+      'manuscrito_novela': 'Formato A5 para capítulos, relatos y lectura prolongada.',
+      'profesional': 'Más formal, con bloques de título y acentos de informe.',
     }
     description = descriptions.get(template_id, 'Plantilla personalizada de la app.')
     self.template_status_label.setText(description)
@@ -884,7 +884,7 @@ class MainWindow(QMainWindow):
     self.update_template_status()
 
   def load_recent_markdowns(self) -> None:
-    '''Carga en el desplegable las ultimas rutas Markdown usadas.'''
+    '''Carga en el desplegable las últimas rutas Markdown usadas.'''
 
     recent = self.settings.value('recent_markdowns', [], list)
     self.file_input.blockSignals(True)
@@ -900,7 +900,7 @@ class MainWindow(QMainWindow):
     self.splitter.setSizes([left_width, self.width() - left_width])
 
   def update_left_panel_min_width(self) -> None:
-    '''Calcula el minimo del panel izquierdo desde la fila de botones Markdown.'''
+    '''Calcula el mínimo del panel izquierdo desde la fila de botones Markdown.'''
 
     margins = self.left_panel.layout().contentsMargins()
     spacing = self.editor_actions_row.spacing()
@@ -919,7 +919,7 @@ class MainWindow(QMainWindow):
     self.set_initial_splitter_sizes()
 
   def remember_markdown(self, path: Path) -> None:
-    '''Guarda una ruta Markdown en el historial de las 10 ultimas opciones.'''
+    '''Guarda una ruta Markdown en el historial de las 10 últimas opciones.'''
 
     path_text = str(path)
     recent = [str(item) for item in self.settings.value('recent_markdowns', [], list)]
@@ -938,14 +938,14 @@ class MainWindow(QMainWindow):
       self.set_markdown_file(filename)
 
   def restore_window_settings(self) -> None:
-    '''Restaura posicion, monitor y tamano de la ventana si existen.'''
+    '''Restaura posición, monitor y tamaño de la ventana si existen.'''
 
     geometry = self.settings.value('window_geometry')
     if geometry:
       self.restoreGeometry(geometry)
 
   def closeEvent(self, event: QCloseEvent) -> None:
-    '''Guarda geometria de ventana antes de cerrar la app.'''
+    '''Guarda geometría de ventana antes de cerrar la app.'''
 
     if self.editor_dirty and not self.confirm_save_before_close_editor():
       event.ignore()
@@ -955,7 +955,7 @@ class MainWindow(QMainWindow):
     event.accept()
 
   def choose_file(self) -> None:
-    '''Abre un dialogo para seleccionar un archivo Markdown.'''
+    '''Abre un diálogo para seleccionar un archivo Markdown.'''
 
     filename, _ = QFileDialog.getOpenFileName(
       self,
@@ -967,7 +967,7 @@ class MainWindow(QMainWindow):
       self.set_markdown_file(filename)
 
   def create_markdown_file(self) -> None:
-    '''Crea un archivo Markdown vacio y lo abre en el editor.'''
+    '''Crea un archivo Markdown vacío y lo abre en el editor.'''
 
     if not self.confirm_discard_unsaved_changes():
       return
@@ -1001,7 +1001,7 @@ class MainWindow(QMainWindow):
       QMessageBox.warning(self, 'Archivo no encontrado', f'No existe el archivo:\n{path}')
       return
     if path.suffix.lower() not in {'.md', '.markdown'}:
-      QMessageBox.warning(self, 'Formato no valido', 'Selecciona un archivo Markdown.')
+      QMessageBox.warning(self, 'Formato no válido', 'Selecciona un archivo Markdown.')
       return
 
     if not self.confirm_discard_unsaved_changes():
@@ -1162,7 +1162,7 @@ class MainWindow(QMainWindow):
     return answer == QMessageBox.StandardButton.Yes
 
   def confirm_save_before_build(self) -> bool:
-    '''Pregunta que hacer con cambios pendientes antes de generar el PDF.'''
+    '''Pregunta qué hacer con cambios pendientes antes de generar el PDF.'''
 
     if not self.editor_dirty:
       return True
@@ -1181,7 +1181,7 @@ class MainWindow(QMainWindow):
     return True
 
   def confirm_save_before_close_editor(self) -> bool:
-    '''Pregunta que hacer con cambios pendientes antes de cerrar el editor.'''
+    '''Pregunta qué hacer con cambios pendientes antes de cerrar el editor.'''
 
     if not self.editor_dirty:
       return True
@@ -1200,7 +1200,7 @@ class MainWindow(QMainWindow):
     return True
 
   def generate_pdf(self) -> None:
-    '''Inicia la generacion del PDF con los valores actuales de la interfaz.'''
+    '''Inicia la generación del PDF con los valores actuales de la interfaz.'''
 
     markdown_file = self.file_input.currentText().strip()
     if not markdown_file:
@@ -1241,7 +1241,7 @@ class MainWindow(QMainWindow):
       QMessageBox.warning(
         self,
         'Vista previa',
-        'El PDF se genero, pero no se pudo cargar la vista previa.',
+        'El PDF se generó, pero no se pudo cargar la vista previa.',
       )
       return
 
@@ -1268,7 +1268,7 @@ class MainWindow(QMainWindow):
     self.status_label.setText(f'PDF abierto en Windows: {self.current_pdf}')
 
   def on_error(self, message: str) -> None:
-    '''Muestra en la interfaz un error de conversion controlado.'''
+    '''Muestra en la interfaz un error de conversión controlado.'''
 
     self.status_label.setText('Error al generar el PDF.')
     QMessageBox.critical(self, 'Error', message)
