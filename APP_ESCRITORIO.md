@@ -70,7 +70,7 @@ La app permite:
 - elegir tamano base del texto;
 - elegir color del texto normal;
 - ajustar interlineado y espacio entre parrafos;
-- elegir margenes laterales y verticales;
+- elegir margenes laterales y verticales en centimetros;
 - elegir tamano de titulos de nivel 1, 2 y 3;
 - elegir colores para titulos de nivel 1, 2 y 3;
 - elegir colores independientes para negrita y cursiva;

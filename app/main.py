@@ -206,7 +206,7 @@ class MainWindow(QMainWindow):
     self.font_combo.setCurrentText('Arial')
 
     self.body_size_input = QDoubleSpinBox()
-    self.body_size_input.setRange(8, 18)
+    self.body_size_input.setRange(6, 48)
     self.body_size_input.setSingleStep(0.5)
     self.body_size_input.setDecimals(1)
     self.body_size_input.setSuffix(' pt')
@@ -225,35 +225,35 @@ class MainWindow(QMainWindow):
     self.paragraph_spacing_input.setValue(0.82)
 
     self.margin_x_input = QDoubleSpinBox()
-    self.margin_x_input.setRange(10, 45)
-    self.margin_x_input.setSingleStep(1)
+    self.margin_x_input.setRange(0.3, 7)
+    self.margin_x_input.setSingleStep(0.1)
     self.margin_x_input.setDecimals(1)
-    self.margin_x_input.setSuffix(' mm')
-    self.margin_x_input.setValue(22)
+    self.margin_x_input.setSuffix(' cm')
+    self.margin_x_input.setValue(2.2)
 
     self.margin_y_input = QDoubleSpinBox()
-    self.margin_y_input.setRange(10, 45)
-    self.margin_y_input.setSingleStep(1)
+    self.margin_y_input.setRange(0.3, 7)
+    self.margin_y_input.setSingleStep(0.1)
     self.margin_y_input.setDecimals(1)
-    self.margin_y_input.setSuffix(' mm')
-    self.margin_y_input.setValue(20)
+    self.margin_y_input.setSuffix(' cm')
+    self.margin_y_input.setValue(2.0)
 
     self.h1_size_input = QDoubleSpinBox()
-    self.h1_size_input.setRange(14, 34)
+    self.h1_size_input.setRange(6, 48)
     self.h1_size_input.setSingleStep(0.5)
     self.h1_size_input.setDecimals(1)
     self.h1_size_input.setSuffix(' pt')
     self.h1_size_input.setValue(24)
 
     self.h2_size_input = QDoubleSpinBox()
-    self.h2_size_input.setRange(12, 28)
+    self.h2_size_input.setRange(6, 48)
     self.h2_size_input.setSingleStep(0.5)
     self.h2_size_input.setDecimals(1)
     self.h2_size_input.setSuffix(' pt')
     self.h2_size_input.setValue(16)
 
     self.h3_size_input = QDoubleSpinBox()
-    self.h3_size_input.setRange(10, 22)
+    self.h3_size_input.setRange(6, 48)
     self.h3_size_input.setSingleStep(0.5)
     self.h3_size_input.setDecimals(1)
     self.h3_size_input.setSuffix(' pt')
@@ -272,7 +272,7 @@ class MainWindow(QMainWindow):
     self.code_font_combo.setCurrentText('Consolas')
 
     self.code_size_input = QDoubleSpinBox()
-    self.code_size_input.setRange(7, 14)
+    self.code_size_input.setRange(6, 48)
     self.code_size_input.setSingleStep(0.5)
     self.code_size_input.setDecimals(1)
     self.code_size_input.setSuffix(' pt')
@@ -718,8 +718,8 @@ class MainWindow(QMainWindow):
       body_color=self.heading_colors['body'],
       paragraph_leading=self.paragraph_leading_input.value(),
       paragraph_spacing=self.paragraph_spacing_input.value(),
-      page_margin_x=self.margin_x_input.value(),
-      page_margin_y=self.margin_y_input.value(),
+      page_margin_x=self.margin_x_input.value() * 10,
+      page_margin_y=self.margin_y_input.value() * 10,
       heading_1_size=self.h1_size_input.value(),
       heading_2_size=self.h2_size_input.value(),
       heading_3_size=self.h3_size_input.value(),
