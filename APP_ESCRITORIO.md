@@ -171,6 +171,12 @@ La primera fase de plantillas predefinidas incluye:
 Los últimos ajustes importantes son:
 
 - cada plantilla carga sus valores base en la pestaña `Diseño`;
+- la app recuerda la última plantilla seleccionada sin conservar cambios temporales como si fueran valores base;
+- las plantillas personalizadas se guardan fuera del repositorio, en `%APPDATA%\pdf_apuntes\templates`;
+- las plantillas personalizadas pueden actualizarse con `Guardar cambios`;
+- los controles numéricos de diseño ignoran la rueda del ratón para evitar cambios accidentales;
+- `Bloques` permite ajustar espacio interno, color/tamaño del texto, borde y fondo;
+- `Tablas` permite ajustar espacio de celdas, color/tamaño del texto, bordes y cabecera;
 - `Ensayo APA / MLA` usa tamaños distintos para títulos y subtítulos;
 - `Ensayo APA / MLA` ya no parte de `Espacio párrafos = 0`;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;
@@ -180,10 +186,8 @@ Los últimos ajustes importantes son:
 
 Objetivos previstos:
 
-- ajustes dinámicos por plantilla;
-- edición y gestión de plantillas personalizadas;
-- estilos para tablas;
-- estilos para bloques destacados;
+- gestión avanzada de plantillas personalizadas;
+- galería futura de plantillas con definición rápida y vista previa cacheada;
 - estilos para código;
 - portada opcional;
 - cabecera y pie de página configurables;

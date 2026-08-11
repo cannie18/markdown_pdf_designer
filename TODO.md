@@ -26,6 +26,19 @@
 - Plantillas personalizadas guardadas en `%APPDATA%\pdf_apuntes\templates`.
 - Persistencia de la última plantilla seleccionada.
 - Controles numéricos protegidos frente a cambios accidentales con la rueda del ratón.
+- Opciones de bloques destacados:
+  - espacio interno;
+  - color del borde;
+  - color de fondo;
+  - color del texto;
+  - tamaño del texto.
+- Opciones de tablas:
+  - espacio de celdas;
+  - color de bordes;
+  - color del texto;
+  - tamaño del texto;
+  - color de fondo de cabecera;
+  - color del texto de cabecera.
 - Corrección de textos visibles de la app a español de España.
 - Separación entre plantillas de app y plantilla portable.
 - Primera fase de plantillas predefinidas:
@@ -47,7 +60,6 @@
 
 ## Opciones De Diseño
 
-- Revisar qué opciones visuales deben estar disponibles desde la app.
 - Seguir separando opciones básicas y avanzadas para no cargar demasiado la interfaz.
 - Mantener dinámicos, como mínimo:
   - fuente principal;
@@ -61,6 +73,12 @@
   - estilos de tabla;
   - espaciados principales;
   - márgenes del documento.
+- Revisar si conviene añadir controles para:
+  - ancho del borde lateral de bloques destacados;
+  - radio de bloques destacados;
+  - alineación del cuerpo de texto por plantilla;
+  - espaciado de listas;
+  - color de enlaces.
 - Decidir si cada ajuste se guarda por documento, por plantilla o como preferencia global.
 
 ## Plantillas
@@ -120,4 +138,5 @@ Lee README.md, APP_ESCRITORIO.md y TODO.md antes de tocar código.
 Quiero seguir con la parte de plantillas y opciones de diseño de Markdown PDF Designer.
 Mantén intacta la versión portable: crear_pdf.bat y templates/apuntes.typ.
 En Python usa indentación de dos espacios y comillas simples cuando se pueda.
+Recuerda hacer commit y push con cada cambio terminado.
 ```

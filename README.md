@@ -170,6 +170,11 @@ Las plantillas disponibles en la app son:
 
 - la app Python genera PDF con todas las plantillas de `app/templates/`;
 - las plantillas personalizadas se guardan en `%APPDATA%\pdf_apuntes\templates`;
+- la última plantilla seleccionada se recuerda, pero al abrir la app se cargan los parámetros base de esa plantilla;
+- las plantillas personalizadas pueden actualizarse con `Guardar cambios`;
+- los controles numéricos de `Diseño` no cambian con la rueda del ratón;
+- `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;
+- `Diseño` permite controlar texto, espaciado, bordes y cabecera de tablas;
 - la versión portable `crear_pdf.bat` sigue funcionando;
 - `Ensayo APA / MLA` tiene jerarquía de títulos y espaciado corregido;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;
