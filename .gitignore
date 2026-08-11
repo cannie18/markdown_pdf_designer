@@ -22,3 +22,6 @@ __pycache__/
 
 # Temporary design references
 para_eliminar/
+
+# Local chat history exports
+docs/historial/
