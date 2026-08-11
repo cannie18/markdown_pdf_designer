@@ -6,7 +6,7 @@ $definitions.typst()$
 // Pagina.
 #set page(
   paper: "a4",
-  margin: (x: 22mm, y: 20mm),
+  margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),
   numbering: "1",
   number-align: bottom + center,
 )
@@ -31,19 +31,19 @@ $definitions.typst()$
 
 #show heading.where(level: 1): it => block(
   below: 1.1em,
-  text(size: 24pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body),
+  text(size: __H1_SIZE__pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body),
 )
 
 #show heading.where(level: 2): it => block(
   above: 1.2em,
   below: 0.55em,
-  text(size: 16pt, weight: "bold", fill: rgb("__H2_COLOR__"), it.body),
+  text(size: __H2_SIZE__pt, weight: "bold", fill: rgb("__H2_COLOR__"), it.body),
 )
 
 #show heading.where(level: 3): it => block(
   above: 0.9em,
   below: 0.35em,
-  text(size: 12.5pt, weight: "bold", fill: rgb("__H3_COLOR__"), it.body),
+  text(size: __H3_SIZE__pt, weight: "bold", fill: rgb("__H3_COLOR__"), it.body),
 )
 
 // Enfasis.

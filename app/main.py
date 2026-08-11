@@ -206,6 +206,41 @@ class MainWindow(QMainWindow):
     self.body_size_input.setSuffix(' pt')
     self.body_size_input.setValue(10.5)
 
+    self.margin_x_input = QDoubleSpinBox()
+    self.margin_x_input.setRange(10, 45)
+    self.margin_x_input.setSingleStep(1)
+    self.margin_x_input.setDecimals(1)
+    self.margin_x_input.setSuffix(' mm')
+    self.margin_x_input.setValue(22)
+
+    self.margin_y_input = QDoubleSpinBox()
+    self.margin_y_input.setRange(10, 45)
+    self.margin_y_input.setSingleStep(1)
+    self.margin_y_input.setDecimals(1)
+    self.margin_y_input.setSuffix(' mm')
+    self.margin_y_input.setValue(20)
+
+    self.h1_size_input = QDoubleSpinBox()
+    self.h1_size_input.setRange(14, 34)
+    self.h1_size_input.setSingleStep(0.5)
+    self.h1_size_input.setDecimals(1)
+    self.h1_size_input.setSuffix(' pt')
+    self.h1_size_input.setValue(24)
+
+    self.h2_size_input = QDoubleSpinBox()
+    self.h2_size_input.setRange(12, 28)
+    self.h2_size_input.setSingleStep(0.5)
+    self.h2_size_input.setDecimals(1)
+    self.h2_size_input.setSuffix(' pt')
+    self.h2_size_input.setValue(16)
+
+    self.h3_size_input = QDoubleSpinBox()
+    self.h3_size_input.setRange(10, 22)
+    self.h3_size_input.setSingleStep(0.5)
+    self.h3_size_input.setDecimals(1)
+    self.h3_size_input.setSuffix(' pt')
+    self.h3_size_input.setValue(12.5)
+
     self.h1_color_button = self.create_color_button('h1')
     self.h2_color_button = self.create_color_button('h2')
     self.h3_color_button = self.create_color_button('h3')
@@ -274,6 +309,11 @@ class MainWindow(QMainWindow):
     style_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
     style_layout.addRow('Fuente', self.font_combo)
     style_layout.addRow('Tamano texto', self.body_size_input)
+    style_layout.addRow('Margen lateral', self.margin_x_input)
+    style_layout.addRow('Margen vertical', self.margin_y_input)
+    style_layout.addRow('Tamano titulo 1', self.h1_size_input)
+    style_layout.addRow('Tamano titulo 2', self.h2_size_input)
+    style_layout.addRow('Tamano titulo 3', self.h3_size_input)
     style_layout.addRow('Titulo 1', self.h1_color_button)
     style_layout.addRow('Titulo 2', self.h2_color_button)
     style_layout.addRow('Titulo 3', self.h3_color_button)
@@ -553,6 +593,11 @@ class MainWindow(QMainWindow):
     return PdfStyleOptions(
       font_family=self.font_combo.currentText(),
       body_font_size=self.body_size_input.value(),
+      page_margin_x=self.margin_x_input.value(),
+      page_margin_y=self.margin_y_input.value(),
+      heading_1_size=self.h1_size_input.value(),
+      heading_2_size=self.h2_size_input.value(),
+      heading_3_size=self.h3_size_input.value(),
       heading_1_color=self.heading_colors['h1'],
       heading_2_color=self.heading_colors['h2'],
       heading_3_color=self.heading_colors['h3'],

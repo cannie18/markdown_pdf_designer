@@ -26,6 +26,11 @@ class PdfStyleOptions:
 
   font_family: str = 'Arial'
   body_font_size: float = 10.5
+  page_margin_x: float = 22
+  page_margin_y: float = 20
+  heading_1_size: float = 24
+  heading_2_size: float = 16
+  heading_3_size: float = 12.5
   heading_1_color: str = '#1f3552'
   heading_2_color: str = '#2e6f73'
   heading_3_color: str = '#7a3f3f'
@@ -117,6 +122,11 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
   replacements = {
     '__BODY_FONT__': style.font_family,
     '__BODY_FONT_SIZE__': f'{style.body_font_size:g}',
+    '__PAGE_MARGIN_X__': f'{style.page_margin_x:g}',
+    '__PAGE_MARGIN_Y__': f'{style.page_margin_y:g}',
+    '__H1_SIZE__': f'{style.heading_1_size:g}',
+    '__H2_SIZE__': f'{style.heading_2_size:g}',
+    '__H3_SIZE__': f'{style.heading_3_size:g}',
     '__H1_COLOR__': normalize_hex_color(style.heading_1_color),
     '__H2_COLOR__': normalize_hex_color(style.heading_2_color),
     '__H3_COLOR__': normalize_hex_color(style.heading_3_color),

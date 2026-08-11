@@ -89,7 +89,7 @@ La app permite, de momento:
 - generar el PDF con un boton;
 - ver el PDF generado dentro de la propia app;
 - abrir el PDF generado en el visor predeterminado de Windows;
-- elegir fuente, tamano base y colores de titulos antes de generar;
+- elegir fuente, tamano base, margenes, tamanos de titulos y colores antes de generar;
 - recordar posicion, monitor y tamano de ventana;
 - mantener un ancho minimo usable para controles y dejar que la vista previa use el espacio restante.
 
