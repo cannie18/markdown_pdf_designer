@@ -7,11 +7,12 @@ una plantilla temporal generada con las opciones escogidas en la interfaz.
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
 import tempfile
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, fields
 from pathlib import Path
 
 
@@ -221,7 +222,95 @@ def template_style_preset(template_id: str) -> PdfStyleOptions:
   '''Devuelve los ajustes de diseño iniciales de una plantilla.'''
 
   normalized_id = template_id.strip().lower() or DEFAULT_TEMPLATE_ID
-  return TEMPLATE_STYLE_PRESETS.get(normalized_id, PdfStyleOptions())
+  if normalized_id in TEMPLATE_STYLE_PRESETS:
+    return TEMPLATE_STYLE_PRESETS[normalized_id]
+
+  metadata = template_metadata(normalized_id)
+  style_data = metadata.get('style')
+  if isinstance(style_data, dict):
+    return style_options_from_data(style_data)
+
+  return PdfStyleOptions()
+
+
+def style_options_from_data(data: dict[str, object]) -> PdfStyleOptions:
+  '''Construye opciones visuales ignorando claves desconocidas.'''
+
+  field_names = {field.name for field in fields(PdfStyleOptions)}
+  values = {
+    key: value
+    for key, value in data.items()
+    if key in field_names
+  }
+  return PdfStyleOptions(**values)
+
+
+def template_metadata(template_id: str) -> dict[str, object]:
+  '''Lee los metadatos opcionales de una plantilla de la app.'''
+
+  normalized_id = template_id.strip().lower() or DEFAULT_TEMPLATE_ID
+  metadata_file = APP_TEMPLATES_DIR / f'{normalized_id}.json'
+  if not metadata_file.exists():
+    return {}
+
+  try:
+    data = json.loads(metadata_file.read_text(encoding='utf-8'))
+  except (OSError, json.JSONDecodeError):
+    return {}
+
+  if isinstance(data, dict):
+    return data
+  return {}
+
+
+def template_label(template_id: str) -> str | None:
+  '''Devuelve el nombre visible de una plantilla personalizada si existe.'''
+
+  label = template_metadata(template_id).get('label')
+  if isinstance(label, str) and label.strip():
+    return label.strip()
+  return None
+
+
+def template_description(template_id: str) -> str | None:
+  '''Devuelve la descripción de una plantilla personalizada si existe.'''
+
+  description = template_metadata(template_id).get('description')
+  if isinstance(description, str) and description.strip():
+    return description.strip()
+  return None
+
+
+def save_custom_template(
+  template_id: str,
+  label: str,
+  style: PdfStyleOptions,
+  source_template_id: str,
+) -> None:
+  '''Guarda una plantilla personalizada basada en la plantilla actual.'''
+
+  normalized_id = template_id.strip().lower()
+  if not normalized_id:
+    raise PdfBuildError('El identificador de la plantilla no puede estar vacío.')
+
+  APP_TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+  source_template = template_path(source_template_id)
+  target_template = APP_TEMPLATES_DIR / f'{normalized_id}.typ'
+  target_metadata = APP_TEMPLATES_DIR / f'{normalized_id}.json'
+  if target_template.exists() or target_metadata.exists():
+    raise PdfBuildError(f'Ya existe una plantilla con ese identificador: {normalized_id}')
+
+  target_template.write_text(source_template.read_text(encoding='utf-8'), encoding='utf-8')
+  metadata = {
+    'label': label.strip(),
+    'description': 'Plantilla personalizada creada desde Diseño.',
+    'source_template': source_template_id,
+    'style': asdict(style),
+  }
+  target_metadata.write_text(
+    json.dumps(metadata, ensure_ascii=False, indent=2),
+    encoding='utf-8',
+  )
 
 
 def find_executable(name: str) -> Path | str:

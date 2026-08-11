@@ -93,6 +93,7 @@ La app permite, de momento:
 - definir colores independientes para títulos, negrita y cursiva;
 - ajustar interlineado, espaciado entre párrafos y estilos de código;
 - elegir una plantilla visual predefinida;
+- crear una nueva plantilla desde los ajustes visuales actuales;
 - cargar en `Diseño` los ajustes base de la plantilla seleccionada;
 - mantener el espacio entre párrafos igual o superior al interlineado;
 - evitar que los títulos hereden justificación, sangría o guionado automático;

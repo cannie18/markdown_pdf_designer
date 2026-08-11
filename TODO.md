@@ -21,6 +21,7 @@
 - Pestañas `Archivo` y `Diseño`.
 - Selector de plantillas predefinidas.
 - Carga automática en `Diseño` de los valores base de la plantilla seleccionada.
+- Creación de plantillas personalizadas desde los ajustes actuales de `Diseño`.
 - Corrección de textos visibles de la app a español de España.
 - Separación entre plantillas de app y plantilla portable.
 - Primera fase de plantillas predefinidas:
@@ -58,6 +59,7 @@
 ## Plantillas
 
 - Revisar y mejorar la estructura para crear y listar plantillas de la app desde la interfaz.
+- Revisar si las plantillas personalizadas deben vivir en `app/templates/` o en una ruta de usuario.
 - Valorar una futura galería de plantillas en grid con definición rápida y vista previa cacheada.
   - Debe permitir comparar plantillas sin convertir manualmente cada documento.
   - La vista puede ser PDF de ejemplo ya generado o imagen derivada del PDF.

@@ -78,6 +78,7 @@ La app permite:
 - consultar las opciones de diseño agrupadas por secciones compactas;
 - elegir una plantilla visual predefinida desde `Diseño`;
 - cargar en `Diseño` los ajustes base de la plantilla seleccionada;
+- crear una nueva plantilla desde los ajustes visuales actuales;
 - corregir automáticamente el espacio entre párrafos para que no quede por debajo del interlineado;
 - aplicar reglas propias a los títulos para evitar justificación, sangría heredada y guionado automático;
 - generar el PDF;
@@ -168,6 +169,7 @@ Los últimos ajustes importantes son:
 Objetivos previstos:
 
 - ajustes dinámicos por plantilla;
+- edición y gestión de plantillas personalizadas;
 - estilos para tablas;
 - estilos para bloques destacados;
 - estilos para código;

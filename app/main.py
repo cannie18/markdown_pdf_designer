@@ -7,8 +7,10 @@ de la app. La conversión se delega en `app.pdf_builder`.
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
+import unicodedata
 from pathlib import Path
 
 from PySide6.QtCore import QSettings, Qt, QThread, Signal
@@ -24,6 +26,7 @@ from PySide6.QtWidgets import (
   QFormLayout,
   QFrame,
   QHBoxLayout,
+  QInputDialog,
   QLabel,
   QMainWindow,
   QMessageBox,
@@ -44,6 +47,9 @@ from .pdf_builder import (
   PdfStyleOptions,
   available_templates,
   build_pdf,
+  save_custom_template,
+  template_description,
+  template_label,
   template_style_preset,
 )
 
@@ -335,10 +341,13 @@ class MainWindow(QMainWindow):
     self.code_size_input.setSuffix(' pt')
     self.code_size_input.setValue(9)
 
+    self.create_template_button = QPushButton('Crear nueva plantilla')
+    self.create_template_button.clicked.connect(self.create_custom_template)
+
     self.template_combo = QComboBox()
     for template_id in self.template_ids:
       self.template_combo.addItem(
-        TEMPLATE_LABELS.get(template_id, template_id.replace('_', ' ').title()),
+        self.display_template_label(template_id),
         template_id,
       )
     self.template_combo.setCurrentIndex(
@@ -418,6 +427,7 @@ class MainWindow(QMainWindow):
         [
           ('Plantilla', self.template_combo),
           ('Definición', self.template_status_label),
+          ('', self.create_template_button),
         ],
       )
     )
@@ -878,7 +888,9 @@ class MainWindow(QMainWindow):
       'manuscrito_novela': 'Formato A5 para capítulos, relatos y lectura prolongada.',
       'profesional': 'Más formal, con bloques de título y acentos de informe.',
     }
-    description = descriptions.get(template_id, 'Plantilla personalizada de la app.')
+    description = descriptions.get(template_id)
+    if description is None:
+      description = template_description(template_id) or 'Plantilla personalizada de la app.'
     self.template_status_label.setText(description)
 
   def handle_template_changed(self) -> None:
@@ -887,6 +899,72 @@ class MainWindow(QMainWindow):
     template_id = self.current_template_id()
     self.apply_style_options(template_style_preset(template_id))
     self.update_template_status()
+
+  def display_template_label(self, template_id: str) -> str:
+    '''Devuelve el texto visible para el selector de plantillas.'''
+
+    return (
+      TEMPLATE_LABELS.get(template_id)
+      or template_label(template_id)
+      or template_id.replace('_', ' ').title()
+    )
+
+  def create_custom_template(self) -> None:
+    '''Crea una plantilla personalizada desde los ajustes actuales.'''
+
+    label, accepted = QInputDialog.getText(
+      self,
+      'Crear nueva plantilla',
+      'Nombre de la nueva plantilla:',
+    )
+    label = label.strip()
+    if not accepted or not label:
+      return
+
+    template_id = self.unique_template_id(label)
+    try:
+      save_custom_template(
+        template_id,
+        label,
+        self.current_style_options(),
+        self.current_template_id(),
+      )
+    except PdfBuildError as exc:
+      QMessageBox.critical(self, 'Error', str(exc))
+      return
+    except OSError as exc:
+      QMessageBox.critical(self, 'Error', f'No se pudo crear la plantilla:\n{exc}')
+      return
+
+    self.template_ids = self.sorted_template_ids(available_templates())
+    self.template_combo.blockSignals(True)
+    self.template_combo.clear()
+    for current_template_id in self.template_ids:
+      self.template_combo.addItem(
+        self.display_template_label(current_template_id),
+        current_template_id,
+      )
+    self.template_combo.setCurrentIndex(self.template_combo.findData(template_id))
+    self.template_combo.blockSignals(False)
+    self.handle_template_changed()
+    self.status_label.setText(f'Plantilla creada: {label}')
+
+  def unique_template_id(self, label: str) -> str:
+    '''Genera un identificador de plantilla disponible desde un nombre visible.'''
+
+    normalized = unicodedata.normalize('NFKD', label)
+    ascii_label = normalized.encode('ascii', 'ignore').decode('ascii')
+    base_id = re.sub(r'[^a-z0-9]+', '_', ascii_label.lower()).strip('_')
+    if not base_id:
+      base_id = 'plantilla'
+
+    existing_ids = set(available_templates())
+    candidate = base_id
+    counter = 2
+    while candidate in existing_ids:
+      candidate = f'{base_id}_{counter}'
+      counter += 1
+    return candidate
 
   def load_recent_markdowns(self) -> None:
     '''Carga en el desplegable las últimas rutas Markdown usadas.'''
