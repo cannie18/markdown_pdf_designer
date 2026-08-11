@@ -77,6 +77,7 @@ La app permite:
 - elegir fuente, tamano y fondo de los bloques de codigo;
 - consultar las opciones de diseno agrupadas por secciones compactas;
 - elegir una plantilla visual predefinida;
+- cargar en `Diseno` los ajustes base de la plantilla seleccionada;
 - generar el PDF;
 - mostrar el PDF generado dentro de la propia app;
 - abrir el PDF en el visor externo de Windows.

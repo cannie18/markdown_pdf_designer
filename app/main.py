@@ -44,6 +44,7 @@ from .pdf_builder import (
   PdfStyleOptions,
   available_templates,
   build_pdf,
+  template_style_preset,
 )
 
 
@@ -241,7 +242,14 @@ class MainWindow(QMainWindow):
     self.editor.textChanged.connect(self.mark_editor_dirty)
 
     self.font_combo = QComboBox()
-    self.font_combo.addItems(['Arial', 'Aptos', 'Calibri', 'Segoe UI', 'Times New Roman'])
+    self.font_combo.addItems([
+      'Arial',
+      'Aptos',
+      'Calibri',
+      'Latin Modern Roman',
+      'Segoe UI',
+      'Times New Roman',
+    ])
     self.font_combo.setCurrentText('Arial')
 
     self.body_size_input = QDoubleSpinBox()
@@ -258,7 +266,7 @@ class MainWindow(QMainWindow):
     self.paragraph_leading_input.setValue(0.62)
 
     self.paragraph_spacing_input = QDoubleSpinBox()
-    self.paragraph_spacing_input.setRange(0.2, 3.0)
+    self.paragraph_spacing_input.setRange(0, 3.0)
     self.paragraph_spacing_input.setSingleStep(0.05)
     self.paragraph_spacing_input.setDecimals(2)
     self.paragraph_spacing_input.setValue(0.82)
@@ -326,7 +334,7 @@ class MainWindow(QMainWindow):
     self.template_combo.setCurrentIndex(
       max(0, self.template_combo.findData(DEFAULT_TEMPLATE_ID))
     )
-    self.template_combo.currentIndexChanged.connect(self.update_template_status)
+    self.template_combo.currentIndexChanged.connect(self.handle_template_changed)
 
     self.pdf_document = QPdfDocument(self)
     self.pdf_view = QPdfView()
@@ -533,7 +541,7 @@ class MainWindow(QMainWindow):
     if initial_file:
       self.set_markdown_file(initial_file)
     self.select_left_section(0)
-    self.update_template_status()
+    self.handle_template_changed()
 
   def apply_styles(self) -> None:
     '''Aplica estilos visuales de la interfaz, no del PDF generado.'''
@@ -761,6 +769,53 @@ class MainWindow(QMainWindow):
     brightness = (red * 299 + green * 587 + blue * 114) / 1000
     return '#000000' if brightness > 150 else '#ffffff'
 
+  def apply_style_options(self, style: PdfStyleOptions) -> None:
+    '''Carga un conjunto de opciones visuales en los controles de Diseno.'''
+
+    controlled_widgets = [
+      self.font_combo,
+      self.body_size_input,
+      self.paragraph_leading_input,
+      self.paragraph_spacing_input,
+      self.margin_x_input,
+      self.margin_y_input,
+      self.h1_size_input,
+      self.h2_size_input,
+      self.h3_size_input,
+      self.code_font_combo,
+      self.code_size_input,
+    ]
+    for widget in controlled_widgets:
+      widget.blockSignals(True)
+
+    self.font_combo.setCurrentText(style.font_family)
+    self.body_size_input.setValue(style.body_font_size)
+    self.paragraph_leading_input.setValue(style.paragraph_leading)
+    self.paragraph_spacing_input.setValue(style.paragraph_spacing)
+    self.margin_x_input.setValue(style.page_margin_x / 10)
+    self.margin_y_input.setValue(style.page_margin_y / 10)
+    self.h1_size_input.setValue(style.heading_1_size)
+    self.h2_size_input.setValue(style.heading_2_size)
+    self.h3_size_input.setValue(style.heading_3_size)
+    self.code_font_combo.setCurrentText(style.code_font_family)
+    self.code_size_input.setValue(style.code_font_size)
+
+    for widget in controlled_widgets:
+      widget.blockSignals(False)
+
+    self.heading_colors.update(
+      {
+        'body': style.body_color,
+        'h1': style.heading_1_color,
+        'h2': style.heading_2_color,
+        'h3': style.heading_3_color,
+        'bold': style.bold_color,
+        'italic': style.italic_color,
+        'code_background': style.code_background_color,
+      }
+    )
+    self.refresh_color_buttons()
+
   def current_style_options(self) -> PdfStyleOptions:
     '''Construye las opciones visuales actuales para el generador de PDF.'''
 
@@ -820,6 +875,13 @@ class MainWindow(QMainWindow):
     }
     description = descriptions.get(template_id, 'Plantilla personalizada de la app.')
     self.template_status_label.setText(description)
+
+  def handle_template_changed(self) -> None:
+    '''Sincroniza la plantilla seleccionada con su preset visual.'''
+
+    template_id = self.current_template_id()
+    self.apply_style_options(template_style_preset(template_id))
+    self.update_template_status()
 
   def load_recent_markdowns(self) -> None:
     '''Carga en el desplegable las ultimas rutas Markdown usadas.'''

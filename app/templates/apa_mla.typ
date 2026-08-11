@@ -4,14 +4,14 @@ $definitions.typst()$
 
 #set page(
   paper: "a4",
-  margin: (x: 25.4mm, y: 25.4mm),
+  margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),
   numbering: "1",
   number-align: bottom + center,
 )
 
 #set text(
   font: "__BODY_FONT__",
-  size: 12pt,
+  size: __BODY_FONT_SIZE__pt,
   fill: rgb("__BODY_COLOR__"),
   lang: "es",
 )
@@ -19,8 +19,8 @@ $definitions.typst()$
 #set par(
   justify: false,
   first-line-indent: 1.27cm,
-  leading: 2em,
-  spacing: 0em,
+  leading: __PAR_LEADING__em,
+  spacing: __PAR_SPACING__em,
 )
 
 #set heading(numbering: none)
@@ -28,19 +28,19 @@ $definitions.typst()$
 #show heading.where(level: 1): it => block(
   above: 0.8em,
   below: 0.8em,
-  align(center, text(size: 12pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body)),
+  align(center, text(size: __H1_SIZE__pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body)),
 )
 
 #show heading.where(level: 2): it => block(
   above: 0.8em,
   below: 0.4em,
-  text(size: 12pt, weight: "bold", fill: rgb("__H2_COLOR__"), it.body),
+  text(size: __H2_SIZE__pt, weight: "bold", fill: rgb("__H2_COLOR__"), it.body),
 )
 
 #show heading.where(level: 3): it => block(
   above: 0.6em,
   below: 0.25em,
-  text(size: 12pt, weight: "bold", style: "italic", fill: rgb("__H3_COLOR__"), it.body),
+  text(size: __H3_SIZE__pt, weight: "bold", style: "italic", fill: rgb("__H3_COLOR__"), it.body),
 )
 
 #show strong: it => text(weight: "bold", fill: rgb("__BOLD_COLOR__"), it.body)

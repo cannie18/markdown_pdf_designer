@@ -4,7 +4,7 @@ $definitions.typst()$
 
 #set page(
   paper: "a4",
-  margin: (left: 32mm, right: 22mm, top: 22mm, bottom: 22mm),
+  margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),
   numbering: "1",
   number-align: bottom + center,
 )

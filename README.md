@@ -93,6 +93,7 @@ La app permite, de momento:
 - definir colores independientes para titulos, negrita y cursiva;
 - ajustar interlineado, espaciado entre parrafos y estilos de codigo;
 - elegir una plantilla visual predefinida;
+- cargar en `Diseno` los ajustes base de la plantilla seleccionada;
 - recordar posicion, monitor y tamano de ventana;
 - mantener un ancho minimo usable para controles y dejar que la vista previa use el espacio restante.
 
