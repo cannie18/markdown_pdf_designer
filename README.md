@@ -1,6 +1,6 @@
 # pdf_apuntes
 
-Prueba minima para evaluar el flujo:
+Prueba mínima para evaluar el flujo:
 
 ```text
 Markdown -> Pandoc -> Typst -> PDF
@@ -30,14 +30,14 @@ bin/
 ```
 
 `crear_pdf.bat` busca primero esos binarios locales. Si existen, los usa antes
-que cualquier instalacion del sistema.
+que cualquier instalación del sistema.
 
-Los binarios locales no se suben a GitHub porque estan ignorados en
+Los binarios locales no se suben a GitHub porque están ignorados en
 `.gitignore`. Esto mantiene el repositorio ligero, pero permite copiar la
 carpeta local completa a otro equipo para trabajar sin instalar dependencias.
 
 En esta primera prueba no se usa Python. La idea es comprobar si Pandoc y Typst
-pueden hacerse cargo de la conversion y la maquetacion basica sin un
+pueden hacerse cargo de la conversión y la maquetación básica sin un
 preprocesador lleno de expresiones regulares.
 
 ## Probar en Windows
@@ -55,20 +55,20 @@ Resultado esperado:
 ejemplos\prueba_apuntes.pdf
 ```
 
-Si `typst` no esta disponible, el script generara igualmente:
+Si `typst` no está disponible, el script generará igualmente:
 
 ```text
 ejemplos\prueba_apuntes.typ
 ```
 
-Ese archivo permite comprobar la salida de Pandoc antes de anadir Typst al
+Ese archivo permite comprobar la salida de Pandoc antes de añadir Typst al
 modo instalado o al modo portable.
 
 ## App de escritorio
 
 La app Python se llama Markdown PDF Designer. Vive en `app/` y usa sus propias
 plantillas en `app/templates/`. Esto evita que los cambios de la app rompan la
-version portable por `.bat`.
+versión portable por `.bat`.
 
 Para abrirla:
 
@@ -76,26 +76,28 @@ Para abrirla:
 abrir_app.bat
 ```
 
-Tambien puedes arrastrar un archivo Markdown sobre `abrir_app.bat`.
+También puedes arrastrar un archivo Markdown sobre `abrir_app.bat`.
 
 La app permite, de momento:
 
 - crear un archivo Markdown nuevo;
 - abrir un archivo `.md`;
 - arrastrar un archivo `.md`;
-- elegir entre los ultimos Markdown usados desde el desplegable de ruta;
+- elegir entre los últimos Markdown usados desde el desplegable de ruta;
 - cargar el Markdown directamente en el editor al abrirlo;
 - guardar o guardar como el Markdown;
-- generar el PDF con un boton;
+- generar el PDF con un botón;
 - ver el PDF generado dentro de la propia app;
 - abrir el PDF generado en el visor predeterminado de Windows;
-- elegir fuente, tamano base, margenes, tamanos de titulos y colores antes de generar;
-- definir colores independientes para titulos, negrita y cursiva;
-- ajustar interlineado, espaciado entre parrafos y estilos de codigo;
+- elegir fuente, tamaño base, márgenes, tamaños de títulos y colores antes de generar;
+- definir colores independientes para títulos, negrita y cursiva;
+- ajustar interlineado, espaciado entre párrafos y estilos de código;
 - elegir una plantilla visual predefinida;
-- cargar en `Diseno` los ajustes base de la plantilla seleccionada;
-- recordar posicion, monitor y tamano de ventana;
-- mantener un ancho minimo usable para controles y dejar que la vista previa use el espacio restante.
+- cargar en `Diseño` los ajustes base de la plantilla seleccionada;
+- mantener el espacio entre párrafos igual o superior al interlineado;
+- evitar que los títulos hereden justificación, sangría o guionado automático;
+- recordar posición, monitor y tamaño de ventana;
+- mantener un ancho mínimo usable para controles y dejar que la vista previa use el espacio restante.
 
 Las opciones visuales de la app se aplican generando una plantilla Typst
 temporal a partir de la plantilla elegida en `app/templates/`. La plantilla
@@ -132,7 +134,7 @@ pdf_apuntes/
 ## Siguiente paso
 
 Cuando esta prueba compile correctamente, podemos iterar sobre la plantilla
-`templates\apuntes.typ`: portada, colores, cabecera, pie, tablas, codigo,
+`templates\apuntes.typ`: portada, colores, cabecera, pie, tablas, código,
 bloques destacados y tratamiento de ecuaciones.
 
 ## Plantillas de la app
@@ -140,10 +142,29 @@ bloques destacados y tratamiento de ecuaciones.
 Las plantillas disponibles en la app son:
 
 - `Estudio`: equilibrada para apuntes claros.
-- `LaTeX clasico`: academica, monocromatica y con margenes amplios.
+- `LaTeX clásico`: académica, monocromática y con márgenes amplios.
 - `Ensayo APA / MLA`: pensada para trabajos universitarios.
-- `Informe ejecutivo`: estilo corporativo con titulos destacados.
-- `Manual tecnico`: pensada para documentacion y bloques de codigo.
+- `Informe ejecutivo`: estilo corporativo con títulos destacados.
+- `Manual técnico`: pensada para documentación y bloques de código.
 - `Manuscrito / novela`: formato A5 para lectura prolongada.
 - `Profesional`: informe sobrio de uso general.
-- `Compacto`: dos columnas y menor consumo de paginas.
+- `Compacto`: dos columnas y menor consumo de páginas.
+
+## Estado Para Retomar
+
+Último estado comprobado:
+
+- la app Python genera PDF con todas las plantillas de `app/templates/`;
+- la versión portable `crear_pdf.bat` sigue funcionando;
+- `Ensayo APA / MLA` tiene jerarquía de títulos y espaciado corregido;
+- `Manuscrito / novela` ya no coloca el primer título a mitad de página;
+- los títulos de todas las plantillas usan reglas propias para no quedar afectados por el interlineado del texto normal.
+
+Siguiente conversación recomendada:
+
+```text
+Continuamos en el proyecto pdf_apuntes. Lee README.md, APP_ESCRITORIO.md y TODO.md.
+Quiero seguir desde la parte de plantillas/diseño de Markdown PDF Designer.
+No rompas crear_pdf.bat ni templates/apuntes.typ.
+En Python usa indentación de dos espacios y comillas simples cuando se pueda.
+```

@@ -1,10 +1,10 @@
 # Markdown PDF Designer
 
-## Que es
+## Qué Es
 
 Markdown PDF Designer es una app de escritorio local para generar PDF de
 apuntes a partir de archivos Markdown, ajustando el resultado a necesidades de
-diseno concretas.
+diseño concretas.
 
 Su objetivo no es sustituir al Markdown ni convertir la herramienta en un
 editor complejo. La idea principal es facilitar este flujo:
@@ -17,7 +17,7 @@ generar PDF
 ver el resultado dentro de la app
 ```
 
-La app esta creada con Python y PySide6.
+La app está creada con Python y PySide6.
 
 ## Estructura visual deseada
 
@@ -31,28 +31,28 @@ panel izquierdo cambiante | vista previa PDF
 El panel izquierdo tiene tres secciones:
 
 - `Archivo`: abrir o arrastrar Markdown, revisar contenido y generar PDF.
-- `Diseno`: ajustar fuente, tamano y colores antes de volver a generar.
-- `Plantillas`: preparar seleccion y creacion de plantillas visuales.
+- `Diseño`: ajustar fuente, tamaño y colores antes de volver a generar.
+- `Plantillas`: preparar selección y creación de plantillas visuales.
 
-La vista previa no es una pestana separada: debe estar siempre disponible para
+La vista previa no es una pestaña separada: debe estar siempre disponible para
 comprobar el PDF real generado.
 
-## Principio de diseno
+## Principio de Diseño
 
 La herramienta mantiene separado:
 
 ```text
-contenido != presentacion
+contenido != presentación
 ```
 
 El Markdown debe describir la estructura del apunte:
 
 ```markdown
-# Titulo
+# Título
 
-## Seccion
+## Sección
 
-Texto, listas, tablas, codigo y bloques destacados.
+Texto, listas, tablas, código y bloques destacados.
 ```
 
 La apariencia del PDF se controla desde plantillas Typst y desde opciones de la
@@ -67,26 +67,28 @@ La app permite:
 - ver y editar opcionalmente el contenido;
 - preguntar antes de generar si hay cambios sin guardar;
 - elegir tipo de fuente;
-- elegir tamano base del texto;
+- elegir tamaño base del texto;
 - elegir color del texto normal;
-- ajustar interlineado y espacio entre parrafos;
-- elegir margenes laterales y verticales en centimetros;
-- elegir tamano de titulos de nivel 1, 2 y 3;
-- elegir colores para titulos de nivel 1, 2 y 3;
+- ajustar interlineado y espacio entre párrafos;
+- elegir márgenes laterales y verticales en centímetros;
+- elegir tamaño de títulos de nivel 1, 2 y 3;
+- elegir colores para títulos de nivel 1, 2 y 3;
 - elegir colores independientes para negrita y cursiva;
-- elegir fuente, tamano y fondo de los bloques de codigo;
-- consultar las opciones de diseno agrupadas por secciones compactas;
+- elegir fuente, tamaño y fondo de los bloques de código;
+- consultar las opciones de diseño agrupadas por secciones compactas;
 - elegir una plantilla visual predefinida;
-- cargar en `Diseno` los ajustes base de la plantilla seleccionada;
+- cargar en `Diseño` los ajustes base de la plantilla seleccionada;
+- corregir automáticamente el espacio entre párrafos para que no quede por debajo del interlineado;
+- aplicar reglas propias a los títulos para evitar justificación, sangría heredada y guionado automático;
 - generar el PDF;
 - mostrar el PDF generado dentro de la propia app;
 - abrir el PDF en el visor externo de Windows.
-- cambiar entre secciones `Archivo`, `Diseno` y `Plantillas` en el panel
+- cambiar entre secciones `Archivo`, `Diseño` y `Plantillas` en el panel
   izquierdo.
 
-## Relacion con la version portable
+## Relación Con La Versión Portable
 
-La app Python y la version portable por `.bat` deben evolucionar de forma
+La app Python y la versión portable por `.bat` deben evolucionar de forma
 separada.
 
 ```text
@@ -94,7 +96,7 @@ crear_pdf.bat
 templates/apuntes.typ
 ```
 
-pertenecen a la version portable basica.
+pertenecen a la versión portable básica.
 
 ```text
 app/main.py
@@ -110,7 +112,7 @@ Esto permite mejorar la app sin romper el flujo simple:
 .\crear_pdf.bat .\ejemplos\archivo.md
 ```
 
-## Como genera el PDF la app
+## Cómo Genera El PDF La App
 
 La app no transforma manualmente el Markdown con expresiones regulares.
 
@@ -123,63 +125,75 @@ Markdown
   -> PDF
 ```
 
-Cuando el usuario cambia fuente, tamano, margenes, titulos o colores, Python genera una plantilla
+Cuando el usuario cambia fuente, tamaño, márgenes, títulos o colores, Python genera una plantilla
 Typst temporal a partir de la plantilla elegida en:
 
 ```text
 app/templates/
 ```
 
-Esa plantilla temporal se usa solo durante la conversion y se elimina al
+Esa plantilla temporal se usa solo durante la conversión y se elimina al
 terminar.
 
 ## Pretensiones
 
 La app quiere convertirse progresivamente en una herramienta sencilla para
-crear PDF de estudio con buena maquetacion.
+crear PDF de estudio con buena maquetación.
 
 ## Plantillas iniciales
 
 La primera fase de plantillas predefinidas incluye:
 
 - `Estudio`: apuntes claros y equilibrados.
-- `LaTeX clasico`: documentos academicos sobrios, en blanco y negro.
-- `Ensayo APA / MLA`: trabajos universitarios con margenes e interlineado amplio.
-- `Informe ejecutivo`: documentos corporativos con titulos fuertes y bloques destacados.
-- `Manual tecnico`: documentacion con codigo protagonista.
+- `LaTeX clásico`: documentos académicos sobrios, en blanco y negro.
+- `Ensayo APA / MLA`: trabajos universitarios con márgenes e interlineado amplio.
+- `Informe ejecutivo`: documentos corporativos con títulos fuertes y bloques destacados.
+- `Manual técnico`: documentación con código protagonista.
 - `Manuscrito / novela`: textos largos en formato A5.
 - `Profesional`: informe sobrio de uso general.
-- `Compacto`: documento de dos columnas para ahorrar paginas.
+- `Compacto`: documento de dos columnas para ahorrar páginas.
+
+## Ajustes Recientes
+
+Los últimos ajustes importantes son:
+
+- cada plantilla carga sus valores base en la pestaña `Diseño`;
+- `Ensayo APA / MLA` usa tamaños distintos para títulos y subtítulos;
+- `Ensayo APA / MLA` ya no parte de `Espacio párrafos = 0`;
+- `Manuscrito / novela` ya no coloca el primer título a mitad de página;
+- las plantillas evitan que los títulos hereden el interlineado grande del texto normal;
+- el cuerpo de texto puede seguir justificándose según la plantilla, pero los títulos no;
+- la versión portable por `.bat` no se ha tocado.
 
 Objetivos previstos:
 
-- ajustes dinamicos por plantilla;
+- ajustes dinámicos por plantilla;
 - estilos para tablas;
 - estilos para bloques destacados;
-- estilos para codigo;
+- estilos para código;
 - portada opcional;
-- cabecera y pie de pagina configurables;
-- numero de pagina y total de paginas;
+- cabecera y pie de página configurables;
+- número de página y total de páginas;
 - salida a una carpeta elegida por el usuario;
 - modo debug para conservar `.typ` intermedios;
-- mensajes de error mas comprensibles;
+- mensajes de error más comprensibles;
 - empaquetado como `.exe` para usar sin abrir terminal;
-- version portable completa distribuible como `.zip`.
+- versión portable completa distribuible como `.zip`.
 
 ## Cosas que no queremos hacer de momento
 
 - crear un editor Markdown avanzado;
-- mezclar la plantilla portable con las plantillas dinamicas de la app;
+- mezclar la plantilla portable con las plantillas dinámicas de la app;
 - volver a convertir Markdown a mano mediante muchas expresiones regulares;
 - subir binarios pesados como `pandoc.exe` o `typst.exe` al repositorio Git.
 
 ## Criterio de avance
 
-Cada mejora debe ser pequena y comprobable.
+Cada mejora debe ser pequeña y comprobable.
 
 Antes de ampliar la app conviene verificar siempre:
 
 - que la app genera PDF;
 - que la vista previa carga el PDF;
-- que la version `crear_pdf.bat` sigue funcionando;
+- que la versión `crear_pdf.bat` sigue funcionando;
 - que las plantillas de la app no rompen las plantillas portables.
