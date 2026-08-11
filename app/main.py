@@ -54,6 +54,7 @@ TEMPLATE_LABELS = {
   'estudio': 'Estudio',
   'profesional': 'Profesional',
   'compacto': 'Compacto',
+  'accesibilidad_neurodivergencia': 'Accesibilidad y neurodivergencia',
   'latex_clasico': 'LaTeX clásico',
   'apa_mla': 'Ensayo APA / MLA',
   'informe_ejecutivo': 'Informe ejecutivo',
@@ -66,6 +67,7 @@ TEMPLATE_ORDER = [
   'apa_mla',
   'informe_ejecutivo',
   'manual_tecnico',
+  'accesibilidad_neurodivergencia',
   'manuscrito_novela',
   'profesional',
   'compacto',
@@ -246,9 +248,15 @@ class MainWindow(QMainWindow):
       'Arial',
       'Aptos',
       'Calibri',
+      'Comic Sans MS',
+      'Inter',
       'Latin Modern Roman',
+      'Lexend',
+      'OpenDyslexic',
       'Segoe UI',
+      'Tahoma',
       'Times New Roman',
+      'Verdana',
     ])
     self.font_combo.setCurrentText('Arial')
 
@@ -881,6 +889,7 @@ class MainWindow(QMainWindow):
     template_id = self.current_template_id()
     descriptions = {
       'apa_mla': 'Ensayo universitario con márgenes de 1 pulgada e interlineado doble.',
+      'accesibilidad_neurodivergencia': 'Lectura accesible con sans-serif, aire amplio, fondo crema y cursivas convertidas a negrita.',
       'compacto': 'Usa dos columnas y reduce espacios para ahorrar páginas.',
       'estudio': 'Equilibrada para apuntes claros y lectura cómoda.',
       'informe_ejecutivo': 'Corporativa, con títulos destacados y bloques de decisión.',

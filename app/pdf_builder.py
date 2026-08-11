@@ -194,6 +194,26 @@ TEMPLATE_STYLE_PRESETS = {
     code_font_size=9,
     code_background_color='#f6f3ee',
   ),
+  'accesibilidad_neurodivergencia': PdfStyleOptions(
+    font_family='Verdana',
+    body_font_size=13.5,
+    body_color='#333333',
+    paragraph_leading=1.55,
+    paragraph_spacing=1.65,
+    page_margin_x=32,
+    page_margin_y=28,
+    heading_1_size=27,
+    heading_2_size=20,
+    heading_3_size=16,
+    heading_1_color='#24435a',
+    heading_2_color='#2f6f66',
+    heading_3_color='#5a5f7a',
+    bold_color='#24435a',
+    italic_color='#24435a',
+    code_font_family='Cascadia Mono',
+    code_font_size=10.5,
+    code_background_color='#e7f3f2',
+  ),
 }
 
 

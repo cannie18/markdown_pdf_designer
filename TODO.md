@@ -29,6 +29,7 @@
   - `Ensayo APA / MLA`;
   - `Informe ejecutivo`;
   - `Manual técnico`;
+  - `Accesibilidad y neurodivergencia`;
   - `Manuscrito / novela`;
   - `Profesional`;
   - `Compacto`.

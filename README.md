@@ -119,7 +119,8 @@ pdf_apuntes/
 │       ├── latex_clasico.typ
 │       ├── manual_tecnico.typ
 │       ├── manuscrito_novela.typ
-│       └── profesional.typ
+│       ├── profesional.typ
+│       └── accesibilidad_neurodivergencia.typ
 ├── crear_pdf.bat
 ├── bin/
 │   ├── pandoc/
@@ -146,6 +147,7 @@ Las plantillas disponibles en la app son:
 - `Ensayo APA / MLA`: pensada para trabajos universitarios.
 - `Informe ejecutivo`: estilo corporativo con títulos destacados.
 - `Manual técnico`: pensada para documentación y bloques de código.
+- `Accesibilidad y neurodivergencia`: lectura accesible para dislexia, TDA y TDAH.
 - `Manuscrito / novela`: formato A5 para lectura prolongada.
 - `Profesional`: informe sobrio de uso general.
 - `Compacto`: dos columnas y menor consumo de páginas.

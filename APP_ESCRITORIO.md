@@ -149,6 +149,7 @@ La primera fase de plantillas predefinidas incluye:
 - `Ensayo APA / MLA`: trabajos universitarios con márgenes e interlineado amplio.
 - `Informe ejecutivo`: documentos corporativos con títulos fuertes y bloques destacados.
 - `Manual técnico`: documentación con código protagonista.
+- `Accesibilidad y neurodivergencia`: lectura accesible con fondo suave, aire amplio y énfasis sin cursiva.
 - `Manuscrito / novela`: textos largos en formato A5.
 - `Profesional`: informe sobrio de uso general.
 - `Compacto`: documento de dos columnas para ahorrar páginas.
