@@ -91,6 +91,7 @@ La app permite, de momento:
 - abrir el PDF generado en el visor predeterminado de Windows;
 - elegir fuente, tamano base, margenes, tamanos de titulos y colores antes de generar;
 - definir colores independientes para titulos, negrita y cursiva;
+- ajustar interlineado, espaciado entre parrafos y estilos de codigo;
 - recordar posicion, monitor y tamano de ventana;
 - mantener un ancho minimo usable para controles y dejar que la vista previa use el espacio restante.
 

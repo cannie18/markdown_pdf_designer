@@ -16,14 +16,15 @@ $definitions.typst()$
 #set text(
   font: "__BODY_FONT__",
   size: __BODY_FONT_SIZE__pt,
+  fill: rgb("__BODY_COLOR__"),
   lang: "es",
 )
 
 // Parrafos.
 #set par(
   justify: true,
-  leading: 0.62em,
-  spacing: 0.82em,
+  leading: __PAR_LEADING__em,
+  spacing: __PAR_SPACING__em,
 )
 
 // Titulos.
@@ -71,8 +72,8 @@ $definitions.typst()$
   below: 0.8em,
   inset: 0.8em,
   radius: 3pt,
-  fill: rgb("#f4f1ec"),
-  text(font: "Consolas", size: 9pt, it),
+  fill: rgb("__CODE_BACKGROUND_COLOR__"),
+  text(font: "__CODE_FONT__", size: __CODE_FONT_SIZE__pt, it),
 )
 
 // Tablas.

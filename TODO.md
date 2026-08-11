@@ -9,6 +9,8 @@
   - tamano base del texto;
   - colores de titulos;
   - tamanos de titulos;
+  - color del texto normal;
+  - estilos de codigo;
   - espaciados principales;
   - margenes del documento.
 - Decidir si cada ajuste se guarda por documento, por plantilla o como preferencia global.

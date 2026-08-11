@@ -139,6 +139,8 @@ class MainWindow(QMainWindow):
       'h3': '#7a3f3f',
       'bold': '#1f3552',
       'italic': '#131b2e',
+      'body': '#131b2e',
+      'code_background': '#f4f1ec',
     }
     self.setWindowTitle('Markdown PDF Designer')
     self.resize(1180, 720)
@@ -210,6 +212,20 @@ class MainWindow(QMainWindow):
     self.body_size_input.setSuffix(' pt')
     self.body_size_input.setValue(10.5)
 
+    self.paragraph_leading_input = QDoubleSpinBox()
+    self.paragraph_leading_input.setRange(0.35, 1.4)
+    self.paragraph_leading_input.setSingleStep(0.05)
+    self.paragraph_leading_input.setDecimals(2)
+    self.paragraph_leading_input.setSuffix(' em')
+    self.paragraph_leading_input.setValue(0.62)
+
+    self.paragraph_spacing_input = QDoubleSpinBox()
+    self.paragraph_spacing_input.setRange(0.2, 1.8)
+    self.paragraph_spacing_input.setSingleStep(0.05)
+    self.paragraph_spacing_input.setDecimals(2)
+    self.paragraph_spacing_input.setSuffix(' em')
+    self.paragraph_spacing_input.setValue(0.82)
+
     self.margin_x_input = QDoubleSpinBox()
     self.margin_x_input.setRange(10, 45)
     self.margin_x_input.setSingleStep(1)
@@ -250,6 +266,19 @@ class MainWindow(QMainWindow):
     self.h3_color_button = self.create_color_button('h3')
     self.bold_color_button = self.create_color_button('bold')
     self.italic_color_button = self.create_color_button('italic')
+    self.body_color_button = self.create_color_button('body')
+    self.code_background_color_button = self.create_color_button('code_background')
+
+    self.code_font_combo = QComboBox()
+    self.code_font_combo.addItems(['Consolas', 'Cascadia Mono', 'Courier New', 'JetBrains Mono'])
+    self.code_font_combo.setCurrentText('Consolas')
+
+    self.code_size_input = QDoubleSpinBox()
+    self.code_size_input.setRange(7, 14)
+    self.code_size_input.setSingleStep(0.5)
+    self.code_size_input.setDecimals(1)
+    self.code_size_input.setSuffix(' pt')
+    self.code_size_input.setValue(9)
 
     self.pdf_document = QPdfDocument(self)
     self.pdf_view = QPdfView()
@@ -318,6 +347,9 @@ class MainWindow(QMainWindow):
     style_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
     style_layout.addRow('Fuente', self.font_combo)
     style_layout.addRow('Tamano texto', self.body_size_input)
+    style_layout.addRow('Color texto', self.body_color_button)
+    style_layout.addRow('Interlineado', self.paragraph_leading_input)
+    style_layout.addRow('Espacio parrafos', self.paragraph_spacing_input)
     style_layout.addRow('Margen lateral', self.margin_x_input)
     style_layout.addRow('Margen vertical', self.margin_y_input)
     style_layout.addRow('Tamano titulo 1', self.h1_size_input)
@@ -328,6 +360,9 @@ class MainWindow(QMainWindow):
     style_layout.addRow('Titulo 3', self.h3_color_button)
     style_layout.addRow('Negrita', self.bold_color_button)
     style_layout.addRow('Cursiva', self.italic_color_button)
+    style_layout.addRow('Fuente codigo', self.code_font_combo)
+    style_layout.addRow('Tamano codigo', self.code_size_input)
+    style_layout.addRow('Fondo codigo', self.code_background_color_button)
     design_layout.addWidget(design_title)
     design_layout.addWidget(design_help)
     design_layout.addWidget(style_panel)
@@ -580,6 +615,8 @@ class MainWindow(QMainWindow):
       'h3': self.h3_color_button,
       'bold': self.bold_color_button,
       'italic': self.italic_color_button,
+      'body': self.body_color_button,
+      'code_background': self.code_background_color_button,
     }
     for color_key, button in buttons.items():
       color = self.heading_colors[color_key]
@@ -604,6 +641,9 @@ class MainWindow(QMainWindow):
     return PdfStyleOptions(
       font_family=self.font_combo.currentText(),
       body_font_size=self.body_size_input.value(),
+      body_color=self.heading_colors['body'],
+      paragraph_leading=self.paragraph_leading_input.value(),
+      paragraph_spacing=self.paragraph_spacing_input.value(),
       page_margin_x=self.margin_x_input.value(),
       page_margin_y=self.margin_y_input.value(),
       heading_1_size=self.h1_size_input.value(),
@@ -614,6 +654,9 @@ class MainWindow(QMainWindow):
       heading_3_color=self.heading_colors['h3'],
       bold_color=self.heading_colors['bold'],
       italic_color=self.heading_colors['italic'],
+      code_font_family=self.code_font_combo.currentText(),
+      code_font_size=self.code_size_input.value(),
+      code_background_color=self.heading_colors['code_background'],
     )
 
   def load_recent_markdowns(self) -> None:

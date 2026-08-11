@@ -26,6 +26,9 @@ class PdfStyleOptions:
 
   font_family: str = 'Arial'
   body_font_size: float = 10.5
+  body_color: str = '#131b2e'
+  paragraph_leading: float = 0.62
+  paragraph_spacing: float = 0.82
   page_margin_x: float = 22
   page_margin_y: float = 20
   heading_1_size: float = 24
@@ -36,6 +39,9 @@ class PdfStyleOptions:
   heading_3_color: str = '#7a3f3f'
   bold_color: str = '#1f3552'
   italic_color: str = '#131b2e'
+  code_font_family: str = 'Consolas'
+  code_font_size: float = 9
+  code_background_color: str = '#f4f1ec'
 
 
 @dataclass(frozen=True)
@@ -124,6 +130,9 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
   replacements = {
     '__BODY_FONT__': style.font_family,
     '__BODY_FONT_SIZE__': f'{style.body_font_size:g}',
+    '__BODY_COLOR__': normalize_hex_color(style.body_color),
+    '__PAR_LEADING__': f'{style.paragraph_leading:g}',
+    '__PAR_SPACING__': f'{style.paragraph_spacing:g}',
     '__PAGE_MARGIN_X__': f'{style.page_margin_x:g}',
     '__PAGE_MARGIN_Y__': f'{style.page_margin_y:g}',
     '__H1_SIZE__': f'{style.heading_1_size:g}',
@@ -134,6 +143,9 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
     '__H3_COLOR__': normalize_hex_color(style.heading_3_color),
     '__BOLD_COLOR__': normalize_hex_color(style.bold_color),
     '__ITALIC_COLOR__': normalize_hex_color(style.italic_color),
+    '__CODE_FONT__': style.code_font_family,
+    '__CODE_FONT_SIZE__': f'{style.code_font_size:g}',
+    '__CODE_BACKGROUND_COLOR__': normalize_hex_color(style.code_background_color),
   }
 
   for placeholder, value in replacements.items():
