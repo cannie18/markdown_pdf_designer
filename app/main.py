@@ -554,10 +554,13 @@ class MainWindow(QMainWindow):
         font-size: 9.5pt;
       }
       #stylePanel QComboBox,
-      #stylePanel QDoubleSpinBox,
       #stylePanel QPushButton {
         font-size: 9.5pt;
         padding: 5px 8px;
+      }
+      #stylePanel QDoubleSpinBox {
+        font-size: 9.5pt;
+        min-height: 26px;
       }
       #designGroupTitle {
         font-size: 10pt;
