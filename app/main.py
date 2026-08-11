@@ -137,6 +137,8 @@ class MainWindow(QMainWindow):
       'h1': '#1f3552',
       'h2': '#2e6f73',
       'h3': '#7a3f3f',
+      'bold': '#1f3552',
+      'italic': '#131b2e',
     }
     self.setWindowTitle('Markdown PDF Designer')
     self.resize(1180, 720)
@@ -246,6 +248,8 @@ class MainWindow(QMainWindow):
     self.h1_color_button = self.create_color_button('h1')
     self.h2_color_button = self.create_color_button('h2')
     self.h3_color_button = self.create_color_button('h3')
+    self.bold_color_button = self.create_color_button('bold')
+    self.italic_color_button = self.create_color_button('italic')
 
     self.pdf_document = QPdfDocument(self)
     self.pdf_view = QPdfView()
@@ -322,6 +326,8 @@ class MainWindow(QMainWindow):
     style_layout.addRow('Titulo 1', self.h1_color_button)
     style_layout.addRow('Titulo 2', self.h2_color_button)
     style_layout.addRow('Titulo 3', self.h3_color_button)
+    style_layout.addRow('Negrita', self.bold_color_button)
+    style_layout.addRow('Cursiva', self.italic_color_button)
     design_layout.addWidget(design_title)
     design_layout.addWidget(design_help)
     design_layout.addWidget(style_panel)
@@ -550,14 +556,14 @@ class MainWindow(QMainWindow):
       button.style().polish(button)
 
   def create_color_button(self, color_key: str) -> QPushButton:
-    '''Crea un boton que abre el selector para un color de titulo.'''
+    '''Crea un boton que abre el selector para un color del PDF.'''
 
     button = QPushButton()
     button.clicked.connect(lambda: self.choose_heading_color(color_key))
     return button
 
   def choose_heading_color(self, color_key: str) -> None:
-    '''Permite escoger un color de titulo con el dialogo nativo de Qt.'''
+    '''Permite escoger un color del PDF con el dialogo nativo de Qt.'''
 
     current = QColor(self.heading_colors[color_key])
     color = QColorDialog.getColor(current, self, 'Elegir color')
@@ -574,6 +580,8 @@ class MainWindow(QMainWindow):
       'h1': self.h1_color_button,
       'h2': self.h2_color_button,
       'h3': self.h3_color_button,
+      'bold': self.bold_color_button,
+      'italic': self.italic_color_button,
     }
     for color_key, button in buttons.items():
       color = self.heading_colors[color_key]
@@ -606,6 +614,8 @@ class MainWindow(QMainWindow):
       heading_1_color=self.heading_colors['h1'],
       heading_2_color=self.heading_colors['h2'],
       heading_3_color=self.heading_colors['h3'],
+      bold_color=self.heading_colors['bold'],
+      italic_color=self.heading_colors['italic'],
     )
 
   def load_recent_markdowns(self) -> None:

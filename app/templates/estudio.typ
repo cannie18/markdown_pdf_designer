@@ -47,8 +47,8 @@ $definitions.typst()$
 )
 
 // Enfasis.
-#show strong: it => text(weight: "bold", fill: rgb("__H1_COLOR__"), it.body)
-#show emph: it => text(style: "italic", it.body)
+#show strong: it => text(weight: "bold", fill: rgb("__BOLD_COLOR__"), it.body)
+#show emph: it => text(style: "italic", fill: rgb("__ITALIC_COLOR__"), it.body)
 
 // Listas.
 #set list(indent: 1.2em, body-indent: 0.55em)

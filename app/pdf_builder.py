@@ -34,6 +34,8 @@ class PdfStyleOptions:
   heading_1_color: str = '#1f3552'
   heading_2_color: str = '#2e6f73'
   heading_3_color: str = '#7a3f3f'
+  bold_color: str = '#1f3552'
+  italic_color: str = '#131b2e'
 
 
 @dataclass(frozen=True)
@@ -130,6 +132,8 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
     '__H1_COLOR__': normalize_hex_color(style.heading_1_color),
     '__H2_COLOR__': normalize_hex_color(style.heading_2_color),
     '__H3_COLOR__': normalize_hex_color(style.heading_3_color),
+    '__BOLD_COLOR__': normalize_hex_color(style.bold_color),
+    '__ITALIC_COLOR__': normalize_hex_color(style.italic_color),
   }
 
   for placeholder, value in replacements.items():
