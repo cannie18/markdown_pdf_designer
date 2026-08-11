@@ -925,7 +925,7 @@ class MainWindow(QMainWindow):
     }
     description = descriptions.get(template_id)
     if description is None:
-      description = template_description(template_id) or 'Plantilla personalizada de la app.'
+      description = template_description(template_id) or 'Plantilla personalizada.'
     self.template_status_label.setText(description)
 
   def handle_template_changed(self) -> None:

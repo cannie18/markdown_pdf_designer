@@ -311,7 +311,7 @@ def save_custom_template(
   target_template.write_text(source_template.read_text(encoding='utf-8'), encoding='utf-8')
   metadata = {
     'label': label.strip(),
-    'description': 'Plantilla personalizada creada desde Diseño.',
+    'description': 'Plantilla personalizada.',
     'source_template': source_template_id,
     'style': asdict(style),
   }
