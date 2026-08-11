@@ -3,7 +3,7 @@
 ## Opciones de diseno
 
 - Revisar que opciones visuales deben estar disponibles desde la app.
-- Separar opciones basicas y avanzadas para no cargar demasiado la interfaz.
+- Seguir separando opciones basicas y avanzadas para no cargar demasiado la interfaz.
 - Mantener dinamicos, como minimo:
   - fuente principal;
   - tamano base del texto;

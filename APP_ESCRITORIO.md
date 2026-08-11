@@ -75,6 +75,7 @@ La app permite:
 - elegir colores para titulos de nivel 1, 2 y 3;
 - elegir colores independientes para negrita y cursiva;
 - elegir fuente, tamano y fondo de los bloques de codigo;
+- consultar las opciones de diseno agrupadas por secciones compactas;
 - generar el PDF;
 - mostrar el PDF generado dentro de la propia app;
 - abrir el PDF en el visor externo de Windows.

@@ -213,14 +213,14 @@ class MainWindow(QMainWindow):
     self.body_size_input.setValue(10.5)
 
     self.paragraph_leading_input = QDoubleSpinBox()
-    self.paragraph_leading_input.setRange(0.35, 1.4)
+    self.paragraph_leading_input.setRange(0.35, 2.5)
     self.paragraph_leading_input.setSingleStep(0.05)
     self.paragraph_leading_input.setDecimals(2)
     self.paragraph_leading_input.setSuffix(' em')
     self.paragraph_leading_input.setValue(0.62)
 
     self.paragraph_spacing_input = QDoubleSpinBox()
-    self.paragraph_spacing_input.setRange(0.2, 1.8)
+    self.paragraph_spacing_input.setRange(0.2, 3.0)
     self.paragraph_spacing_input.setSingleStep(0.05)
     self.paragraph_spacing_input.setDecimals(2)
     self.paragraph_spacing_input.setSuffix(' em')
@@ -342,27 +342,62 @@ class MainWindow(QMainWindow):
     style_panel.setObjectName('stylePanel')
     style_panel.setMinimumWidth(0)
     style_panel.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
-    style_layout = QFormLayout(style_panel)
-    style_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
-    style_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
-    style_layout.addRow('Fuente', self.font_combo)
-    style_layout.addRow('Tamano texto', self.body_size_input)
-    style_layout.addRow('Color texto', self.body_color_button)
-    style_layout.addRow('Interlineado', self.paragraph_leading_input)
-    style_layout.addRow('Espacio parrafos', self.paragraph_spacing_input)
-    style_layout.addRow('Margen lateral', self.margin_x_input)
-    style_layout.addRow('Margen vertical', self.margin_y_input)
-    style_layout.addRow('Tamano titulo 1', self.h1_size_input)
-    style_layout.addRow('Tamano titulo 2', self.h2_size_input)
-    style_layout.addRow('Tamano titulo 3', self.h3_size_input)
-    style_layout.addRow('Titulo 1', self.h1_color_button)
-    style_layout.addRow('Titulo 2', self.h2_color_button)
-    style_layout.addRow('Titulo 3', self.h3_color_button)
-    style_layout.addRow('Negrita', self.bold_color_button)
-    style_layout.addRow('Cursiva', self.italic_color_button)
-    style_layout.addRow('Fuente codigo', self.code_font_combo)
-    style_layout.addRow('Tamano codigo', self.code_size_input)
-    style_layout.addRow('Fondo codigo', self.code_background_color_button)
+    style_panel_layout = QVBoxLayout(style_panel)
+    style_panel_layout.setContentsMargins(10, 10, 10, 10)
+    style_panel_layout.setSpacing(8)
+    style_panel_layout.addLayout(
+      self.create_design_group(
+        'Base',
+        [
+          ('Fuente', self.font_combo),
+          ('Tamano texto', self.body_size_input),
+          ('Color texto', self.body_color_button),
+          ('Interlineado', self.paragraph_leading_input),
+          ('Espacio parrafos', self.paragraph_spacing_input),
+        ],
+      )
+    )
+    style_panel_layout.addLayout(
+      self.create_design_group(
+        'Pagina',
+        [
+          ('Margen lateral', self.margin_x_input),
+          ('Margen vertical', self.margin_y_input),
+        ],
+      )
+    )
+    style_panel_layout.addLayout(
+      self.create_design_group(
+        'Titulos',
+        [
+          ('Tamano titulo 1', self.h1_size_input),
+          ('Tamano titulo 2', self.h2_size_input),
+          ('Tamano titulo 3', self.h3_size_input),
+          ('Titulo 1', self.h1_color_button),
+          ('Titulo 2', self.h2_color_button),
+          ('Titulo 3', self.h3_color_button),
+        ],
+      )
+    )
+    style_panel_layout.addLayout(
+      self.create_design_group(
+        'Enfasis',
+        [
+          ('Negrita', self.bold_color_button),
+          ('Cursiva', self.italic_color_button),
+        ],
+      )
+    )
+    style_panel_layout.addLayout(
+      self.create_design_group(
+        'Codigo',
+        [
+          ('Fuente codigo', self.code_font_combo),
+          ('Tamano codigo', self.code_size_input),
+          ('Fondo codigo', self.code_background_color_button),
+        ],
+      )
+    )
     design_layout.addWidget(design_title)
     design_layout.addWidget(design_help)
     design_layout.addWidget(style_panel)
@@ -515,6 +550,21 @@ class MainWindow(QMainWindow):
         background: #ffffff;
         padding: 8px;
       }
+      #stylePanel QLabel {
+        font-size: 9.5pt;
+      }
+      #stylePanel QComboBox,
+      #stylePanel QDoubleSpinBox,
+      #stylePanel QPushButton {
+        font-size: 9.5pt;
+        padding: 5px 8px;
+      }
+      #designGroupTitle {
+        font-size: 10pt;
+        font-weight: 700;
+        color: #26364a;
+        padding-top: 4px;
+      }
       #dropZone {
         border: 1px dashed #7a8a99;
         border-radius: 6px;
@@ -587,6 +637,29 @@ class MainWindow(QMainWindow):
       button.setProperty('active', button_index == index)
       button.style().unpolish(button)
       button.style().polish(button)
+
+  def create_design_group(self, title: str, rows: list[tuple[str, QWidget]]) -> QVBoxLayout:
+    '''Crea una seccion compacta para opciones de diseno relacionadas.'''
+
+    group_layout = QVBoxLayout()
+    group_layout.setContentsMargins(0, 0, 0, 0)
+    group_layout.setSpacing(4)
+
+    group_title = QLabel(title)
+    group_title.setObjectName('designGroupTitle')
+    group_layout.addWidget(group_title)
+
+    form_layout = QFormLayout()
+    form_layout.setContentsMargins(0, 0, 0, 0)
+    form_layout.setHorizontalSpacing(8)
+    form_layout.setVerticalSpacing(5)
+    form_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
+    form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
+    for label, widget in rows:
+      form_layout.addRow(label, widget)
+
+    group_layout.addLayout(form_layout)
+    return group_layout
 
   def create_color_button(self, color_key: str) -> QPushButton:
     '''Crea un boton que abre el selector para un color del PDF.'''
