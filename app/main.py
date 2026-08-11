@@ -56,6 +56,8 @@ from .pdf_builder import (
 
 PREVIEW_PANEL_MIN_WIDTH = 320
 WINDOW_MIN_HEIGHT = 480
+RECENT_FILES_POPUP_MIN_WIDTH = 560
+RECENT_FILES_POPUP_MAX_WIDTH = 960
 TEMPLATE_LABELS = {
   'estudio': 'Estudio',
   'profesional': 'Profesional',
@@ -203,6 +205,7 @@ class MainWindow(QMainWindow):
     self.file_input.setSizeAdjustPolicy(
       QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon
     )
+    self.file_input.view().setMinimumWidth(RECENT_FILES_POPUP_MIN_WIDTH)
     self.file_input.lineEdit().setPlaceholderText('Selecciona o arrastra un archivo .md')
     self.file_input.activated.connect(self.open_recent_markdown)
     self.load_recent_markdowns()
@@ -970,11 +973,28 @@ class MainWindow(QMainWindow):
     '''Carga en el desplegable las últimas rutas Markdown usadas.'''
 
     recent = self.settings.value('recent_markdowns', [], list)
+    recent_paths = [str(path) for path in recent[:10]]
     self.file_input.blockSignals(True)
     self.file_input.clear()
-    self.file_input.addItems([str(path) for path in recent[:10]])
+    self.file_input.addItems(recent_paths)
     self.file_input.setCurrentText('')
     self.file_input.blockSignals(False)
+    self.update_recent_files_popup_width(recent_paths)
+
+  def update_recent_files_popup_width(self, recent_paths: list[str]) -> None:
+    '''Ajusta el ancho del desplegable para leer rutas recientes largas.'''
+
+    if not recent_paths:
+      self.file_input.view().setMinimumWidth(RECENT_FILES_POPUP_MIN_WIDTH)
+      return
+
+    longest_path = max(recent_paths, key=len)
+    measured_width = self.file_input.fontMetrics().horizontalAdvance(longest_path) + 48
+    popup_width = min(
+      max(measured_width, RECENT_FILES_POPUP_MIN_WIDTH),
+      RECENT_FILES_POPUP_MAX_WIDTH,
+    )
+    self.file_input.view().setMinimumWidth(popup_width)
 
   def set_initial_splitter_sizes(self) -> None:
     '''Asigna un ancho inicial estable al panel izquierdo.'''
