@@ -105,6 +105,12 @@ Las opciones visuales de la app se aplican generando una plantilla Typst
 temporal a partir de la plantilla elegida en `app/templates/`. La plantilla
 portable `templates/apuntes.typ` no se modifica.
 
+Las plantillas creadas por el usuario se guardan fuera del código de la app, en:
+
+```text
+%APPDATA%\pdf_apuntes\templates
+```
+
 ## Estructura
 
 ```text
@@ -159,6 +165,7 @@ Las plantillas disponibles en la app son:
 Último estado comprobado:
 
 - la app Python genera PDF con todas las plantillas de `app/templates/`;
+- las plantillas personalizadas se guardan en `%APPDATA%\pdf_apuntes\templates`;
 - la versión portable `crear_pdf.bat` sigue funcionando;
 - `Ensayo APA / MLA` tiene jerarquía de títulos y espaciado corregido;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;

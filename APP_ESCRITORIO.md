@@ -107,6 +107,12 @@ app/templates/*.typ
 
 pertenecen a la app de escritorio.
 
+Las plantillas creadas por el usuario se guardan como datos de usuario en:
+
+```text
+%APPDATA%\pdf_apuntes\templates
+```
+
 Esto permite mejorar la app sin romper el flujo simple:
 
 ```powershell
@@ -131,6 +137,7 @@ Typst temporal a partir de la plantilla elegida en:
 
 ```text
 app/templates/
+%APPDATA%\pdf_apuntes\templates
 ```
 
 Esa plantilla temporal se usa solo durante la conversión y se elimina al

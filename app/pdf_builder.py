@@ -20,6 +20,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 APP_DIR = Path(__file__).resolve().parent
 APP_TEMPLATES_DIR = APP_DIR / 'templates'
 DEFAULT_TEMPLATE_ID = 'estudio'
+USER_DATA_ENV_VAR = 'PDF_APUNTES_USER_DATA_DIR'
 
 
 @dataclass(frozen=True)
@@ -233,6 +234,41 @@ def template_style_preset(template_id: str) -> PdfStyleOptions:
   return PdfStyleOptions()
 
 
+def user_data_dir() -> Path:
+  '''Devuelve la carpeta de datos de usuario de la app.'''
+
+  override = os.environ.get(USER_DATA_ENV_VAR)
+  if override:
+    return Path(override).expanduser()
+
+  appdata = os.environ.get('APPDATA')
+  if appdata:
+    return Path(appdata) / 'pdf_apuntes'
+
+  return Path.home() / '.pdf_apuntes'
+
+
+def user_templates_dir() -> Path:
+  '''Devuelve la carpeta de plantillas creadas por el usuario.'''
+
+  return user_data_dir() / 'templates'
+
+
+def template_metadata_path(template_id: str) -> Path | None:
+  '''Busca los metadatos de una plantilla personalizada.'''
+
+  normalized_id = template_id.strip().lower() or DEFAULT_TEMPLATE_ID
+  user_metadata = user_templates_dir() / f'{normalized_id}.json'
+  if user_metadata.exists():
+    return user_metadata
+
+  legacy_metadata = APP_TEMPLATES_DIR / f'{normalized_id}.json'
+  if legacy_metadata.exists():
+    return legacy_metadata
+
+  return None
+
+
 def style_options_from_data(data: dict[str, object]) -> PdfStyleOptions:
   '''Construye opciones visuales ignorando claves desconocidas.'''
 
@@ -248,9 +284,8 @@ def style_options_from_data(data: dict[str, object]) -> PdfStyleOptions:
 def template_metadata(template_id: str) -> dict[str, object]:
   '''Lee los metadatos opcionales de una plantilla de la app.'''
 
-  normalized_id = template_id.strip().lower() or DEFAULT_TEMPLATE_ID
-  metadata_file = APP_TEMPLATES_DIR / f'{normalized_id}.json'
-  if not metadata_file.exists():
+  metadata_file = template_metadata_path(template_id)
+  if metadata_file is None:
     return {}
 
   try:
@@ -285,8 +320,10 @@ def is_custom_template(template_id: str) -> bool:
   '''Indica si una plantilla tiene metadatos editables de usuario.'''
 
   normalized_id = template_id.strip().lower() or DEFAULT_TEMPLATE_ID
-  metadata_file = APP_TEMPLATES_DIR / f'{normalized_id}.json'
-  return normalized_id not in TEMPLATE_STYLE_PRESETS and metadata_file.exists()
+  return (
+    normalized_id not in TEMPLATE_STYLE_PRESETS
+    and template_metadata_path(normalized_id) is not None
+  )
 
 
 def save_custom_template(
@@ -301,11 +338,19 @@ def save_custom_template(
   if not normalized_id:
     raise PdfBuildError('El identificador de la plantilla no puede estar vacío.')
 
-  APP_TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+  user_template_dir = user_templates_dir()
+  user_template_dir.mkdir(parents=True, exist_ok=True)
   source_template = template_path(source_template_id)
-  target_template = APP_TEMPLATES_DIR / f'{normalized_id}.typ'
-  target_metadata = APP_TEMPLATES_DIR / f'{normalized_id}.json'
-  if target_template.exists() or target_metadata.exists():
+  target_template = user_template_dir / f'{normalized_id}.typ'
+  target_metadata = user_template_dir / f'{normalized_id}.json'
+  legacy_template = APP_TEMPLATES_DIR / f'{normalized_id}.typ'
+  legacy_metadata = APP_TEMPLATES_DIR / f'{normalized_id}.json'
+  if (
+    target_template.exists()
+    or target_metadata.exists()
+    or legacy_template.exists()
+    or legacy_metadata.exists()
+  ):
     raise PdfBuildError(f'Ya existe una plantilla con ese identificador: {normalized_id}')
 
   target_template.write_text(source_template.read_text(encoding='utf-8'), encoding='utf-8')
@@ -328,13 +373,45 @@ def update_custom_template_style(template_id: str, style: PdfStyleOptions) -> No
   if not is_custom_template(normalized_id):
     raise PdfBuildError('Solo se pueden actualizar plantillas personalizadas.')
 
-  metadata_file = APP_TEMPLATES_DIR / f'{normalized_id}.json'
+  metadata_file = template_metadata_path(normalized_id)
+  if metadata_file is None:
+    raise PdfBuildError('No se encontraron los metadatos de la plantilla.')
+
   metadata = template_metadata(normalized_id)
   metadata['style'] = asdict(style)
   metadata_file.write_text(
     json.dumps(metadata, ensure_ascii=False, indent=2),
     encoding='utf-8',
   )
+
+
+def migrate_legacy_custom_templates() -> None:
+  '''Copia plantillas personalizadas antiguas a la carpeta de usuario.'''
+
+  if not APP_TEMPLATES_DIR.exists():
+    return
+
+  target_dir = user_templates_dir()
+  for metadata_file in APP_TEMPLATES_DIR.glob('*.json'):
+    template_id = metadata_file.stem
+    if template_id in TEMPLATE_STYLE_PRESETS:
+      continue
+
+    source_template = APP_TEMPLATES_DIR / f'{template_id}.typ'
+    if not source_template.exists():
+      continue
+
+    target_template = target_dir / source_template.name
+    target_metadata = target_dir / metadata_file.name
+    if target_template.exists() or target_metadata.exists():
+      continue
+
+    target_dir.mkdir(parents=True, exist_ok=True)
+    target_template.write_text(
+      source_template.read_text(encoding='utf-8'),
+      encoding='utf-8',
+    )
+    target_metadata.write_text(metadata_file.read_text(encoding='utf-8'), encoding='utf-8')
 
 
 def find_executable(name: str) -> Path | str:
@@ -380,19 +457,30 @@ def default_template() -> Path:
 def available_templates() -> list[str]:
   '''Lista las plantillas Typst disponibles para la app.'''
 
-  if not APP_TEMPLATES_DIR.exists():
-    return []
-  return sorted(template.stem for template in APP_TEMPLATES_DIR.glob('*.typ'))
+  migrate_legacy_custom_templates()
+
+  templates = set()
+  if APP_TEMPLATES_DIR.exists():
+    templates.update(template.stem for template in APP_TEMPLATES_DIR.glob('*.typ'))
+  current_user_templates_dir = user_templates_dir()
+  if current_user_templates_dir.exists():
+    templates.update(template.stem for template in current_user_templates_dir.glob('*.typ'))
+  return sorted(templates)
 
 
 def template_path(template_id: str) -> Path:
   '''Devuelve la ruta de una plantilla de la app validando su existencia.'''
 
   normalized_id = template_id.strip().lower() or DEFAULT_TEMPLATE_ID
-  template = APP_TEMPLATES_DIR / f'{normalized_id}.typ'
-  if not template.exists():
-    raise PdfBuildError(f'No existe la plantilla de la app: {template}')
-  return template
+  app_template = APP_TEMPLATES_DIR / f'{normalized_id}.typ'
+  if app_template.exists():
+    return app_template
+
+  user_template = user_templates_dir() / f'{normalized_id}.typ'
+  if user_template.exists():
+    return user_template
+
+  raise PdfBuildError(f'No existe la plantilla de la app: {app_template}')
 
 
 def normalize_hex_color(color: str) -> str:
