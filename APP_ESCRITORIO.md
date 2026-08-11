@@ -75,6 +75,7 @@ La app permite:
 - elegir colores para títulos de nivel 1, 2 y 3;
 - elegir colores independientes para negrita y cursiva;
 - elegir fuente, tamaño y fondo de los bloques de código;
+- elegir espaciado, bordes y cabecera de tablas;
 - consultar las opciones de diseño agrupadas por secciones compactas;
 - elegir una plantilla visual predefinida desde `Diseño`;
 - cargar en `Diseño` los ajustes base de la plantilla seleccionada;

@@ -45,6 +45,10 @@ class PdfStyleOptions:
   code_font_family: str = 'Consolas'
   code_font_size: float = 9
   code_background_color: str = '#f4f1ec'
+  table_inset: float = 7
+  table_stroke_color: str = '#c8d0d8'
+  table_header_background_color: str = '#eef2f7'
+  table_header_text_color: str = '#1f3552'
 
 
 @dataclass(frozen=True)
@@ -82,6 +86,10 @@ TEMPLATE_STYLE_PRESETS = {
     bold_color='#233b5d',
     italic_color='#172033',
     code_background_color='#f3f5f7',
+    table_inset=7,
+    table_stroke_color='#b9c3cf',
+    table_header_background_color='#eef2f7',
+    table_header_text_color='#233b5d',
   ),
   'compacto': PdfStyleOptions(
     font_family='Arial',
@@ -101,6 +109,10 @@ TEMPLATE_STYLE_PRESETS = {
     italic_color='#171717',
     code_font_size=8,
     code_background_color='#f4f4f4',
+    table_inset=5,
+    table_stroke_color='#c8d0d8',
+    table_header_background_color='#edf1f2',
+    table_header_text_color='#19324a',
   ),
   'latex_clasico': PdfStyleOptions(
     font_family='Latin Modern Roman',
@@ -120,6 +132,10 @@ TEMPLATE_STYLE_PRESETS = {
     italic_color='#000000',
     code_font_size=9,
     code_background_color='#ffffff',
+    table_inset=6,
+    table_stroke_color='#000000',
+    table_header_background_color='#ffffff',
+    table_header_text_color='#000000',
   ),
   'apa_mla': PdfStyleOptions(
     font_family='Times New Roman',
@@ -139,6 +155,10 @@ TEMPLATE_STYLE_PRESETS = {
     italic_color='#111111',
     code_font_size=9,
     code_background_color='#f7f7f7',
+    table_inset=6,
+    table_stroke_color='#c8d0d8',
+    table_header_background_color='#f7f7f7',
+    table_header_text_color='#111111',
   ),
   'informe_ejecutivo': PdfStyleOptions(
     font_family='Aptos',
@@ -157,6 +177,10 @@ TEMPLATE_STYLE_PRESETS = {
     bold_color='#204a66',
     italic_color='#1c2433',
     code_background_color='#eef2f6',
+    table_inset=8,
+    table_stroke_color='#d3dae2',
+    table_header_background_color='#204a66',
+    table_header_text_color='#ffffff',
   ),
   'manual_tecnico': PdfStyleOptions(
     font_family='Segoe UI',
@@ -176,6 +200,10 @@ TEMPLATE_STYLE_PRESETS = {
     italic_color='#17202c',
     code_font_size=9,
     code_background_color='#1f2430',
+    table_inset=7,
+    table_stroke_color='#c8d0d8',
+    table_header_background_color='#e8f4f8',
+    table_header_text_color='#17496b',
   ),
   'manuscrito_novela': PdfStyleOptions(
     font_family='Times New Roman',
@@ -195,6 +223,10 @@ TEMPLATE_STYLE_PRESETS = {
     italic_color='#151515',
     code_font_size=9,
     code_background_color='#f6f3ee',
+    table_inset=6,
+    table_stroke_color='#d6cfc3',
+    table_header_background_color='#f1ebe1',
+    table_header_text_color='#252525',
   ),
   'accesibilidad_neurodivergencia': PdfStyleOptions(
     font_family='Verdana',
@@ -215,6 +247,10 @@ TEMPLATE_STYLE_PRESETS = {
     code_font_family='Cascadia Mono',
     code_font_size=10.5,
     code_background_color='#e7f3f2',
+    table_inset=9,
+    table_stroke_color='#b8cbc6',
+    table_header_background_color='#e8f4ec',
+    table_header_text_color='#24435a',
   ),
 }
 
@@ -526,6 +562,12 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
     '__CODE_FONT__': style.code_font_family,
     '__CODE_FONT_SIZE__': f'{style.code_font_size:g}',
     '__CODE_BACKGROUND_COLOR__': normalize_hex_color(style.code_background_color),
+    '__TABLE_INSET__': f'{style.table_inset:g}',
+    '__TABLE_STROKE_COLOR__': normalize_hex_color(style.table_stroke_color),
+    '__TABLE_HEADER_BACKGROUND_COLOR__': normalize_hex_color(
+      style.table_header_background_color
+    ),
+    '__TABLE_HEADER_TEXT_COLOR__': normalize_hex_color(style.table_header_text_color),
   }
 
   for placeholder, value in replacements.items():

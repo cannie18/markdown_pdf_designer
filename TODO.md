@@ -55,6 +55,7 @@
   - tamaños de títulos;
   - color del texto normal;
   - estilos de código;
+  - estilos de tabla;
   - espaciados principales;
   - márgenes del documento.
 - Decidir si cada ajuste se guarda por documento, por plantilla o como preferencia global.

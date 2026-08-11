@@ -198,6 +198,9 @@ class MainWindow(QMainWindow):
       'italic': '#131b2e',
       'body': '#131b2e',
       'code_background': '#f4f1ec',
+      'table_stroke': '#c8d0d8',
+      'table_header_background': '#eef2f7',
+      'table_header_text': '#1f3552',
     }
     self.setWindowTitle('Markdown PDF Designer')
     self.resize(1180, 720)
@@ -339,6 +342,11 @@ class MainWindow(QMainWindow):
     self.italic_color_button = self.create_color_button('italic')
     self.body_color_button = self.create_color_button('body')
     self.code_background_color_button = self.create_color_button('code_background')
+    self.table_stroke_color_button = self.create_color_button('table_stroke')
+    self.table_header_background_color_button = self.create_color_button(
+      'table_header_background'
+    )
+    self.table_header_text_color_button = self.create_color_button('table_header_text')
 
     self.code_font_combo = QComboBox()
     self.code_font_combo.addItems(['Consolas', 'Cascadia Mono', 'Courier New', 'JetBrains Mono'])
@@ -350,6 +358,13 @@ class MainWindow(QMainWindow):
     self.code_size_input.setDecimals(1)
     self.code_size_input.setSuffix(' pt')
     self.code_size_input.setValue(9)
+
+    self.table_inset_input = QDoubleSpinBox()
+    self.table_inset_input.setRange(2, 18)
+    self.table_inset_input.setSingleStep(0.5)
+    self.table_inset_input.setDecimals(1)
+    self.table_inset_input.setSuffix(' pt')
+    self.table_inset_input.setValue(7)
 
     self.create_template_button = QPushButton('Crear nueva plantilla')
     self.create_template_button.clicked.connect(self.create_custom_template)
@@ -497,6 +512,17 @@ class MainWindow(QMainWindow):
           ('Fuente código', self.code_font_combo),
           ('Tamaño código', self.code_size_input),
           ('Fondo código', self.code_background_color_button),
+        ],
+      )
+    )
+    style_panel_layout.addLayout(
+      self.create_design_group(
+        'Tablas',
+        [
+          ('Espacio celdas', self.table_inset_input),
+          ('Bordes', self.table_stroke_color_button),
+          ('Fondo cabecera', self.table_header_background_color_button),
+          ('Texto cabecera', self.table_header_text_color_button),
         ],
       )
     )
@@ -791,6 +817,9 @@ class MainWindow(QMainWindow):
       'italic': self.italic_color_button,
       'body': self.body_color_button,
       'code_background': self.code_background_color_button,
+      'table_stroke': self.table_stroke_color_button,
+      'table_header_background': self.table_header_background_color_button,
+      'table_header_text': self.table_header_text_color_button,
     }
     for color_key, button in buttons.items():
       color = self.heading_colors[color_key]
@@ -824,6 +853,7 @@ class MainWindow(QMainWindow):
       self.h3_size_input,
       self.code_font_combo,
       self.code_size_input,
+      self.table_inset_input,
     ]
     for widget in controlled_widgets:
       widget.blockSignals(True)
@@ -839,6 +869,7 @@ class MainWindow(QMainWindow):
     self.h3_size_input.setValue(style.heading_3_size)
     self.code_font_combo.setCurrentText(style.code_font_family)
     self.code_size_input.setValue(style.code_font_size)
+    self.table_inset_input.setValue(style.table_inset)
 
     for widget in controlled_widgets:
       widget.blockSignals(False)
@@ -853,6 +884,9 @@ class MainWindow(QMainWindow):
         'bold': style.bold_color,
         'italic': style.italic_color,
         'code_background': style.code_background_color,
+        'table_stroke': style.table_stroke_color,
+        'table_header_background': style.table_header_background_color,
+        'table_header_text': style.table_header_text_color,
       }
     )
     self.refresh_color_buttons()
@@ -881,6 +915,10 @@ class MainWindow(QMainWindow):
       code_font_family=self.code_font_combo.currentText(),
       code_font_size=self.code_size_input.value(),
       code_background_color=self.heading_colors['code_background'],
+      table_inset=self.table_inset_input.value(),
+      table_stroke_color=self.heading_colors['table_stroke'],
+      table_header_background_color=self.heading_colors['table_header_background'],
+      table_header_text_color=self.heading_colors['table_header_text'],
     )
 
   def ensure_paragraph_spacing_minimum(self) -> None:

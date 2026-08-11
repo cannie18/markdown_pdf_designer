@@ -80,9 +80,11 @@ $definitions.typst()$
 
 // Tablas.
 #set table(
-  inset: 7pt,
-  stroke: rgb("#c8d0d8"),
+  inset: __TABLE_INSET__pt,
+  stroke: rgb("__TABLE_STROKE_COLOR__"),
 )
+#show table.cell.where(y: 0): set table.cell(fill: rgb("__TABLE_HEADER_BACKGROUND_COLOR__"))
+#show table.cell.where(y: 0): set text(weight: "bold", fill: rgb("__TABLE_HEADER_TEXT_COLOR__"))
 
 $for(header-includes)$
 $header-includes$
@@ -90,3 +92,4 @@ $header-includes$
 $endfor$
 
 $body$
+
