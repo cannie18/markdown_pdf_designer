@@ -24,22 +24,24 @@ $definitions.typst()$
 )
 
 #set heading(numbering: none)
+#show heading: set par(justify: false, first-line-indent: 0em, leading: 0.72em)
+#show heading: set text(hyphenate: false)
 
 #show heading.where(level: 1): it => block(
   above: 0.8em,
-  below: 0.8em,
+  below: 0.9em,
   align(center, text(size: __H1_SIZE__pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body)),
 )
 
 #show heading.where(level: 2): it => block(
-  above: 0.8em,
-  below: 0.4em,
+  above: 1em,
+  below: 0.65em,
   text(size: __H2_SIZE__pt, weight: "bold", fill: rgb("__H2_COLOR__"), it.body),
 )
 
 #show heading.where(level: 3): it => block(
-  above: 0.6em,
-  below: 0.25em,
+  above: 0.8em,
+  below: 0.55em,
   text(size: __H3_SIZE__pt, weight: "bold", style: "italic", fill: rgb("__H3_COLOR__"), it.body),
 )
 

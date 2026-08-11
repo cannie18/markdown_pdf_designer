@@ -23,6 +23,8 @@ $definitions.typst()$
 )
 
 #set heading(numbering: none)
+#show heading: set par(justify: false, first-line-indent: 0em, leading: 0.72em)
+#show heading: set text(hyphenate: false)
 
 #show heading.where(level: 1): it => block(
   above: 0.5em,

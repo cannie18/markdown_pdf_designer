@@ -270,6 +270,8 @@ class MainWindow(QMainWindow):
     self.paragraph_spacing_input.setSingleStep(0.05)
     self.paragraph_spacing_input.setDecimals(2)
     self.paragraph_spacing_input.setValue(0.82)
+    self.paragraph_leading_input.valueChanged.connect(self.ensure_paragraph_spacing_minimum)
+    self.paragraph_spacing_input.valueChanged.connect(self.ensure_paragraph_spacing_minimum)
 
     self.margin_x_input = QDoubleSpinBox()
     self.margin_x_input.setRange(0.3, 7)
@@ -803,6 +805,7 @@ class MainWindow(QMainWindow):
     for widget in controlled_widgets:
       widget.blockSignals(False)
 
+    self.ensure_paragraph_spacing_minimum()
     self.heading_colors.update(
       {
         'body': style.body_color,
@@ -819,12 +822,14 @@ class MainWindow(QMainWindow):
   def current_style_options(self) -> PdfStyleOptions:
     '''Construye las opciones visuales actuales para el generador de PDF.'''
 
+    paragraph_leading = self.paragraph_leading_input.value()
+    paragraph_spacing = max(self.paragraph_spacing_input.value(), paragraph_leading)
     return PdfStyleOptions(
       font_family=self.font_combo.currentText(),
       body_font_size=self.body_size_input.value(),
       body_color=self.heading_colors['body'],
-      paragraph_leading=self.paragraph_leading_input.value(),
-      paragraph_spacing=self.paragraph_spacing_input.value(),
+      paragraph_leading=paragraph_leading,
+      paragraph_spacing=paragraph_spacing,
       page_margin_x=self.margin_x_input.value() * 10,
       page_margin_y=self.margin_y_input.value() * 10,
       heading_1_size=self.h1_size_input.value(),
@@ -839,6 +844,17 @@ class MainWindow(QMainWindow):
       code_font_size=self.code_size_input.value(),
       code_background_color=self.heading_colors['code_background'],
     )
+
+  def ensure_paragraph_spacing_minimum(self) -> None:
+    '''Evita que el espacio entre párrafos quede por debajo del interlineado.'''
+
+    paragraph_leading = self.paragraph_leading_input.value()
+    if self.paragraph_spacing_input.value() >= paragraph_leading:
+      return
+
+    self.paragraph_spacing_input.blockSignals(True)
+    self.paragraph_spacing_input.setValue(paragraph_leading)
+    self.paragraph_spacing_input.blockSignals(False)
 
   def current_template_id(self) -> str:
     '''Devuelve la plantilla seleccionada para generar el PDF.'''
