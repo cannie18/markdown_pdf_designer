@@ -84,6 +84,7 @@ La app permite:
 - recordar la última plantilla seleccionada;
 - corregir automáticamente el espacio entre párrafos para que no quede por debajo del interlineado;
 - aplicar reglas propias a los títulos para evitar justificación, sangría heredada y guionado automático;
+- evitar cambios accidentales en controles numéricos al usar la rueda del ratón;
 - generar el PDF;
 - mostrar el PDF generado dentro de la propia app;
 - abrir el PDF en el visor externo de Windows.

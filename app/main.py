@@ -14,7 +14,7 @@ import unicodedata
 from pathlib import Path
 
 from PySide6.QtCore import QSettings, Qt, QThread, Signal
-from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent
+from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent, QWheelEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
@@ -171,6 +171,15 @@ class DropZone(QFrame):
       self.file_dropped.emit(path)
 
 
+class DesignDoubleSpinBox(QDoubleSpinBox):
+  '''Spinbox de diseño que no cambia valores con la rueda del ratón.'''
+
+  def wheelEvent(self, event: QWheelEvent) -> None:
+    '''Ignora la rueda para que el scroll del panel no cambie parámetros.'''
+
+    event.ignore()
+
+
 class MainWindow(QMainWindow):
   '''Ventana principal de la app de escritorio.'''
 
@@ -275,20 +284,20 @@ class MainWindow(QMainWindow):
     ])
     self.font_combo.setCurrentText('Arial')
 
-    self.body_size_input = QDoubleSpinBox()
+    self.body_size_input = DesignDoubleSpinBox()
     self.body_size_input.setRange(6, 48)
     self.body_size_input.setSingleStep(0.5)
     self.body_size_input.setDecimals(1)
     self.body_size_input.setSuffix(' pt')
     self.body_size_input.setValue(10.5)
 
-    self.paragraph_leading_input = QDoubleSpinBox()
+    self.paragraph_leading_input = DesignDoubleSpinBox()
     self.paragraph_leading_input.setRange(0.35, 2.5)
     self.paragraph_leading_input.setSingleStep(0.05)
     self.paragraph_leading_input.setDecimals(2)
     self.paragraph_leading_input.setValue(0.62)
 
-    self.paragraph_spacing_input = QDoubleSpinBox()
+    self.paragraph_spacing_input = DesignDoubleSpinBox()
     self.paragraph_spacing_input.setRange(0, 3.0)
     self.paragraph_spacing_input.setSingleStep(0.05)
     self.paragraph_spacing_input.setDecimals(2)
@@ -296,35 +305,35 @@ class MainWindow(QMainWindow):
     self.paragraph_leading_input.valueChanged.connect(self.ensure_paragraph_spacing_minimum)
     self.paragraph_spacing_input.valueChanged.connect(self.ensure_paragraph_spacing_minimum)
 
-    self.margin_x_input = QDoubleSpinBox()
+    self.margin_x_input = DesignDoubleSpinBox()
     self.margin_x_input.setRange(0.3, 7)
     self.margin_x_input.setSingleStep(0.1)
     self.margin_x_input.setDecimals(1)
     self.margin_x_input.setSuffix(' cm')
     self.margin_x_input.setValue(2.2)
 
-    self.margin_y_input = QDoubleSpinBox()
+    self.margin_y_input = DesignDoubleSpinBox()
     self.margin_y_input.setRange(0.3, 7)
     self.margin_y_input.setSingleStep(0.1)
     self.margin_y_input.setDecimals(1)
     self.margin_y_input.setSuffix(' cm')
     self.margin_y_input.setValue(2.0)
 
-    self.h1_size_input = QDoubleSpinBox()
+    self.h1_size_input = DesignDoubleSpinBox()
     self.h1_size_input.setRange(6, 48)
     self.h1_size_input.setSingleStep(0.5)
     self.h1_size_input.setDecimals(1)
     self.h1_size_input.setSuffix(' pt')
     self.h1_size_input.setValue(24)
 
-    self.h2_size_input = QDoubleSpinBox()
+    self.h2_size_input = DesignDoubleSpinBox()
     self.h2_size_input.setRange(6, 48)
     self.h2_size_input.setSingleStep(0.5)
     self.h2_size_input.setDecimals(1)
     self.h2_size_input.setSuffix(' pt')
     self.h2_size_input.setValue(16)
 
-    self.h3_size_input = QDoubleSpinBox()
+    self.h3_size_input = DesignDoubleSpinBox()
     self.h3_size_input.setRange(6, 48)
     self.h3_size_input.setSingleStep(0.5)
     self.h3_size_input.setDecimals(1)
@@ -348,14 +357,14 @@ class MainWindow(QMainWindow):
     self.code_font_combo.addItems(['Consolas', 'Cascadia Mono', 'Courier New', 'JetBrains Mono'])
     self.code_font_combo.setCurrentText('Consolas')
 
-    self.code_size_input = QDoubleSpinBox()
+    self.code_size_input = DesignDoubleSpinBox()
     self.code_size_input.setRange(6, 48)
     self.code_size_input.setSingleStep(0.5)
     self.code_size_input.setDecimals(1)
     self.code_size_input.setSuffix(' pt')
     self.code_size_input.setValue(9)
 
-    self.table_inset_input = QDoubleSpinBox()
+    self.table_inset_input = DesignDoubleSpinBox()
     self.table_inset_input.setRange(2, 18)
     self.table_inset_input.setSingleStep(0.5)
     self.table_inset_input.setDecimals(1)

@@ -100,6 +100,7 @@ La app permite, de momento:
 - recordar la última plantilla seleccionada;
 - mantener el espacio entre párrafos igual o superior al interlineado;
 - evitar que los títulos hereden justificación, sangría o guionado automático;
+- evitar cambios accidentales en controles numéricos al usar la rueda del ratón;
 - recordar posición, monitor y tamaño de ventana;
 - mantener un ancho mínimo usable para controles y dejar que la vista previa use el espacio restante.
 
