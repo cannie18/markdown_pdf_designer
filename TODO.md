@@ -24,6 +24,7 @@
 - Creación de plantillas personalizadas desde los ajustes actuales de `Diseño`.
 - Actualización de plantillas personalizadas sin crear copias nuevas.
 - Plantillas personalizadas guardadas en `%APPDATA%\pdf_apuntes\templates`.
+- Persistencia de la última plantilla y los últimos ajustes visuales usados.
 - Corrección de textos visibles de la app a español de España.
 - Separación entre plantillas de app y plantilla portable.
 - Primera fase de plantillas predefinidas:
@@ -93,8 +94,7 @@
 
 ## Persistencia
 
-- Guardar la plantilla elegida.
-- Guardar opciones visuales usadas recientemente.
+- Revisar si conviene añadir un botón para restaurar valores base de la plantilla.
 - Revisar si conviene guardar ajustes por archivo Markdown.
 - Añadir más adelante una ruta de salida para el PDF.
   - Durante las pruebas, mantener `Generar PDF` sobrescribiendo directamente.

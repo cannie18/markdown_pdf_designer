@@ -7,10 +7,12 @@ de la app. La conversión se delega en `app.pdf_builder`.
 
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
 import unicodedata
+from dataclasses import asdict
 from pathlib import Path
 
 from PySide6.QtCore import QSettings, Qt, QThread, Signal
@@ -49,6 +51,7 @@ from .pdf_builder import (
   build_pdf,
   is_custom_template,
   save_custom_template,
+  style_options_from_data,
   template_description,
   template_label,
   template_style_preset,
@@ -60,6 +63,8 @@ PREVIEW_PANEL_MIN_WIDTH = 320
 WINDOW_MIN_HEIGHT = 480
 RECENT_FILES_POPUP_MIN_WIDTH = 560
 RECENT_FILES_POPUP_MAX_WIDTH = 960
+SELECTED_TEMPLATE_SETTING = 'selected_template_id'
+STYLE_OPTIONS_SETTING = 'style_options'
 TEMPLATE_LABELS = {
   'estudio': 'Estudio',
   'profesional': 'Profesional',
@@ -553,7 +558,7 @@ class MainWindow(QMainWindow):
     if initial_file:
       self.set_markdown_file(initial_file)
     self.select_left_section(0)
-    self.handle_template_changed()
+    self.restore_design_settings()
 
   def apply_styles(self) -> None:
     '''Aplica estilos visuales de la interfaz, no del PDF generado.'''
@@ -936,6 +941,47 @@ class MainWindow(QMainWindow):
     self.update_template_status()
     self.update_template_button.setVisible(is_custom_template(template_id))
 
+  def restore_design_settings(self) -> None:
+    '''Restaura la plantilla y los últimos ajustes visuales usados.'''
+
+    template_id = self.settings.value(
+      SELECTED_TEMPLATE_SETTING,
+      DEFAULT_TEMPLATE_ID,
+      str,
+    )
+    if not isinstance(template_id, str) or not template_id.strip():
+      template_id = DEFAULT_TEMPLATE_ID
+
+    template_index = self.template_combo.findData(template_id)
+    self.template_combo.blockSignals(True)
+    self.template_combo.setCurrentIndex(max(0, template_index))
+    self.template_combo.blockSignals(False)
+    self.handle_template_changed()
+
+    style_text = self.settings.value(STYLE_OPTIONS_SETTING, '', str)
+    if not isinstance(style_text, str) or not style_text.strip():
+      return
+
+    try:
+      style_data = json.loads(style_text)
+    except json.JSONDecodeError:
+      return
+
+    if not isinstance(style_data, dict):
+      return
+
+    self.apply_style_options(style_options_from_data(style_data))
+    self.update_template_status()
+
+  def save_design_settings(self) -> None:
+    '''Guarda la plantilla y los ajustes visuales actuales.'''
+
+    self.settings.setValue(SELECTED_TEMPLATE_SETTING, self.current_template_id())
+    self.settings.setValue(
+      STYLE_OPTIONS_SETTING,
+      json.dumps(asdict(self.current_style_options()), ensure_ascii=False),
+    )
+
   def display_template_label(self, template_id: str) -> str:
     '''Devuelve el texto visible para el selector de plantillas.'''
 
@@ -1108,6 +1154,7 @@ class MainWindow(QMainWindow):
       return
 
     self.settings.setValue('window_geometry', self.saveGeometry())
+    self.save_design_settings()
     event.accept()
 
   def choose_file(self) -> None:

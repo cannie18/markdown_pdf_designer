@@ -80,6 +80,7 @@ La app permite:
 - cargar en `Diseño` los ajustes base de la plantilla seleccionada;
 - crear una nueva plantilla desde los ajustes visuales actuales;
 - guardar cambios sobre una plantilla personalizada existente;
+- recordar la última plantilla y los últimos ajustes visuales usados;
 - corregir automáticamente el espacio entre párrafos para que no quede por debajo del interlineado;
 - aplicar reglas propias a los títulos para evitar justificación, sangría heredada y guionado automático;
 - generar el PDF;
