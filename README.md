@@ -97,7 +97,7 @@ La app permite, de momento:
 - crear una nueva plantilla desde los ajustes visuales actuales;
 - guardar cambios sobre una plantilla personalizada existente;
 - cargar en `Diseño` los ajustes base de la plantilla seleccionada;
-- recordar la última plantilla y los últimos ajustes visuales usados;
+- recordar la última plantilla seleccionada;
 - mantener el espacio entre párrafos igual o superior al interlineado;
 - evitar que los títulos hereden justificación, sangría o guionado automático;
 - recordar posición, monitor y tamaño de ventana;
