@@ -204,10 +204,12 @@ class MainWindow(QMainWindow):
       'body': '#131b2e',
       'code_background': '#f4f1ec',
       'table_stroke': '#c8d0d8',
+      'table_text': '#131b2e',
       'table_header_background': '#eef2f7',
       'table_header_text': '#1f3552',
       'quote_border': '#2e6f73',
       'quote_background': '#eef6f4',
+      'quote_text': '#131b2e',
     }
     self.setWindowTitle('Markdown PDF Designer')
     self.resize(1180, 720)
@@ -350,12 +352,14 @@ class MainWindow(QMainWindow):
     self.body_color_button = self.create_color_button('body')
     self.code_background_color_button = self.create_color_button('code_background')
     self.table_stroke_color_button = self.create_color_button('table_stroke')
+    self.table_text_color_button = self.create_color_button('table_text')
     self.table_header_background_color_button = self.create_color_button(
       'table_header_background'
     )
     self.table_header_text_color_button = self.create_color_button('table_header_text')
     self.quote_border_color_button = self.create_color_button('quote_border')
     self.quote_background_color_button = self.create_color_button('quote_background')
+    self.quote_text_color_button = self.create_color_button('quote_text')
 
     self.code_font_combo = QComboBox()
     self.code_font_combo.addItems(['Consolas', 'Cascadia Mono', 'Courier New', 'JetBrains Mono'])
@@ -375,12 +379,26 @@ class MainWindow(QMainWindow):
     self.table_inset_input.setSuffix(' pt')
     self.table_inset_input.setValue(7)
 
+    self.table_text_size_input = DesignDoubleSpinBox()
+    self.table_text_size_input.setRange(6, 48)
+    self.table_text_size_input.setSingleStep(0.5)
+    self.table_text_size_input.setDecimals(1)
+    self.table_text_size_input.setSuffix(' pt')
+    self.table_text_size_input.setValue(10)
+
     self.quote_inset_input = DesignDoubleSpinBox()
     self.quote_inset_input.setRange(0.2, 2.5)
     self.quote_inset_input.setSingleStep(0.05)
     self.quote_inset_input.setDecimals(2)
     self.quote_inset_input.setSuffix(' em')
     self.quote_inset_input.setValue(0.85)
+
+    self.quote_text_size_input = DesignDoubleSpinBox()
+    self.quote_text_size_input.setRange(6, 48)
+    self.quote_text_size_input.setSingleStep(0.5)
+    self.quote_text_size_input.setDecimals(1)
+    self.quote_text_size_input.setSuffix(' pt')
+    self.quote_text_size_input.setValue(10.5)
 
     self.create_template_button = QPushButton('Crear nueva plantilla')
     self.create_template_button.clicked.connect(self.create_custom_template)
@@ -536,6 +554,8 @@ class MainWindow(QMainWindow):
         'Bloques',
         [
           ('Espacio interno', self.quote_inset_input),
+          ('Tamaño texto', self.quote_text_size_input),
+          ('Color texto', self.quote_text_color_button),
           ('Borde', self.quote_border_color_button),
           ('Fondo', self.quote_background_color_button),
         ],
@@ -546,6 +566,8 @@ class MainWindow(QMainWindow):
         'Tablas',
         [
           ('Espacio celdas', self.table_inset_input),
+          ('Tamaño texto', self.table_text_size_input),
+          ('Color texto', self.table_text_color_button),
           ('Bordes', self.table_stroke_color_button),
           ('Fondo cabecera', self.table_header_background_color_button),
           ('Texto cabecera', self.table_header_text_color_button),
@@ -844,10 +866,12 @@ class MainWindow(QMainWindow):
       'body': self.body_color_button,
       'code_background': self.code_background_color_button,
       'table_stroke': self.table_stroke_color_button,
+      'table_text': self.table_text_color_button,
       'table_header_background': self.table_header_background_color_button,
       'table_header_text': self.table_header_text_color_button,
       'quote_border': self.quote_border_color_button,
       'quote_background': self.quote_background_color_button,
+      'quote_text': self.quote_text_color_button,
     }
     for color_key, button in buttons.items():
       color = self.heading_colors[color_key]
@@ -882,7 +906,9 @@ class MainWindow(QMainWindow):
       self.code_font_combo,
       self.code_size_input,
       self.table_inset_input,
+      self.table_text_size_input,
       self.quote_inset_input,
+      self.quote_text_size_input,
     ]
     for widget in controlled_widgets:
       widget.blockSignals(True)
@@ -899,7 +925,9 @@ class MainWindow(QMainWindow):
     self.code_font_combo.setCurrentText(style.code_font_family)
     self.code_size_input.setValue(style.code_font_size)
     self.table_inset_input.setValue(style.table_inset)
+    self.table_text_size_input.setValue(style.table_text_size)
     self.quote_inset_input.setValue(style.quote_inset)
+    self.quote_text_size_input.setValue(style.quote_text_size)
 
     for widget in controlled_widgets:
       widget.blockSignals(False)
@@ -915,10 +943,12 @@ class MainWindow(QMainWindow):
         'italic': style.italic_color,
         'code_background': style.code_background_color,
         'table_stroke': style.table_stroke_color,
+        'table_text': style.table_text_color,
         'table_header_background': style.table_header_background_color,
         'table_header_text': style.table_header_text_color,
         'quote_border': style.quote_border_color,
         'quote_background': style.quote_background_color,
+        'quote_text': style.quote_text_color,
       }
     )
     self.refresh_color_buttons()
@@ -949,11 +979,15 @@ class MainWindow(QMainWindow):
       code_background_color=self.heading_colors['code_background'],
       table_inset=self.table_inset_input.value(),
       table_stroke_color=self.heading_colors['table_stroke'],
+      table_text_color=self.heading_colors['table_text'],
+      table_text_size=self.table_text_size_input.value(),
       table_header_background_color=self.heading_colors['table_header_background'],
       table_header_text_color=self.heading_colors['table_header_text'],
       quote_inset=self.quote_inset_input.value(),
       quote_border_color=self.heading_colors['quote_border'],
       quote_background_color=self.heading_colors['quote_background'],
+      quote_text_color=self.heading_colors['quote_text'],
+      quote_text_size=self.quote_text_size_input.value(),
     )
 
   def ensure_paragraph_spacing_minimum(self) -> None:

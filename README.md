@@ -92,8 +92,8 @@ La app permite, de momento:
 - elegir fuente, tamaño base, márgenes, tamaños de títulos y colores antes de generar;
 - definir colores independientes para títulos, negrita y cursiva;
 - ajustar interlineado, espaciado entre párrafos y estilos de código;
-- ajustar fondo, borde y espaciado de bloques destacados;
-- ajustar espaciado, bordes y cabecera de tablas;
+- ajustar texto, fondo, borde y espaciado de bloques destacados;
+- ajustar texto, espaciado, bordes y cabecera de tablas;
 - elegir una plantilla visual predefinida;
 - crear una nueva plantilla desde los ajustes visuales actuales;
 - guardar cambios sobre una plantilla personalizada existente;

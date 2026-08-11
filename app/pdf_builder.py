@@ -47,11 +47,15 @@ class PdfStyleOptions:
   code_background_color: str = '#f4f1ec'
   table_inset: float = 7
   table_stroke_color: str = '#c8d0d8'
+  table_text_color: str = '#131b2e'
+  table_text_size: float = 10
   table_header_background_color: str = '#eef2f7'
   table_header_text_color: str = '#1f3552'
   quote_inset: float = 0.85
   quote_border_color: str = '#2e6f73'
   quote_background_color: str = '#eef6f4'
+  quote_text_color: str = '#131b2e'
+  quote_text_size: float = 10.5
 
 
 @dataclass(frozen=True)
@@ -91,11 +95,15 @@ TEMPLATE_STYLE_PRESETS = {
     code_background_color='#f3f5f7',
     table_inset=7,
     table_stroke_color='#b9c3cf',
+    table_text_color='#172033',
+    table_text_size=10,
     table_header_background_color='#eef2f7',
     table_header_text_color='#233b5d',
     quote_inset=0.85,
     quote_border_color='#c8d0d8',
     quote_background_color='#f7f9fb',
+    quote_text_color='#172033',
+    quote_text_size=10.5,
   ),
   'compacto': PdfStyleOptions(
     font_family='Arial',
@@ -117,11 +125,15 @@ TEMPLATE_STYLE_PRESETS = {
     code_background_color='#f4f4f4',
     table_inset=5,
     table_stroke_color='#c8d0d8',
+    table_text_color='#171717',
+    table_text_size=8.5,
     table_header_background_color='#edf1f2',
     table_header_text_color='#19324a',
     quote_inset=0.55,
     quote_border_color='#2f665c',
     quote_background_color='#f5f7f8',
+    quote_text_color='#171717',
+    quote_text_size=9,
   ),
   'latex_clasico': PdfStyleOptions(
     font_family='Latin Modern Roman',
@@ -143,11 +155,15 @@ TEMPLATE_STYLE_PRESETS = {
     code_background_color='#ffffff',
     table_inset=6,
     table_stroke_color='#000000',
+    table_text_color='#000000',
+    table_text_size=10.5,
     table_header_background_color='#ffffff',
     table_header_text_color='#000000',
     quote_inset=0.75,
     quote_border_color='#000000',
     quote_background_color='#ffffff',
+    quote_text_color='#000000',
+    quote_text_size=11,
   ),
   'apa_mla': PdfStyleOptions(
     font_family='Times New Roman',
@@ -169,11 +185,15 @@ TEMPLATE_STYLE_PRESETS = {
     code_background_color='#f7f7f7',
     table_inset=6,
     table_stroke_color='#c8d0d8',
+    table_text_color='#111111',
+    table_text_size=11,
     table_header_background_color='#f7f7f7',
     table_header_text_color='#111111',
     quote_inset=0.65,
     quote_border_color='#111111',
     quote_background_color='#ffffff',
+    quote_text_color='#111111',
+    quote_text_size=12,
   ),
   'informe_ejecutivo': PdfStyleOptions(
     font_family='Aptos',
@@ -194,11 +214,15 @@ TEMPLATE_STYLE_PRESETS = {
     code_background_color='#eef2f6',
     table_inset=8,
     table_stroke_color='#d3dae2',
+    table_text_color='#1c2433',
+    table_text_size=10,
     table_header_background_color='#204a66',
     table_header_text_color='#ffffff',
     quote_inset=0.85,
     quote_border_color='#2c7280',
     quote_background_color='#eef4fb',
+    quote_text_color='#1c2433',
+    quote_text_size=10.5,
   ),
   'manual_tecnico': PdfStyleOptions(
     font_family='Segoe UI',
@@ -220,11 +244,15 @@ TEMPLATE_STYLE_PRESETS = {
     code_background_color='#1f2430',
     table_inset=7,
     table_stroke_color='#c8d0d8',
+    table_text_color='#17202c',
+    table_text_size=9.5,
     table_header_background_color='#e8f4f8',
     table_header_text_color='#17496b',
     quote_inset=0.85,
     quote_border_color='#286c7d',
     quote_background_color='#eef7ff',
+    quote_text_color='#17202c',
+    quote_text_size=10,
   ),
   'manuscrito_novela': PdfStyleOptions(
     font_family='Times New Roman',
@@ -246,11 +274,15 @@ TEMPLATE_STYLE_PRESETS = {
     code_background_color='#f6f3ee',
     table_inset=6,
     table_stroke_color='#d6cfc3',
+    table_text_color='#151515',
+    table_text_size=10.5,
     table_header_background_color='#f1ebe1',
     table_header_text_color='#252525',
     quote_inset=1.2,
     quote_border_color='#d6cfc3',
     quote_background_color='#ffffff',
+    quote_text_color='#151515',
+    quote_text_size=11,
   ),
   'accesibilidad_neurodivergencia': PdfStyleOptions(
     font_family='Verdana',
@@ -273,11 +305,15 @@ TEMPLATE_STYLE_PRESETS = {
     code_background_color='#e7f3f2',
     table_inset=9,
     table_stroke_color='#b8cbc6',
+    table_text_color='#333333',
+    table_text_size=13,
     table_header_background_color='#e8f4ec',
     table_header_text_color='#24435a',
     quote_inset=0.95,
     quote_border_color='#6aa38f',
     quote_background_color='#e8f4ec',
+    quote_text_color='#333333',
+    quote_text_size=13.5,
   ),
 }
 
@@ -591,6 +627,8 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
     '__CODE_BACKGROUND_COLOR__': normalize_hex_color(style.code_background_color),
     '__TABLE_INSET__': f'{style.table_inset:g}',
     '__TABLE_STROKE_COLOR__': normalize_hex_color(style.table_stroke_color),
+    '__TABLE_TEXT_COLOR__': normalize_hex_color(style.table_text_color),
+    '__TABLE_TEXT_SIZE__': f'{style.table_text_size:g}',
     '__TABLE_HEADER_BACKGROUND_COLOR__': normalize_hex_color(
       style.table_header_background_color
     ),
@@ -598,6 +636,8 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
     '__QUOTE_INSET__': f'{style.quote_inset:g}',
     '__QUOTE_BORDER_COLOR__': normalize_hex_color(style.quote_border_color),
     '__QUOTE_BACKGROUND_COLOR__': normalize_hex_color(style.quote_background_color),
+    '__QUOTE_TEXT_COLOR__': normalize_hex_color(style.quote_text_color),
+    '__QUOTE_TEXT_SIZE__': f'{style.quote_text_size:g}',
   }
 
   for placeholder, value in replacements.items():

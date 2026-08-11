@@ -84,7 +84,7 @@ $definitions.typst()$
   radius: 3pt,
   stroke: (left: 4pt + rgb("__QUOTE_BORDER_COLOR__")),
   fill: rgb("__QUOTE_BACKGROUND_COLOR__"),
-  it.body,
+  text(size: __QUOTE_TEXT_SIZE__pt, fill: rgb("__QUOTE_TEXT_COLOR__"), it.body),
 )
 #show raw.where(block: true): it => block(
   above: 1em,
@@ -100,6 +100,7 @@ $definitions.typst()$
   stroke: rgb("__TABLE_STROKE_COLOR__"),
   fill: (_, y) => if y == 0 { rgb("__TABLE_HEADER_BACKGROUND_COLOR__") },
 )
+#show table.cell: set text(size: __TABLE_TEXT_SIZE__pt, fill: rgb("__TABLE_TEXT_COLOR__"))
 #show table.cell.where(y: 0): set text(weight: "bold", fill: rgb("__TABLE_HEADER_TEXT_COLOR__"))
 
 $for(header-includes)$
@@ -108,5 +109,4 @@ $header-includes$
 $endfor$
 
 $body$
-
 
