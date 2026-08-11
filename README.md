@@ -109,8 +109,13 @@ pdf_apuntes/
 │   ├── main.py
 │   ├── pdf_builder.py
 │   └── templates/
+│       ├── apa_mla.typ
 │       ├── compacto.typ
 │       ├── estudio.typ
+│       ├── informe_ejecutivo.typ
+│       ├── latex_clasico.typ
+│       ├── manual_tecnico.typ
+│       ├── manuscrito_novela.typ
 │       └── profesional.typ
 ├── crear_pdf.bat
 ├── bin/
@@ -128,3 +133,16 @@ pdf_apuntes/
 Cuando esta prueba compile correctamente, podemos iterar sobre la plantilla
 `templates\apuntes.typ`: portada, colores, cabecera, pie, tablas, codigo,
 bloques destacados y tratamiento de ecuaciones.
+
+## Plantillas de la app
+
+Las plantillas disponibles en la app son:
+
+- `Estudio`: equilibrada para apuntes claros.
+- `LaTeX clasico`: academica, monocromatica y con margenes amplios.
+- `Ensayo APA / MLA`: pensada para trabajos universitarios.
+- `Informe ejecutivo`: estilo corporativo con titulos destacados.
+- `Manual tecnico`: pensada para documentacion y bloques de codigo.
+- `Manuscrito / novela`: formato A5 para lectura prolongada.
+- `Profesional`: informe sobrio de uso general.
+- `Compacto`: dos columnas y menor consumo de paginas.

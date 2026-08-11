@@ -137,6 +137,19 @@ terminar.
 La app quiere convertirse progresivamente en una herramienta sencilla para
 crear PDF de estudio con buena maquetacion.
 
+## Plantillas iniciales
+
+La primera fase de plantillas predefinidas incluye:
+
+- `Estudio`: apuntes claros y equilibrados.
+- `LaTeX clasico`: documentos academicos sobrios, en blanco y negro.
+- `Ensayo APA / MLA`: trabajos universitarios con margenes e interlineado amplio.
+- `Informe ejecutivo`: documentos corporativos con titulos fuertes y bloques destacados.
+- `Manual tecnico`: documentacion con codigo protagonista.
+- `Manuscrito / novela`: textos largos en formato A5.
+- `Profesional`: informe sobrio de uso general.
+- `Compacto`: documento de dos columnas para ahorrar paginas.
+
 Objetivos previstos:
 
 - ajustes dinamicos por plantilla;

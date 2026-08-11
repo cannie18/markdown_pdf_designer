@@ -17,13 +17,26 @@
 
 ## Plantillas
 
-- Revisar y mejorar la estructura para crear y listar plantillas de la app.
+- Primera fase de plantillas predefinidas completada:
+  - LaTeX clasico;
+  - Ensayo APA / MLA;
+  - Informe ejecutivo;
+  - Manual tecnico;
+  - Manuscrito / novela.
+- Revisar y mejorar la estructura para crear y listar plantillas de la app desde la interfaz.
 - Mantener separadas las plantillas de la app y la plantilla portable por `.bat`.
 - Mejorar las plantillas base:
   - estudio;
   - compacto;
   - profesional;
   - apuntes con portada.
+- Preparar futuras plantillas:
+  - IEEE doble columna;
+  - acta;
+  - factura;
+  - hoja resumen;
+  - curriculum;
+  - articulo de blog.
 - Preparar una pantalla para crear nuevas plantillas desde la interfaz.
 - Decidir que partes de una plantilla se editan con controles y cuales se editan como codigo Typst.
 

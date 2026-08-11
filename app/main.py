@@ -49,6 +49,26 @@ from .pdf_builder import (
 
 PREVIEW_PANEL_MIN_WIDTH = 320
 WINDOW_MIN_HEIGHT = 480
+TEMPLATE_LABELS = {
+  'estudio': 'Estudio',
+  'profesional': 'Profesional',
+  'compacto': 'Compacto',
+  'latex_clasico': 'LaTeX clasico',
+  'apa_mla': 'Ensayo APA / MLA',
+  'informe_ejecutivo': 'Informe ejecutivo',
+  'manual_tecnico': 'Manual tecnico',
+  'manuscrito_novela': 'Manuscrito / novela',
+}
+TEMPLATE_ORDER = [
+  'estudio',
+  'latex_clasico',
+  'apa_mla',
+  'informe_ejecutivo',
+  'manual_tecnico',
+  'manuscrito_novela',
+  'profesional',
+  'compacto',
+]
 
 
 class BuildWorker(QThread):
@@ -149,7 +169,7 @@ class MainWindow(QMainWindow):
     self.current_pdf: Path | None = None
     self.editor_dirty = False
     self.settings = QSettings('pdf_apuntes', 'Markdown PDF Designer')
-    self.template_ids = available_templates()
+    self.template_ids = self.sorted_template_ids(available_templates())
     if DEFAULT_TEMPLATE_ID not in self.template_ids:
       self.template_ids.insert(0, DEFAULT_TEMPLATE_ID)
     self.heading_colors = {
@@ -298,9 +318,15 @@ class MainWindow(QMainWindow):
     self.code_size_input.setValue(9)
 
     self.template_combo = QComboBox()
-    self.template_combo.addItems(self.template_ids)
-    self.template_combo.setCurrentText(DEFAULT_TEMPLATE_ID)
-    self.template_combo.currentTextChanged.connect(self.update_template_status)
+    for template_id in self.template_ids:
+      self.template_combo.addItem(
+        TEMPLATE_LABELS.get(template_id, template_id.replace('_', ' ').title()),
+        template_id,
+      )
+    self.template_combo.setCurrentIndex(
+      max(0, self.template_combo.findData(DEFAULT_TEMPLATE_ID))
+    )
+    self.template_combo.currentIndexChanged.connect(self.update_template_status)
 
     self.pdf_document = QPdfDocument(self)
     self.pdf_view = QPdfView()
@@ -762,15 +788,34 @@ class MainWindow(QMainWindow):
   def current_template_id(self) -> str:
     '''Devuelve la plantilla seleccionada para generar el PDF.'''
 
-    return self.template_combo.currentText().strip() or DEFAULT_TEMPLATE_ID
+    template_id = self.template_combo.currentData()
+    if isinstance(template_id, str) and template_id.strip():
+      return template_id.strip()
+    return DEFAULT_TEMPLATE_ID
+
+  def sorted_template_ids(self, template_ids: list[str]) -> list[str]:
+    '''Ordena las plantillas conocidas y deja al final las personalizadas.'''
+
+    known_templates = [
+      template_id for template_id in TEMPLATE_ORDER if template_id in template_ids
+    ]
+    custom_templates = sorted(
+      template_id for template_id in template_ids if template_id not in TEMPLATE_ORDER
+    )
+    return known_templates + custom_templates
 
   def update_template_status(self) -> None:
     '''Actualiza el texto informativo de la plantilla seleccionada.'''
 
     template_id = self.current_template_id()
     descriptions = {
+      'apa_mla': 'Ensayo universitario con margenes de 1 pulgada e interlineado doble.',
       'compacto': 'Usa dos columnas y reduce espacios para ahorrar paginas.',
       'estudio': 'Equilibrada para apuntes claros y lectura comoda.',
+      'informe_ejecutivo': 'Corporativa, con titulos destacados y bloques de decision.',
+      'latex_clasico': 'Academica, monocromatica, con margenes amplios y titulos numerados.',
+      'manual_tecnico': 'Documentacion tecnica con codigo oscuro y bloques destacados.',
+      'manuscrito_novela': 'Formato A5 para capitulos, relatos y lectura prolongada.',
       'profesional': 'Mas formal, con bloques de titulo y acentos de informe.',
     }
     description = descriptions.get(template_id, 'Plantilla personalizada de la app.')

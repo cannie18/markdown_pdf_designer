@@ -1,0 +1,78 @@
+// Plantilla para manuscritos, relatos y novelas.
+// Usa formato A5, serif de lectura y capitulos con salto de pagina.
+$definitions.typst()$
+
+#set page(
+  paper: "a5",
+  margin: (x: 18mm, y: 20mm),
+  numbering: "1",
+  number-align: bottom + center,
+)
+
+#set text(
+  font: "__BODY_FONT__",
+  size: __BODY_FONT_SIZE__pt,
+  fill: rgb("__BODY_COLOR__"),
+  lang: "es",
+)
+
+#set par(
+  justify: true,
+  first-line-indent: 1.2em,
+  leading: __PAR_LEADING__em,
+  spacing: 0em,
+)
+
+#set heading(numbering: none)
+
+#show heading.where(level: 1): it => [
+  #pagebreak(weak: true)
+  #v(28%)
+  #align(center, text(size: __H1_SIZE__pt, weight: "regular", fill: rgb("__H1_COLOR__"), it.body))
+  #v(2em)
+]
+
+#show heading.where(level: 2): it => block(
+  above: 1.2em,
+  below: 0.65em,
+  align(center, text(size: __H2_SIZE__pt, weight: "bold", fill: rgb("__H2_COLOR__"), it.body)),
+)
+
+#show heading.where(level: 3): it => block(
+  above: 0.9em,
+  below: 0.35em,
+  align(center, text(size: __H3_SIZE__pt, style: "italic", fill: rgb("__H3_COLOR__"), it.body)),
+)
+
+#show strong: it => text(weight: "bold", fill: rgb("__BOLD_COLOR__"), it.body)
+#show emph: it => text(style: "italic", fill: rgb("__ITALIC_COLOR__"), it.body)
+
+#set list(indent: 1.2em, body-indent: 0.55em)
+#set enum(indent: 1.2em, body-indent: 0.7em)
+
+#show quote: it => block(
+  above: 1em,
+  below: 1em,
+  inset: (x: 1.4em),
+  text(style: "italic", it.body),
+)
+
+#show raw.where(block: true): it => block(
+  above: 0.8em,
+  below: 0.8em,
+  inset: 0.8em,
+  fill: rgb("__CODE_BACKGROUND_COLOR__"),
+  text(font: "__CODE_FONT__", size: __CODE_FONT_SIZE__pt, it),
+)
+
+#set table(
+  inset: 6pt,
+  stroke: rgb("#d0d0d0"),
+)
+
+$for(header-includes)$
+$header-includes$
+
+$endfor$
+
+$body$
