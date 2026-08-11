@@ -78,15 +78,14 @@ $definitions.typst()$
 )
 
 #show quote: it => block(
-  above: 1em,
-  below: 1em,
-  inset: (x: 1em, y: 0.85em),
-  radius: 4pt,
-  stroke: (left: 4pt + rgb("#6aa38f")),
-  fill: rgb("#e8f4ec"),
+  above: 0.9em,
+  below: 0.9em,
+  inset: (x: __QUOTE_INSET__em, y: __QUOTE_INSET__em),
+  radius: 3pt,
+  stroke: (left: 4pt + rgb("__QUOTE_BORDER_COLOR__")),
+  fill: rgb("__QUOTE_BACKGROUND_COLOR__"),
   it.body,
 )
-
 #show raw.where(block: true): it => block(
   above: 1em,
   below: 1em,
@@ -109,4 +108,5 @@ $header-includes$
 $endfor$
 
 $body$
+
 

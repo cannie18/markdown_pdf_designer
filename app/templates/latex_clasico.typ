@@ -51,13 +51,14 @@ $definitions.typst()$
 #set enum(indent: 1.2em, body-indent: 0.7em)
 
 #show quote: it => block(
-  above: 0.8em,
-  below: 0.8em,
-  inset: (x: 1em, y: 0.65em),
-  stroke: (left: 1pt + rgb("#000000")),
+  above: 0.9em,
+  below: 0.9em,
+  inset: (x: __QUOTE_INSET__em, y: __QUOTE_INSET__em),
+  radius: 3pt,
+  stroke: (left: 4pt + rgb("__QUOTE_BORDER_COLOR__")),
+  fill: rgb("__QUOTE_BACKGROUND_COLOR__"),
   it.body,
 )
-
 #show raw.where(block: true): it => block(
   above: 0.8em,
   below: 0.8em,
@@ -80,4 +81,5 @@ $header-includes$
 $endfor$
 
 $body$
+
 

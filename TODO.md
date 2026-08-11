@@ -56,6 +56,7 @@
   - tamaños de títulos;
   - color del texto normal;
   - estilos de código;
+  - estilos de bloques destacados;
   - estilos de tabla;
   - espaciados principales;
   - márgenes del documento.

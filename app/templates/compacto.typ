@@ -63,15 +63,14 @@ $definitions.typst()$
 
 // Cajas destacadas.
 #show quote: it => block(
-  above: 0.55em,
-  below: 0.55em,
-  inset: (x: 0.65em, y: 0.5em),
-  radius: 2pt,
-  stroke: (left: 2pt + rgb("__H2_COLOR__")),
-  fill: rgb("#f5f7f8"),
+  above: 0.9em,
+  below: 0.9em,
+  inset: (x: __QUOTE_INSET__em, y: __QUOTE_INSET__em),
+  radius: 3pt,
+  stroke: (left: 4pt + rgb("__QUOTE_BORDER_COLOR__")),
+  fill: rgb("__QUOTE_BACKGROUND_COLOR__"),
   it.body,
 )
-
 // Codigo.
 #show raw.where(block: true): it => block(
   above: 0.55em,
@@ -98,4 +97,5 @@ $endfor$
 #columns(2, gutter: 14pt)[
 $body$
 ]
+
 

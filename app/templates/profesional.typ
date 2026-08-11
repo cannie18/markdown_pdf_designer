@@ -70,13 +70,12 @@ $definitions.typst()$
 #show quote: it => block(
   above: 0.9em,
   below: 0.9em,
-  inset: (x: 1em, y: 0.85em),
-  radius: 2pt,
-  stroke: 0.6pt + rgb("#c8d0d8"),
-  fill: rgb("#f7f9fb"),
+  inset: (x: __QUOTE_INSET__em, y: __QUOTE_INSET__em),
+  radius: 3pt,
+  stroke: (left: 4pt + rgb("__QUOTE_BORDER_COLOR__")),
+  fill: rgb("__QUOTE_BACKGROUND_COLOR__"),
   it.body,
 )
-
 // Codigo.
 #show raw.where(block: true): it => block(
   above: 0.8em,
@@ -102,4 +101,5 @@ $header-includes$
 $endfor$
 
 $body$
+
 
