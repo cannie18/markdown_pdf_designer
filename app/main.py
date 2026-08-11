@@ -38,7 +38,13 @@ from PySide6.QtWidgets import (
   QWidget,
 )
 
-from .pdf_builder import PdfBuildError, PdfStyleOptions, build_pdf
+from .pdf_builder import (
+  DEFAULT_TEMPLATE_ID,
+  PdfBuildError,
+  PdfStyleOptions,
+  available_templates,
+  build_pdf,
+)
 
 
 PREVIEW_PANEL_MIN_WIDTH = 320
@@ -51,18 +57,28 @@ class BuildWorker(QThread):
   succeeded = Signal(str)
   failed = Signal(str)
 
-  def __init__(self, markdown_file: str, style: PdfStyleOptions) -> None:
+  def __init__(
+    self,
+    markdown_file: str,
+    style: PdfStyleOptions,
+    template_id: str,
+  ) -> None:
     '''Guarda el archivo y las opciones visuales que se usaran al generar.'''
 
     super().__init__()
     self.markdown_file = markdown_file
     self.style = style
+    self.template_id = template_id
 
   def run(self) -> None:
     '''Lanza la generacion del PDF y emite una senal de exito o error.'''
 
     try:
-      result = build_pdf(self.markdown_file, style=self.style)
+      result = build_pdf(
+        self.markdown_file,
+        style=self.style,
+        template_id=self.template_id,
+      )
     except PdfBuildError as exc:
       self.failed.emit(str(exc))
       return
@@ -133,6 +149,9 @@ class MainWindow(QMainWindow):
     self.current_pdf: Path | None = None
     self.editor_dirty = False
     self.settings = QSettings('pdf_apuntes', 'Markdown PDF Designer')
+    self.template_ids = available_templates()
+    if DEFAULT_TEMPLATE_ID not in self.template_ids:
+      self.template_ids.insert(0, DEFAULT_TEMPLATE_ID)
     self.heading_colors = {
       'h1': '#1f3552',
       'h2': '#2e6f73',
@@ -278,6 +297,11 @@ class MainWindow(QMainWindow):
     self.code_size_input.setSuffix(' pt')
     self.code_size_input.setValue(9)
 
+    self.template_combo = QComboBox()
+    self.template_combo.addItems(self.template_ids)
+    self.template_combo.setCurrentText(DEFAULT_TEMPLATE_ID)
+    self.template_combo.currentTextChanged.connect(self.update_template_status)
+
     self.pdf_document = QPdfDocument(self)
     self.pdf_view = QPdfView()
     self.pdf_view.setDocument(self.pdf_document)
@@ -412,17 +436,18 @@ class MainWindow(QMainWindow):
     templates_layout.setContentsMargins(0, 0, 0, 0)
     templates_title = QLabel('Plantillas')
     templates_title.setObjectName('sectionTitle')
-    templates_help = QLabel(
-      'Aqui prepararemos plantillas base como estudio, compacto o tesis. '
-      'De momento la app usa la plantilla estudio.'
-    )
+    templates_help = QLabel('Elige la plantilla visual que se usara al generar el PDF.')
     templates_help.setObjectName('sectionHelp')
     templates_help.setWordWrap(True)
     templates_card = QFrame()
     templates_card.setObjectName('placeholderCard')
     templates_card_layout = QVBoxLayout(templates_card)
-    templates_card_layout.addWidget(QLabel('Activa: estudio'))
-    templates_card_layout.addWidget(QLabel('Nuevas plantillas: pendiente'))
+    templates_card_layout.addWidget(QLabel('Plantilla activa'))
+    templates_card_layout.addWidget(self.template_combo)
+    self.template_status_label = QLabel()
+    self.template_status_label.setObjectName('sectionHelp')
+    self.template_status_label.setWordWrap(True)
+    templates_card_layout.addWidget(self.template_status_label)
     templates_layout.addWidget(templates_title)
     templates_layout.addWidget(templates_help)
     templates_layout.addWidget(templates_card)
@@ -482,6 +507,7 @@ class MainWindow(QMainWindow):
     if initial_file:
       self.set_markdown_file(initial_file)
     self.select_left_section(0)
+    self.update_template_status()
 
   def apply_styles(self) -> None:
     '''Aplica estilos visuales de la interfaz, no del PDF generado.'''
@@ -732,6 +758,23 @@ class MainWindow(QMainWindow):
       code_font_size=self.code_size_input.value(),
       code_background_color=self.heading_colors['code_background'],
     )
+
+  def current_template_id(self) -> str:
+    '''Devuelve la plantilla seleccionada para generar el PDF.'''
+
+    return self.template_combo.currentText().strip() or DEFAULT_TEMPLATE_ID
+
+  def update_template_status(self) -> None:
+    '''Actualiza el texto informativo de la plantilla seleccionada.'''
+
+    template_id = self.current_template_id()
+    descriptions = {
+      'compacto': 'Reduce espacios y deja un documento mas denso.',
+      'estudio': 'Equilibrada para apuntes claros y lectura comoda.',
+      'profesional': 'Mas formal, con linea de acento en titulos principales.',
+    }
+    description = descriptions.get(template_id, 'Plantilla personalizada de la app.')
+    self.template_status_label.setText(description)
 
   def load_recent_markdowns(self) -> None:
     '''Carga en el desplegable las ultimas rutas Markdown usadas.'''
@@ -1061,7 +1104,11 @@ class MainWindow(QMainWindow):
 
     self.build_button.setEnabled(False)
     self.status_label.setText('Generando PDF...')
-    self.worker = BuildWorker(markdown_file, self.current_style_options())
+    self.worker = BuildWorker(
+      markdown_file,
+      self.current_style_options(),
+      self.current_template_id(),
+    )
     self.worker.succeeded.connect(self.on_success)
     self.worker.failed.connect(self.on_error)
     self.worker.finished.connect(lambda: self.build_button.setEnabled(True))

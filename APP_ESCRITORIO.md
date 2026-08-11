@@ -76,6 +76,7 @@ La app permite:
 - elegir colores independientes para negrita y cursiva;
 - elegir fuente, tamano y fondo de los bloques de codigo;
 - consultar las opciones de diseno agrupadas por secciones compactas;
+- elegir una plantilla visual predefinida;
 - generar el PDF;
 - mostrar el PDF generado dentro de la propia app;
 - abrir el PDF en el visor externo de Windows.
@@ -97,7 +98,7 @@ pertenecen a la version portable basica.
 ```text
 app/main.py
 app/pdf_builder.py
-app/templates/estudio.typ
+app/templates/*.typ
 ```
 
 pertenecen a la app de escritorio.
@@ -122,10 +123,10 @@ Markdown
 ```
 
 Cuando el usuario cambia fuente, tamano, margenes, titulos o colores, Python genera una plantilla
-Typst temporal a partir de:
+Typst temporal a partir de la plantilla elegida en:
 
 ```text
-app/templates/estudio.typ
+app/templates/
 ```
 
 Esa plantilla temporal se usa solo durante la conversion y se elimina al
@@ -138,7 +139,6 @@ crear PDF de estudio con buena maquetacion.
 
 Objetivos previstos:
 
-- selector de plantillas visuales;
 - ajustes dinamicos por plantilla;
 - estilos para tablas;
 - estilos para bloques destacados;

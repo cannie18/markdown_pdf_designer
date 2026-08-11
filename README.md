@@ -92,12 +92,13 @@ La app permite, de momento:
 - elegir fuente, tamano base, margenes, tamanos de titulos y colores antes de generar;
 - definir colores independientes para titulos, negrita y cursiva;
 - ajustar interlineado, espaciado entre parrafos y estilos de codigo;
+- elegir una plantilla visual predefinida;
 - recordar posicion, monitor y tamano de ventana;
 - mantener un ancho minimo usable para controles y dejar que la vista previa use el espacio restante.
 
 Las opciones visuales de la app se aplican generando una plantilla Typst
-temporal a partir de `app/templates/estudio.typ`. La plantilla portable
-`templates/apuntes.typ` no se modifica.
+temporal a partir de la plantilla elegida en `app/templates/`. La plantilla
+portable `templates/apuntes.typ` no se modifica.
 
 ## Estructura
 
@@ -108,7 +109,9 @@ pdf_apuntes/
 │   ├── main.py
 │   ├── pdf_builder.py
 │   └── templates/
-│       └── estudio.typ
+│       ├── compacto.typ
+│       ├── estudio.typ
+│       └── profesional.typ
 ├── crear_pdf.bat
 ├── bin/
 │   ├── pandoc/

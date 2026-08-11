@@ -17,9 +17,9 @@
 
 ## Plantillas
 
-- Definir una estructura para crear y listar plantillas de la app.
+- Revisar y mejorar la estructura para crear y listar plantillas de la app.
 - Mantener separadas las plantillas de la app y la plantilla portable por `.bat`.
-- Crear varias plantillas base cuando el diseno este mas claro:
+- Mejorar las plantillas base:
   - estudio;
   - compacto;
   - profesional;
@@ -35,7 +35,7 @@
   - Habria que implementar arrastre manual de ventana.
 - Revisar el comportamiento de la vista previa con PDFs largos.
 - Mejorar la pestana de diseno para que permita regenerar el PDF sin perder contexto.
-- Dejar la pestana de plantillas preparada para seleccionar, duplicar y editar plantillas.
+- Ampliar la pestana de plantillas para duplicar y editar plantillas.
 
 ## Persistencia
 

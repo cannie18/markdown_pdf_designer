@@ -18,6 +18,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parents[1]
 APP_DIR = Path(__file__).resolve().parent
 APP_TEMPLATES_DIR = APP_DIR / 'templates'
+DEFAULT_TEMPLATE_ID = 'estudio'
 
 
 @dataclass(frozen=True)
@@ -97,7 +98,22 @@ def default_template() -> Path:
   portable por `.bat`.
   '''
 
-  template = APP_TEMPLATES_DIR / 'estudio.typ'
+  return template_path(DEFAULT_TEMPLATE_ID)
+
+
+def available_templates() -> list[str]:
+  '''Lista las plantillas Typst disponibles para la app.'''
+
+  if not APP_TEMPLATES_DIR.exists():
+    return []
+  return sorted(template.stem for template in APP_TEMPLATES_DIR.glob('*.typ'))
+
+
+def template_path(template_id: str) -> Path:
+  '''Devuelve la ruta de una plantilla de la app validando su existencia.'''
+
+  normalized_id = template_id.strip().lower() or DEFAULT_TEMPLATE_ID
+  template = APP_TEMPLATES_DIR / f'{normalized_id}.typ'
   if not template.exists():
     raise PdfBuildError(f'No existe la plantilla de la app: {template}')
   return template
@@ -189,6 +205,7 @@ def run_command(command: list[str | Path]) -> None:
 def build_pdf(
   input_file: str | Path,
   style: PdfStyleOptions | None = None,
+  template_id: str = DEFAULT_TEMPLATE_ID,
 ) -> PdfResult:
   '''Genera un PDF desde un archivo Markdown usando Pandoc y Typst.
 
@@ -202,7 +219,7 @@ def build_pdf(
   if source.suffix.lower() not in {'.md', '.markdown'}:
     raise PdfBuildError('Selecciona un archivo Markdown con extension .md o .markdown.')
 
-  source_template_file = default_template()
+  source_template_file = template_path(template_id)
   template_file = render_template(source_template_file, style or PdfStyleOptions())
   typ_file = source.with_suffix('.typ')
   pdf_file = source.with_suffix('.pdf')
