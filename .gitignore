@@ -2,7 +2,16 @@
 *.pdf
 *.typ
 !templates/*.typ
-!app/templates/*.typ
+!app/templates/accesibilidad_neurodivergencia.typ
+!app/templates/apa_mla.typ
+!app/templates/compacto.typ
+!app/templates/estudio.typ
+!app/templates/informe_ejecutivo.typ
+!app/templates/latex_clasico.typ
+!app/templates/manual_tecnico.typ
+!app/templates/manuscrito_novela.typ
+!app/templates/profesional.typ
+app/templates/*.json
 
 # Optional local portable binaries
 bin/pandoc/*

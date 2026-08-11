@@ -281,6 +281,14 @@ def template_description(template_id: str) -> str | None:
   return None
 
 
+def is_custom_template(template_id: str) -> bool:
+  '''Indica si una plantilla tiene metadatos editables de usuario.'''
+
+  normalized_id = template_id.strip().lower() or DEFAULT_TEMPLATE_ID
+  metadata_file = APP_TEMPLATES_DIR / f'{normalized_id}.json'
+  return normalized_id not in TEMPLATE_STYLE_PRESETS and metadata_file.exists()
+
+
 def save_custom_template(
   template_id: str,
   label: str,
@@ -308,6 +316,22 @@ def save_custom_template(
     'style': asdict(style),
   }
   target_metadata.write_text(
+    json.dumps(metadata, ensure_ascii=False, indent=2),
+    encoding='utf-8',
+  )
+
+
+def update_custom_template_style(template_id: str, style: PdfStyleOptions) -> None:
+  '''Actualiza los ajustes visuales de una plantilla personalizada existente.'''
+
+  normalized_id = template_id.strip().lower()
+  if not is_custom_template(normalized_id):
+    raise PdfBuildError('Solo se pueden actualizar plantillas personalizadas.')
+
+  metadata_file = APP_TEMPLATES_DIR / f'{normalized_id}.json'
+  metadata = template_metadata(normalized_id)
+  metadata['style'] = asdict(style)
+  metadata_file.write_text(
     json.dumps(metadata, ensure_ascii=False, indent=2),
     encoding='utf-8',
   )

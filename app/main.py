@@ -47,10 +47,12 @@ from .pdf_builder import (
   PdfStyleOptions,
   available_templates,
   build_pdf,
+  is_custom_template,
   save_custom_template,
   template_description,
   template_label,
   template_style_preset,
+  update_custom_template_style,
 )
 
 
@@ -346,6 +348,14 @@ class MainWindow(QMainWindow):
 
     self.create_template_button = QPushButton('Crear nueva plantilla')
     self.create_template_button.clicked.connect(self.create_custom_template)
+    self.update_template_button = QPushButton('Guardar cambios')
+    self.update_template_button.clicked.connect(self.update_custom_template)
+    self.template_actions = QWidget()
+    template_actions_layout = QHBoxLayout(self.template_actions)
+    template_actions_layout.setContentsMargins(0, 0, 0, 0)
+    template_actions_layout.addWidget(self.create_template_button)
+    template_actions_layout.addWidget(self.update_template_button)
+    template_actions_layout.addStretch()
 
     self.template_combo = QComboBox()
     for template_id in self.template_ids:
@@ -430,7 +440,7 @@ class MainWindow(QMainWindow):
         [
           ('Plantilla', self.template_combo),
           ('Definición', self.template_status_label),
-          ('', self.create_template_button),
+          ('', self.template_actions),
         ],
       )
     )
@@ -902,6 +912,7 @@ class MainWindow(QMainWindow):
     template_id = self.current_template_id()
     self.apply_style_options(template_style_preset(template_id))
     self.update_template_status()
+    self.update_template_button.setVisible(is_custom_template(template_id))
 
   def display_template_label(self, template_id: str) -> str:
     '''Devuelve el texto visible para el selector de plantillas.'''
@@ -951,6 +962,26 @@ class MainWindow(QMainWindow):
     self.template_combo.blockSignals(False)
     self.handle_template_changed()
     self.status_label.setText(f'Plantilla creada: {label}')
+
+  def update_custom_template(self) -> None:
+    '''Guarda los cambios actuales en la plantilla personalizada activa.'''
+
+    template_id = self.current_template_id()
+    if not is_custom_template(template_id):
+      return
+
+    try:
+      update_custom_template_style(template_id, self.current_style_options())
+    except PdfBuildError as exc:
+      QMessageBox.critical(self, 'Error', str(exc))
+      return
+    except OSError as exc:
+      QMessageBox.critical(self, 'Error', f'No se pudo actualizar la plantilla:\n{exc}')
+      return
+
+    self.status_label.setText(
+      f'Cambios guardados en la plantilla: {self.display_template_label(template_id)}'
+    )
 
   def unique_template_id(self, label: str) -> str:
     '''Genera un identificador de plantilla disponible desde un nombre visible.'''

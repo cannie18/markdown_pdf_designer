@@ -22,6 +22,7 @@
 - Selector de plantillas predefinidas.
 - Carga automática en `Diseño` de los valores base de la plantilla seleccionada.
 - Creación de plantillas personalizadas desde los ajustes actuales de `Diseño`.
+- Actualización de plantillas personalizadas sin crear copias nuevas.
 - Corrección de textos visibles de la app a español de España.
 - Separación entre plantillas de app y plantilla portable.
 - Primera fase de plantillas predefinidas:
