@@ -187,6 +187,8 @@ class MainWindow(QMainWindow):
     self.open_pdf_button.setVisible(False)
 
     self.status_label = QLabel('Listo.')
+    self.status_label.setMinimumWidth(0)
+    self.status_label.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
     self.status_label.setWordWrap(True)
 
     self.editor = QPlainTextEdit()
@@ -305,8 +307,11 @@ class MainWindow(QMainWindow):
     design_help.setWordWrap(True)
     style_panel = QFrame()
     style_panel.setObjectName('stylePanel')
+    style_panel.setMinimumWidth(0)
+    style_panel.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
     style_layout = QFormLayout(style_panel)
     style_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
+    style_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
     style_layout.addRow('Fuente', self.font_combo)
     style_layout.addRow('Tamano texto', self.body_size_input)
     style_layout.addRow('Margen lateral', self.margin_x_input)
