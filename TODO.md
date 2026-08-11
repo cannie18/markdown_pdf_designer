@@ -42,6 +42,9 @@
 - Guardar la plantilla elegida.
 - Guardar opciones visuales usadas recientemente.
 - Revisar si conviene guardar ajustes por archivo Markdown.
+- Anadir mas adelante una ruta de salida para el PDF.
+  - Durante las pruebas, mantener `Generar PDF` sobrescribiendo directamente.
+  - En el futuro, preguntar ubicacion la primera vez y permitir `Guardar PDF como`.
 
 ## Pruebas
 
