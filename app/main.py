@@ -769,9 +769,9 @@ class MainWindow(QMainWindow):
 
     template_id = self.current_template_id()
     descriptions = {
-      'compacto': 'Reduce espacios y deja un documento mas denso.',
+      'compacto': 'Usa dos columnas y reduce espacios para ahorrar paginas.',
       'estudio': 'Equilibrada para apuntes claros y lectura comoda.',
-      'profesional': 'Mas formal, con linea de acento en titulos principales.',
+      'profesional': 'Mas formal, con bloques de titulo y acentos de informe.',
     }
     description = descriptions.get(template_id, 'Plantilla personalizada de la app.')
     self.template_status_label.setText(description)

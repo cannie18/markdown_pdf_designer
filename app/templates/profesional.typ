@@ -32,17 +32,22 @@ $definitions.typst()$
 #show heading.where(level: 1): it => block(
   above: 0.3em,
   below: 1.1em,
-  [
-    #text(size: __H1_SIZE__pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body)
-    #v(0.25em)
-    #line(length: 100%, stroke: 0.8pt + rgb("__H1_COLOR__"))
-  ],
+  width: 100%,
+  inset: (x: 0.9em, y: 0.65em),
+  radius: 2pt,
+  stroke: (left: 4pt + rgb("__H1_COLOR__")),
+  fill: rgb("#eef2f7"),
+  text(size: __H1_SIZE__pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body),
 )
 
 #show heading.where(level: 2): it => block(
   above: 1.3em,
   below: 0.55em,
-  text(size: __H2_SIZE__pt, weight: "bold", fill: rgb("__H2_COLOR__"), it.body),
+  [
+    #text(size: __H2_SIZE__pt, weight: "bold", fill: rgb("__H2_COLOR__"), it.body)
+    #v(0.12em)
+    #line(length: 40%, stroke: 0.6pt + rgb("__H2_COLOR__"))
+  ],
 )
 
 #show heading.where(level: 3): it => block(
@@ -63,9 +68,9 @@ $definitions.typst()$
 #show quote: it => block(
   above: 0.9em,
   below: 0.9em,
-  inset: (x: 0.95em, y: 0.75em),
+  inset: (x: 1em, y: 0.85em),
   radius: 2pt,
-  stroke: (left: 3pt + rgb("__H2_COLOR__")),
+  stroke: 0.6pt + rgb("#c8d0d8"),
   fill: rgb("#f7f9fb"),
   it.body,
 )

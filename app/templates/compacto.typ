@@ -1,5 +1,5 @@
 // Plantilla compacta de la app Python.
-// Pensada para ahorrar espacio sin cambiar el contenido Markdown.
+// Usa dos columnas para ahorrar espacio sin cambiar el contenido Markdown.
 $definitions.typst()$
 
 // Pagina.
@@ -32,7 +32,11 @@ $definitions.typst()$
 #show heading.where(level: 1): it => block(
   above: 0.2em,
   below: 0.7em,
-  text(size: __H1_SIZE__pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body),
+  [
+    #text(size: __H1_SIZE__pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body)
+    #v(0.15em)
+    #line(length: 100%, stroke: 0.5pt + rgb("__H1_COLOR__"))
+  ],
 )
 
 #show heading.where(level: 2): it => block(
@@ -87,4 +91,6 @@ $header-includes$
 
 $endfor$
 
+#columns(2, gutter: 14pt)[
 $body$
+]
