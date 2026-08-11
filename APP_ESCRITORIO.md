@@ -28,11 +28,11 @@ de trabajo cambiante a la izquierda.
 panel izquierdo cambiante | vista previa PDF
 ```
 
-El panel izquierdo tiene tres secciones:
+El panel izquierdo tiene dos secciones:
 
 - `Archivo`: abrir o arrastrar Markdown, revisar contenido y generar PDF.
-- `Diseño`: ajustar fuente, tamaño y colores antes de volver a generar.
-- `Plantillas`: preparar selección y creación de plantillas visuales.
+- `Diseño`: elegir plantilla visual y ajustar fuente, tamaño, colores y espacios
+  antes de volver a generar.
 
 La vista previa no es una pestaña separada: debe estar siempre disponible para
 comprobar el PDF real generado.
@@ -76,15 +76,14 @@ La app permite:
 - elegir colores independientes para negrita y cursiva;
 - elegir fuente, tamaño y fondo de los bloques de código;
 - consultar las opciones de diseño agrupadas por secciones compactas;
-- elegir una plantilla visual predefinida;
+- elegir una plantilla visual predefinida desde `Diseño`;
 - cargar en `Diseño` los ajustes base de la plantilla seleccionada;
 - corregir automáticamente el espacio entre párrafos para que no quede por debajo del interlineado;
 - aplicar reglas propias a los títulos para evitar justificación, sangría heredada y guionado automático;
 - generar el PDF;
 - mostrar el PDF generado dentro de la propia app;
 - abrir el PDF en el visor externo de Windows.
-- cambiar entre secciones `Archivo`, `Diseño` y `Plantillas` en el panel
-  izquierdo.
+- cambiar entre secciones `Archivo` y `Diseño` en el panel izquierdo.
 
 ## Relación Con La Versión Portable
 

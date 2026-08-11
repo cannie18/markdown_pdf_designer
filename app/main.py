@@ -374,12 +374,10 @@ class MainWindow(QMainWindow):
 
     self.file_tab_button = self.create_nav_button('Archivo', 0)
     self.design_tab_button = self.create_nav_button('Diseño', 1)
-    self.templates_tab_button = self.create_nav_button('Plantillas', 2)
 
     nav_row = QHBoxLayout()
     nav_row.addWidget(self.file_tab_button)
     nav_row.addWidget(self.design_tab_button)
-    nav_row.addWidget(self.templates_tab_button)
     nav_row.addStretch()
 
     file_row = QHBoxLayout()
@@ -411,6 +409,18 @@ class MainWindow(QMainWindow):
     style_panel_layout = QVBoxLayout(style_panel)
     style_panel_layout.setContentsMargins(10, 10, 10, 10)
     style_panel_layout.setSpacing(8)
+    self.template_status_label = QLabel()
+    self.template_status_label.setObjectName('sectionHelp')
+    self.template_status_label.setWordWrap(True)
+    style_panel_layout.addLayout(
+      self.create_design_group(
+        'Plantilla visual',
+        [
+          ('Plantilla', self.template_combo),
+          ('Definición', self.template_status_label),
+        ],
+      )
+    )
     style_panel_layout.addLayout(
       self.create_design_group(
         'Base',
@@ -475,38 +485,9 @@ class MainWindow(QMainWindow):
     self.design_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     self.design_scroll.setFrameShape(QFrame.Shape.NoFrame)
 
-    templates_page = QWidget()
-    templates_layout = QVBoxLayout(templates_page)
-    templates_layout.setContentsMargins(0, 0, 0, 0)
-    templates_title = QLabel('Plantillas')
-    templates_title.setObjectName('sectionTitle')
-    templates_help = QLabel('Elige la plantilla visual que se usará al generar el PDF.')
-    templates_help.setObjectName('sectionHelp')
-    templates_help.setWordWrap(True)
-    templates_card = QFrame()
-    templates_card.setObjectName('placeholderCard')
-    templates_card_layout = QVBoxLayout(templates_card)
-    templates_card_layout.addWidget(QLabel('Plantilla activa'))
-    templates_card_layout.addWidget(self.template_combo)
-    self.template_status_label = QLabel()
-    self.template_status_label.setObjectName('sectionHelp')
-    self.template_status_label.setWordWrap(True)
-    templates_card_layout.addWidget(self.template_status_label)
-    templates_layout.addWidget(templates_title)
-    templates_layout.addWidget(templates_help)
-    templates_layout.addWidget(templates_card)
-    templates_layout.addStretch()
-
-    self.templates_scroll = QScrollArea()
-    self.templates_scroll.setWidget(templates_page)
-    self.templates_scroll.setWidgetResizable(True)
-    self.templates_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-    self.templates_scroll.setFrameShape(QFrame.Shape.NoFrame)
-
     self.left_stack = QStackedWidget()
     self.left_stack.addWidget(file_page)
     self.left_stack.addWidget(self.design_scroll)
-    self.left_stack.addWidget(self.templates_scroll)
 
     editor_actions_row = QHBoxLayout()
     self.editor_actions_row = editor_actions_row
@@ -702,7 +683,6 @@ class MainWindow(QMainWindow):
     buttons = [
       self.file_tab_button,
       self.design_tab_button,
-      self.templates_tab_button,
     ]
     for button_index, button in enumerate(buttons):
       button.setProperty('active', button_index == index)

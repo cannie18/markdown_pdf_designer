@@ -18,7 +18,7 @@
 - Abrir el PDF generado en el visor predeterminado de Windows.
 - Recordar tamaño, posición y monitor de la ventana.
 - Panel izquierdo con ancho mínimo basado en la fila de botones Markdown.
-- Pestañas `Archivo`, `Diseño` y `Plantillas`.
+- Pestañas `Archivo` y `Diseño`.
 - Selector de plantillas predefinidas.
 - Carga automática en `Diseño` de los valores base de la plantilla seleccionada.
 - Corrección de textos visibles de la app a español de España.
@@ -58,6 +58,10 @@
 ## Plantillas
 
 - Revisar y mejorar la estructura para crear y listar plantillas de la app desde la interfaz.
+- Valorar una futura galería de plantillas en grid con definición rápida y vista previa cacheada.
+  - Debe permitir comparar plantillas sin convertir manualmente cada documento.
+  - La vista puede ser PDF de ejemplo ya generado o imagen derivada del PDF.
+  - Debe mostrar componentes clave: títulos, párrafos, listas, tabla, cita, código, negrita y cursiva.
 - Mantener separadas las plantillas de la app y la plantilla portable por `.bat`.
 - Mejorar las plantillas base:
   - `estudio`;
@@ -82,7 +86,7 @@
   - Habría que implementar arrastre manual de ventana.
 - Revisar el comportamiento de la vista previa con PDFs largos.
 - Mejorar la pestaña de diseño para que permita regenerar el PDF sin perder contexto.
-- Ampliar la pestaña de plantillas para duplicar y editar plantillas.
+- Valorar si una galería futura de plantillas debe permitir duplicar y editar plantillas.
 
 ## Persistencia
 
