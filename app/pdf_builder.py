@@ -799,7 +799,7 @@ def apply_special_markdown_tokens(typ_file: Path) -> None:
   typ_text = typ_file.read_text(encoding='utf-8')
   typ_text = typ_text.replace(
     TOC_TOKEN,
-    '\n#outline(title: [Índice])\n',
+    '\n\n#block(above: 1em, below: 1em)[\n  #outline(title: [Índice])\n]\n\n',
   )
   break_command = '#colbreak()' if '#columns(' in typ_text else '#pagebreak()'
   typ_text = typ_text.replace(PAGEBREAK_TOKEN, f'\n{break_command}\n')
