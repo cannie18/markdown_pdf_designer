@@ -121,7 +121,7 @@
   - Habría que implementar arrastre manual de ventana.
 - Revisar el comportamiento de la vista previa con PDFs largos.
 - Mejorar la pestaña de diseño para que permita regenerar el PDF sin perder contexto.
-- Mantener en `Diseño` solo acciones relacionadas con generar el PDF.
+- Mantener `Generar PDF` siempre visible en `Diseño`.
 - Valorar si una galería futura de plantillas debe permitir duplicar y editar plantillas.
 - Reorganizar `Diseño` con iconos reconocibles para reducir texto visible.
 - Revisar más adelante si el botón `Ayuda` debe enlazar ejemplos de Markdown.

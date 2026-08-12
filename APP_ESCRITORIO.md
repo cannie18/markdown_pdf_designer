@@ -101,7 +101,7 @@ La app permite:
 - desactivar visualmente `Ayuda` cuando vuelve el PDF al generar;
 - mantener arriba la fila de selección de Markdown en `Markdown`;
 - colocar `Abrir` junto a la caja de ruta y `Nuevo` después;
-- mostrar en `Diseño` solo `Generar PDF` como acción inferior;
+- mostrar en `Diseño` siempre `Generar PDF` como acción inferior;
 - proteger cambios sin guardar en plantillas personalizadas al cerrar o cambiar de plantilla;
 - mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
 
@@ -198,7 +198,7 @@ Los últimos ajustes importantes son:
 - el cuerpo de texto puede seguir justificándose según la plantilla, pero los títulos no;
 - el botón `Ayuda` muestra las instrucciones en el visor de la derecha sin cambiar el panel izquierdo y permite volver al PDF;
 - `Nuevo` abre un documento sin guardar y pide ubicación al guardar o generar;
-- en `Diseño` se ocultan `Cerrar`, `Guardar`, `Guardar como` y `Abrir PDF en Windows`;
+- en `Diseño` se ocultan `Cerrar`, `Guardar`, `Guardar como` y `Abrir PDF en Windows`, pero `Generar PDF` permanece visible;
 - los cambios de plantillas personalizadas se deben guardar, descartar o cancelar antes de cerrar o cambiar de plantilla;
 - la ayuda combina una guía rápida con explicaciones detalladas de `Markdown` y `Diseño`;
 - el visor vacío muestra una guía breve de primer uso;

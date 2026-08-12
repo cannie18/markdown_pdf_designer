@@ -845,7 +845,7 @@ class MainWindow(QMainWindow):
 
     self.open_pdf_button.setVisible(in_markdown and self.current_pdf is not None)
     self.open_pdf_button.setEnabled(in_markdown and self.current_pdf is not None)
-    self.build_button.setVisible((in_markdown or in_design) and has_markdown)
+    self.build_button.setVisible((in_markdown and has_markdown) or in_design)
     self.build_button.setEnabled((in_markdown or in_design) and has_markdown)
 
   def show_document_preview(self) -> None:
