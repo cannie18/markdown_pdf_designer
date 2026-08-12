@@ -467,7 +467,9 @@ class MainWindow(QMainWindow):
 
     self.file_tab_button = self.create_nav_button('Archivo', 0)
     self.design_tab_button = self.create_nav_button('Diseño', 1)
-    self.help_tab_button = self.create_nav_button('Ayuda', 2)
+    self.help_tab_button = QPushButton('Ayuda')
+    self.help_tab_button.setObjectName('navButton')
+    self.help_tab_button.clicked.connect(self.show_help_preview)
 
     nav_row = QHBoxLayout()
     nav_row.addWidget(self.file_tab_button)
@@ -597,40 +599,9 @@ class MainWindow(QMainWindow):
     self.design_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     self.design_scroll.setFrameShape(QFrame.Shape.NoFrame)
 
-    help_page = QWidget()
-    help_layout = QVBoxLayout(help_page)
-    help_layout.setContentsMargins(0, 0, 0, 0)
-    help_layout.setSpacing(10)
-    help_title = QLabel('Ayuda')
-    help_title.setObjectName('sectionTitle')
-    help_intro = QLabel(
-      'Markdown PDF Designer separa el contenido del aspecto visual. '
-      'Escribe la estructura en Markdown y controla la apariencia desde Diseño.'
-    )
-    help_intro.setObjectName('sectionHelp')
-    help_intro.setWordWrap(True)
-    help_layout.addWidget(help_title)
-    help_layout.addWidget(help_intro)
-    help_note = QLabel(
-      'La ayuda completa se muestra en el visor de la derecha para aprovechar '
-      'el espacio de lectura. Vuelve a Archivo o Diseño para recuperar la '
-      'vista previa del PDF.'
-    )
-    help_note.setObjectName('sectionHelp')
-    help_note.setWordWrap(True)
-    help_layout.addWidget(help_note)
-    help_layout.addStretch()
-
-    self.help_scroll = QScrollArea()
-    self.help_scroll.setWidget(help_page)
-    self.help_scroll.setWidgetResizable(True)
-    self.help_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-    self.help_scroll.setFrameShape(QFrame.Shape.NoFrame)
-
     self.left_stack = QStackedWidget()
     self.left_stack.addWidget(file_page)
     self.left_stack.addWidget(self.design_scroll)
-    self.left_stack.addWidget(self.help_scroll)
 
     editor_actions_row = QHBoxLayout()
     self.editor_actions_row = editor_actions_row
@@ -837,15 +808,9 @@ class MainWindow(QMainWindow):
     '''Muestra una de las secciones principales del panel izquierdo.'''
 
     self.left_stack.setCurrentIndex(index)
-    if index == 2:
-      self.show_help_preview()
-    else:
-      self.show_document_preview()
-
     buttons = [
       self.file_tab_button,
       self.design_tab_button,
-      self.help_tab_button,
     ]
     for button_index, button in enumerate(buttons):
       button.setProperty('active', button_index == index)
@@ -856,9 +821,18 @@ class MainWindow(QMainWindow):
     '''Restaura el visor de PDF o la guia inicial.'''
 
     self.help_preview_scroll.setVisible(False)
+    self.help_tab_button.setProperty('active', False)
+    self.help_tab_button.style().unpolish(self.help_tab_button)
+    self.help_tab_button.style().polish(self.help_tab_button)
     has_preview = self.current_pdf is not None and self.pdf_document.pageCount() > 0
     self.pdf_view.setVisible(has_preview)
     self.empty_preview_label.setVisible(not has_preview)
+
+  def refresh_document_preview_if_visible(self) -> None:
+    '''Actualiza el visor documental sin cerrar la ayuda activa.'''
+
+    if not self.help_preview_scroll.isVisible():
+      self.show_document_preview()
 
   def show_help_preview(self) -> None:
     '''Muestra la ayuda en el area amplia de vista previa.'''
@@ -866,6 +840,9 @@ class MainWindow(QMainWindow):
     self.pdf_view.setVisible(False)
     self.empty_preview_label.setVisible(False)
     self.help_preview_scroll.setVisible(True)
+    self.help_tab_button.setProperty('active', True)
+    self.help_tab_button.style().unpolish(self.help_tab_button)
+    self.help_tab_button.style().polish(self.help_tab_button)
 
   def create_help_content(self) -> QWidget:
     '''Crea el contenido de ayuda que se muestra en el visor.'''
@@ -1476,7 +1453,7 @@ class MainWindow(QMainWindow):
     self.drop_zone.setVisible(False)
     self.editor.setVisible(True)
     self.pdf_document.close()
-    self.show_document_preview()
+    self.refresh_document_preview_if_visible()
     self.editor_dirty = False
     self.edit_button.setText('Cerrar')
     self.edit_button.setEnabled(True)
@@ -1525,7 +1502,7 @@ class MainWindow(QMainWindow):
     self.editor.clear()
     self.editor.setVisible(False)
     self.pdf_document.close()
-    self.show_document_preview()
+    self.refresh_document_preview_if_visible()
     self.editor_dirty = False
     self.edit_button.setText('Cerrar')
     self.edit_button.setEnabled(False)
@@ -1595,7 +1572,7 @@ class MainWindow(QMainWindow):
     self.current_pdf = None
     self.remember_markdown(self.current_file)
     self.pdf_document.close()
-    self.show_document_preview()
+    self.refresh_document_preview_if_visible()
     self.open_pdf_button.setEnabled(False)
     self.open_pdf_button.setVisible(False)
     self.editor_dirty = False

@@ -28,13 +28,13 @@ de trabajo cambiante a la izquierda.
 panel izquierdo cambiante | vista previa PDF
 ```
 
-El panel izquierdo tiene dos secciones:
+El panel izquierdo tiene dos secciones y un botón de ayuda:
 
 - `Archivo`: abrir o arrastrar Markdown, revisar contenido y generar PDF.
 - `Diseño`: elegir plantilla visual y ajustar fuente, tamaño, colores y espacios
   antes de volver a generar.
-- `Ayuda`: consultar en el visor el flujo básico, el Markdown recomendado y el
-  papel de las plantillas.
+- `Ayuda`: mostrar en el visor el flujo básico, el Markdown recomendado y el
+  papel de las plantillas sin cambiar el panel izquierdo activo.
 
 La vista previa no es una pestaña separada: debe estar siempre disponible para
 comprobar el PDF real generado.
@@ -91,8 +91,9 @@ La app permite:
 - generar el PDF;
 - mostrar el PDF generado dentro de la propia app;
 - abrir el PDF en el visor externo de Windows.
-- cambiar entre secciones `Archivo`, `Diseño` y `Ayuda` en el panel izquierdo;
-- mostrar la ayuda en el área de vista previa para aprovechar el espacio de lectura;
+- cambiar entre secciones `Archivo` y `Diseño` en el panel izquierdo;
+- mostrar la ayuda en el área de vista previa sin abandonar `Archivo` o `Diseño`;
+- mantener visible la ayuda al alternar entre `Archivo` y `Diseño`;
 - mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
 
 ## Relación Con La Versión Portable
@@ -186,7 +187,7 @@ Los últimos ajustes importantes son:
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;
 - las plantillas evitan que los títulos hereden el interlineado grande del texto normal;
 - el cuerpo de texto puede seguir justificándose según la plantilla, pero los títulos no;
-- la sección `Ayuda` muestra las instrucciones en el visor de la derecha;
+- el botón `Ayuda` muestra las instrucciones en el visor de la derecha sin cambiar el panel izquierdo;
 - el visor vacío muestra una guía breve de primer uso;
 - la versión portable por `.bat` no se ha tocado.
 
