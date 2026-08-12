@@ -1,6 +1,6 @@
 # pdf_apuntes
 
-Prueba mínima para evaluar el flujo:
+Herramienta local para convertir apuntes en Markdown a PDF:
 
 ```text
 Markdown -> Pandoc -> Typst -> PDF
@@ -36,9 +36,9 @@ Los binarios locales no se suben a GitHub porque están ignorados en
 `.gitignore`. Esto mantiene el repositorio ligero, pero permite copiar la
 carpeta local completa a otro equipo para trabajar sin instalar dependencias.
 
-En esta primera prueba no se usa Python. La idea es comprobar si Pandoc y Typst
-pueden hacerse cargo de la conversión y la maquetación básica sin un
-preprocesador lleno de expresiones regulares.
+La versión portable por `.bat` y la app de escritorio evolucionan separadas. En
+ambos casos se mantiene la idea base: delegar la conversión y la maquetación en
+Pandoc y Typst, evitando un preprocesador lleno de expresiones regulares.
 
 ## Probar en Windows
 
@@ -80,7 +80,6 @@ También puedes arrastrar un archivo Markdown sobre `abrir_app.bat`.
 
 La app permite, de momento:
 
-- crear un archivo Markdown nuevo;
 - crear un Markdown nuevo sin elegir ubicación hasta guardarlo o generar PDF;
 - abrir un archivo `.md`;
 - arrastrar un archivo `.md`;
@@ -109,8 +108,8 @@ La app permite, de momento:
 - evitar que los títulos hereden justificación, sangría o guionado automático;
 - evitar cambios accidentales en controles numéricos al usar la rueda del ratón;
 - recordar posición, monitor y tamaño de ventana;
-- mantener un ancho mínimo usable para controles y dejar que la vista previa use el espacio restante.
-- mantener siempre arriba la fila de selección de Markdown en `Markdown`.
+- mantener un ancho mínimo usable para controles y dejar que la vista previa use el espacio restante;
+- mantener siempre arriba la fila de selección de Markdown en `Markdown`;
 - resaltar en los desplegables la opción seleccionada y la opción bajo el mouse.
 
 Las opciones visuales de la app se aplican generando una plantilla Typst
@@ -152,11 +151,12 @@ pdf_apuntes/
 └── README.md
 ```
 
-## Siguiente paso
+## Próximas mejoras
 
-Cuando esta prueba compile correctamente, podemos iterar sobre la plantilla
-`templates\apuntes.typ`: portada, colores, cabecera, pie, tablas, código,
-bloques destacados y tratamiento de ecuaciones.
+El flujo principal `Markdown -> PDF` ya funciona. Las próximas mejoras previstas
+se centran en la experiencia visual de la app: iconos, organización de controles,
+plantillas, portada, cabecera, pie, salida configurable y soporte futuro para
+imágenes locales referenciadas desde Markdown.
 
 ## Plantillas de la app
 

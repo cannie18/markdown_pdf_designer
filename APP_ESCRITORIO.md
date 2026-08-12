@@ -156,8 +156,9 @@ Markdown
   -> PDF
 ```
 
-Cuando el usuario cambia fuente, tamaño, márgenes, títulos o colores, Python genera una plantilla
-Typst temporal a partir de la plantilla elegida en:
+Cuando el usuario cambia fuente, tamaño, márgenes, títulos, colores, fondo de
+página, bloques, tablas o código, Python genera una plantilla Typst temporal a
+partir de la plantilla elegida en:
 
 ```text
 app/templates/
@@ -196,7 +197,8 @@ Los últimos ajustes importantes son:
 - las plantillas personalizadas pueden actualizarse con `Guardar cambios`;
 - los controles numéricos de diseño ignoran la rueda del ratón para evitar cambios accidentales;
 - `Bloques` permite ajustar espacio interno, color/tamaño del texto, borde y fondo;
-- `Tablas` permite ajustar espacio de celdas, color/tamaño del texto, bordes y cabecera;
+- `Tablas` permite ajustar modo de ancho, espacio de celdas, color/tamaño del texto, bordes y cabecera;
+- `Base` permite ajustar el color de fondo de página del PDF;
 - `Ensayo APA / MLA` usa tamaños distintos para títulos y subtítulos;
 - `Ensayo APA / MLA` ya no parte de `Espacio párrafos = 0`;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;
@@ -221,6 +223,7 @@ Objetivos previstos:
 - cabecera y pie de página configurables;
 - número de página y total de páginas;
 - salida a una carpeta elegida por el usuario;
+- soporte básico para imágenes locales referenciadas desde Markdown;
 - modo debug para conservar `.typ` intermedios;
 - mensajes de error más comprensibles;
 - empaquetado como `.exe` para usar sin abrir terminal;

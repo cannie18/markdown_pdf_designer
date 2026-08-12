@@ -21,7 +21,7 @@
 - Panel izquierdo con ancho mínimo basado en la fila de botones Markdown.
 - Fila de ruta, `Nuevo` y `Abrir` siempre arriba en `Markdown`.
 - `Abrir` queda junto a la caja de ruta y `Nuevo` después.
-- Pestañas `Markdown` y `Diseño`.
+- Botones de navegación `Markdown` y `Diseño` sobre un `QStackedWidget`.
 - Botón `Ayuda` integrado junto a `Markdown` y `Diseño`, con contenido mostrado en el visor.
 - `Ayuda` funciona como interruptor: muestra instrucciones y permite volver al PDF o a la guía inicial.
 - `Ayuda` se desactiva visualmente al generar y mostrar un PDF.
@@ -79,10 +79,11 @@
   - colores de títulos;
   - tamaños de títulos;
   - color del texto normal;
+  - color de fondo de página;
   - estilos de código;
   - estilos de bloques destacados;
   - color y tamaño de texto en tablas y bloques;
-  - estilos de tabla;
+  - estilos de tabla y modo de ancho;
   - espaciados principales;
   - márgenes del documento.
 - Revisar si conviene añadir controles para:
@@ -116,6 +117,18 @@
 - Preparar una pantalla para crear nuevas plantillas desde la interfaz.
 - Decidir qué partes de una plantilla se editan con controles y cuáles se editan como código Typst.
 
+## Imágenes
+
+- Preparar soporte futuro para imágenes referenciadas desde Markdown.
+- Resolver rutas relativas respecto a la carpeta del `.md`, no respecto a la app.
+- Mostrar errores claros si una imagen local no existe.
+- Decidir más adelante si se soportan imágenes remotas o si deben descargarse antes.
+- Valorar controles de diseño para imágenes:
+  - ancho máximo;
+  - alineación;
+  - espaciado;
+  - pie de figura.
+
 ## Interfaz
 
 - Seguir puliendo el panel izquierdo con scroll y ancho mínimo calculado desde los botones Markdown.
@@ -123,7 +136,7 @@
   - Habría que crear botones propios para cerrar, minimizar y maximizar.
   - Habría que implementar arrastre manual de ventana.
 - Revisar el comportamiento de la vista previa con PDFs largos.
-- Mejorar la pestaña de diseño para que permita regenerar el PDF sin perder contexto.
+- Mejorar la sección `Diseño` para que permita regenerar el PDF sin perder contexto.
 - Mantener `Generar PDF` siempre visible y usable en `Diseño`.
 - Valorar si una galería futura de plantillas debe permitir duplicar y editar plantillas.
 - Reorganizar `Diseño` con iconos reconocibles para reducir texto visible.
