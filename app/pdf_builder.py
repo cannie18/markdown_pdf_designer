@@ -80,12 +80,12 @@ class PdfBuildError(RuntimeError):
 HTML_MARK_TOKEN_PREFIX = 'MDPDFMARK'
 TOC_TOKEN = 'MDPDFTOC'
 PAGEBREAK_TOKEN = 'MDPDFPAGEBREAK'
-ADMONITION_LABELS = {
-  'NOTE': 'Nota',
-  'TIP': 'Consejo',
-  'IMPORTANT': 'Importante',
-  'WARNING': 'Advertencia',
-  'CAUTION': 'Precaución',
+ADMONITION_STYLES = {
+  'NOTE': ('Note', '#2f6feb'),
+  'TIP': ('Tip', '#2da44e'),
+  'IMPORTANT': ('Important', '#8957e5'),
+  'WARNING': ('Warning', '#bf8700'),
+  'CAUTION': ('Caution', '#cf222e'),
 }
 
 
@@ -755,8 +755,12 @@ def normalize_github_admonitions(markdown_text: str) -> str:
       continue
 
     quote_prefix = match.group(1)
-    label = ADMONITION_LABELS.get(match.group(2).upper(), match.group(2).title())
-    output_lines.append(f'{quote_prefix}**{label}**')
+    admonition_type = match.group(2).upper()
+    label = ADMONITION_STYLES.get(
+      admonition_type,
+      (admonition_type.title(), '#57606a'),
+    )[0]
+    output_lines.append(f'{quote_prefix}**MDPDFALERT-{admonition_type} {label}**')
     output_lines.append(quote_prefix.rstrip())
 
   return '\n'.join(output_lines) + ('\n' if markdown_text.endswith('\n') else '')
@@ -797,7 +801,43 @@ def apply_special_markdown_tokens(typ_file: Path) -> None:
     TOC_TOKEN,
     '\n#outline(title: [Índice])\n',
   )
-  typ_text = typ_text.replace(PAGEBREAK_TOKEN, '\n#pagebreak()\n')
+  break_command = '#colbreak()' if '#columns(' in typ_text else '#pagebreak()'
+  typ_text = typ_text.replace(PAGEBREAK_TOKEN, f'\n{break_command}\n')
+  typ_file.write_text(typ_text, encoding='utf-8')
+
+
+def apply_github_admonition_styles(typ_file: Path) -> None:
+  '''Maqueta alertas tipo GitHub como bloques coloreados.'''
+
+  typ_text = typ_file.read_text(encoding='utf-8')
+
+  def replace_admonition(match: re.Match[str]) -> str:
+    admonition_type = match.group(1).upper()
+    label = match.group(2).strip()
+    body = match.group(3).strip()
+    _default_label, color = ADMONITION_STYLES.get(
+      admonition_type,
+      (label, '#57606a'),
+    )
+    return (
+      '#block(\n'
+      '  above: 0.9em,\n'
+      '  below: 0.9em,\n'
+      '  inset: (left: 0.9em, right: 0em, top: 0.25em, bottom: 0.25em),\n'
+      '  stroke: (left: 3pt + rgb("' + color + '")),\n'
+      ')[\n'
+      '  #text(weight: "bold", fill: rgb("' + color + '"))[' + label + ']\n'
+      '  #v(0.55em)\n'
+      f'  {body}\n'
+      ']'
+    )
+
+  typ_text = re.sub(
+    r'#quote\(block: true\)\[\s*#strong\[MDPDFALERT-([A-Z]+) ([^\]]+)\]\s*(.*?)\n\]',
+    replace_admonition,
+    typ_text,
+    flags=re.DOTALL,
+  )
   typ_file.write_text(typ_text, encoding='utf-8')
 
 
@@ -893,6 +933,7 @@ def build_pdf(
     )
     apply_mark_replacements(typ_file, mark_replacements)
     apply_special_markdown_tokens(typ_file)
+    apply_github_admonition_styles(typ_file)
     apply_table_width_mode(typ_file, style or PdfStyleOptions())
     run_command([typst, 'compile', typ_file, pdf_file])
   finally:
