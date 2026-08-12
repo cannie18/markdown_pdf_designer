@@ -1,7 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <polygon points="256,110 382,183 382,329 256,402 130,329 130,183" fill="none" stroke="#ff6b6b" stroke-width="32" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="
+    256,25
+    457.35,141.25
+    457.35,373.75
+    256,490
+    54.65,373.75
+    54.65,141.25
+" fill="none" stroke="#cf222e" stroke-width="45" stroke-linejoin="round" stroke-linecap="round"/>
 
-  <rect x="236" y="165" width="40" height="120" fill="#ff6b6b" />
+  <rect x="226" y="105" width="60" height="210" fill="#cf222e" />
 
-  <rect x="236" y="315" width="40" height="40" fill="#ff6b6b" />
+  <rect x="226" y="355" width="60" height="60" fill="#cf222e" />
 </svg>
