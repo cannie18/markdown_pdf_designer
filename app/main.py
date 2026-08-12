@@ -441,7 +441,10 @@ class MainWindow(QMainWindow):
     preview_label = QLabel('Vista previa del PDF')
     preview_label.setObjectName('previewTitle')
     self.empty_preview_label = QLabel(
-      'La vista previa aparecerá aquí cuando generes el primer PDF.'
+      'Empieza abriendo o arrastrando un Markdown.\n\n'
+      '1. Revisa o edita el contenido en Archivo.\n'
+      '2. Elige una plantilla y ajusta el estilo en Diseño.\n'
+      '3. Pulsa Generar PDF para ver aquí el resultado real.'
     )
     self.empty_preview_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
     self.empty_preview_label.setWordWrap(True)
@@ -457,10 +460,12 @@ class MainWindow(QMainWindow):
 
     self.file_tab_button = self.create_nav_button('Archivo', 0)
     self.design_tab_button = self.create_nav_button('Diseño', 1)
+    self.help_tab_button = self.create_nav_button('Ayuda', 2)
 
     nav_row = QHBoxLayout()
     nav_row.addWidget(self.file_tab_button)
     nav_row.addWidget(self.design_tab_button)
+    nav_row.addWidget(self.help_tab_button)
     nav_row.addStretch()
 
     file_row = QHBoxLayout()
@@ -585,9 +590,73 @@ class MainWindow(QMainWindow):
     self.design_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     self.design_scroll.setFrameShape(QFrame.Shape.NoFrame)
 
+    help_page = QWidget()
+    help_layout = QVBoxLayout(help_page)
+    help_layout.setContentsMargins(0, 0, 0, 0)
+    help_layout.setSpacing(10)
+    help_title = QLabel('Ayuda')
+    help_title.setObjectName('sectionTitle')
+    help_intro = QLabel(
+      'Markdown PDF Designer separa el contenido del aspecto visual. '
+      'Escribe la estructura en Markdown y controla la apariencia desde Diseño.'
+    )
+    help_intro.setObjectName('sectionHelp')
+    help_intro.setWordWrap(True)
+    help_layout.addWidget(help_title)
+    help_layout.addWidget(help_intro)
+    help_layout.addWidget(
+      self.create_help_card(
+        'Flujo básico',
+        [
+          'Abre, crea o arrastra un archivo Markdown.',
+          'Edita el texto si necesitas hacer cambios rápidos.',
+          'Elige una plantilla visual y ajusta fuente, colores o márgenes.',
+          'Genera el PDF y revisa la vista previa de la derecha.',
+        ],
+      )
+    )
+    help_layout.addWidget(
+      self.create_help_card(
+        'Markdown recomendado',
+        [
+          'Usa #, ## y ### para organizar títulos y subtítulos.',
+          'Usa listas, tablas, citas y bloques de código estándar de Markdown.',
+          'Evita añadir marcas visuales manuales para simular diseño.',
+        ],
+      )
+    )
+    help_layout.addWidget(
+      self.create_help_card(
+        'Diseño y plantillas',
+        [
+          'Las plantillas definen el estilo general del PDF.',
+          'Los ajustes de Diseño modifican la plantilla antes de generar.',
+          'Las plantillas personalizadas se guardan fuera del repositorio.',
+        ],
+      )
+    )
+    help_layout.addWidget(
+      self.create_help_card(
+        'Salida del PDF',
+        [
+          'El PDF se genera junto al Markdown seleccionado.',
+          'La vista previa muestra el PDF real, no una simulación.',
+          'Abrir PDF en Windows usa el visor predeterminado del sistema.',
+        ],
+      )
+    )
+    help_layout.addStretch()
+
+    self.help_scroll = QScrollArea()
+    self.help_scroll.setWidget(help_page)
+    self.help_scroll.setWidgetResizable(True)
+    self.help_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    self.help_scroll.setFrameShape(QFrame.Shape.NoFrame)
+
     self.left_stack = QStackedWidget()
     self.left_stack.addWidget(file_page)
     self.left_stack.addWidget(self.design_scroll)
+    self.left_stack.addWidget(self.help_scroll)
 
     editor_actions_row = QHBoxLayout()
     self.editor_actions_row = editor_actions_row
@@ -757,6 +826,20 @@ class MainWindow(QMainWindow):
       #sectionHelp {
         color: #434655;
       }
+      #helpCard {
+        border: 1px solid #d7dde3;
+        border-radius: 6px;
+        background: #ffffff;
+        padding: 10px;
+      }
+      #helpCardTitle {
+        font-size: 10.5pt;
+        font-weight: 700;
+        color: #26364a;
+      }
+      #helpCardText {
+        color: #434655;
+      }
       #placeholderCard {
         border: 1px solid #d7dde3;
         border-radius: 6px;
@@ -783,11 +866,38 @@ class MainWindow(QMainWindow):
     buttons = [
       self.file_tab_button,
       self.design_tab_button,
+      self.help_tab_button,
     ]
     for button_index, button in enumerate(buttons):
       button.setProperty('active', button_index == index)
       button.style().unpolish(button)
       button.style().polish(button)
+
+  def create_help_card(self, title: str, items: list[str]) -> QFrame:
+    '''Crea un bloque compacto de instrucciones para la seccion de ayuda.'''
+
+    card = QFrame()
+    card.setObjectName('helpCard')
+    card.setMinimumWidth(0)
+    card.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+
+    layout = QVBoxLayout(card)
+    layout.setContentsMargins(10, 10, 10, 10)
+    layout.setSpacing(6)
+
+    title_label = QLabel(title)
+    title_label.setObjectName('helpCardTitle')
+    title_label.setWordWrap(True)
+
+    text_label = QLabel('\n'.join(f'- {item}' for item in items))
+    text_label.setObjectName('helpCardText')
+    text_label.setWordWrap(True)
+    text_label.setMinimumWidth(0)
+    text_label.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+
+    layout.addWidget(title_label)
+    layout.addWidget(text_label)
+    return card
 
   def create_template_group(self) -> QVBoxLayout:
     '''Crea la sección de selección y acciones de plantilla.'''

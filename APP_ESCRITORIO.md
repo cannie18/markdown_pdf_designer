@@ -33,6 +33,8 @@ El panel izquierdo tiene dos secciones:
 - `Archivo`: abrir o arrastrar Markdown, revisar contenido y generar PDF.
 - `Diseño`: elegir plantilla visual y ajustar fuente, tamaño, colores y espacios
   antes de volver a generar.
+- `Ayuda`: consultar el flujo básico, el Markdown recomendado y el papel de
+  las plantillas.
 
 La vista previa no es una pestaña separada: debe estar siempre disponible para
 comprobar el PDF real generado.
@@ -89,7 +91,8 @@ La app permite:
 - generar el PDF;
 - mostrar el PDF generado dentro de la propia app;
 - abrir el PDF en el visor externo de Windows.
-- cambiar entre secciones `Archivo` y `Diseño` en el panel izquierdo.
+- cambiar entre secciones `Archivo`, `Diseño` y `Ayuda` en el panel izquierdo;
+- mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
 
 ## Relación Con La Versión Portable
 
@@ -182,6 +185,8 @@ Los últimos ajustes importantes son:
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;
 - las plantillas evitan que los títulos hereden el interlineado grande del texto normal;
 - el cuerpo de texto puede seguir justificándose según la plantilla, pero los títulos no;
+- se añadió una sección `Ayuda` integrada en el panel izquierdo;
+- el visor vacío muestra una guía breve de primer uso;
 - la versión portable por `.bat` no se ha tocado.
 
 Objetivos previstos:

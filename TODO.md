@@ -19,6 +19,8 @@
 - Recordar tamaño, posición y monitor de la ventana.
 - Panel izquierdo con ancho mínimo basado en la fila de botones Markdown.
 - Pestañas `Archivo` y `Diseño`.
+- Sección `Ayuda` integrada junto a `Archivo` y `Diseño`.
+- Guía breve en el visor cuando todavía no hay PDF cargado.
 - Selector de plantillas predefinidas.
 - Carga automática en `Diseño` de los valores base de la plantilla seleccionada.
 - Creación de plantillas personalizadas desde los ajustes actuales de `Diseño`.
@@ -113,6 +115,7 @@
 - Revisar el comportamiento de la vista previa con PDFs largos.
 - Mejorar la pestaña de diseño para que permita regenerar el PDF sin perder contexto.
 - Valorar si una galería futura de plantillas debe permitir duplicar y editar plantillas.
+- Revisar más adelante si la sección `Ayuda` debe enlazar ejemplos de Markdown.
 
 ## Persistencia
 

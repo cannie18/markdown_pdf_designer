@@ -89,6 +89,8 @@ La app permite, de momento:
 - generar el PDF con un botón;
 - ver el PDF generado dentro de la propia app;
 - abrir el PDF generado en el visor predeterminado de Windows;
+- consultar una sección de ayuda integrada con el flujo básico de uso;
+- ver una guía breve en el visor cuando todavía no hay PDF cargado;
 - elegir fuente, tamaño base, márgenes, tamaños de títulos y colores antes de generar;
 - definir colores independientes para títulos, negrita y cursiva;
 - ajustar interlineado, espaciado entre párrafos y estilos de código;
@@ -173,6 +175,8 @@ Las plantillas disponibles en la app son:
 - la última plantilla seleccionada se recuerda, pero al abrir la app se cargan los parámetros base de esa plantilla;
 - las plantillas personalizadas pueden actualizarse con `Guardar cambios`;
 - los controles numéricos de `Diseño` no cambian con la rueda del ratón;
+- la app incluye una sección `Ayuda` junto a `Archivo` y `Diseño`;
+- el visor vacío muestra los primeros pasos antes de generar el primer PDF;
 - `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;
 - `Diseño` permite controlar texto, espaciado, bordes y cabecera de tablas;
 - la versión portable `crear_pdf.bat` sigue funcionando;
