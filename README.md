@@ -90,6 +90,7 @@ La app permite, de momento:
 - ver el PDF generado dentro de la propia app;
 - abrir el PDF generado en el visor predeterminado de Windows;
 - consultar la ayuda integrada en el visor sin abandonar `Markdown` o `Diseño`;
+- consultar ayuda detallada sobre botones de Markdown, plantillas y secciones de Diseño;
 - ver una guía breve en el visor cuando todavía no hay PDF cargado;
 - elegir fuente, tamaño base, márgenes, tamaños de títulos y colores antes de generar;
 - definir colores independientes para títulos, negrita y cursiva;
@@ -177,6 +178,7 @@ Las plantillas disponibles en la app son:
 - las plantillas personalizadas pueden actualizarse con `Guardar cambios`;
 - los controles numéricos de `Diseño` no cambian con la rueda del ratón;
 - el botón `Ayuda` funciona como interruptor entre instrucciones y vista previa;
+- la ayuda incluye guía rápida, botones de Markdown, flujo de plantillas y secciones modificables de `Diseño`;
 - el visor vacío muestra los primeros pasos antes de generar el primer PDF;
 - la fila de ruta, `Nuevo` y `Abrir` permanece arriba en `Markdown`, haya o no documento abierto;
 - `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;

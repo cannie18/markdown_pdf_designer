@@ -866,7 +866,8 @@ class MainWindow(QMainWindow):
     intro = QLabel(
       'La app convierte Markdown en PDF separando contenido y presentación. '
       'El Markdown describe la estructura; las plantillas y los controles de '
-      'Diseño deciden cómo se verá el documento final.'
+      'Diseño deciden cómo se verá el documento final. Pulsa Ayuda otra vez '
+      'para volver a la vista previa del PDF o a la guía inicial.'
     )
     intro.setObjectName('sectionHelp')
     intro.setWordWrap(True)
@@ -875,42 +876,83 @@ class MainWindow(QMainWindow):
     layout.addWidget(intro)
     layout.addWidget(
       self.create_help_card(
-        'Flujo básico',
+        'Guía rápida',
         [
           'Abre, crea o arrastra un archivo Markdown.',
-          'Edita el texto si necesitas hacer cambios rápidos.',
-          'Elige una plantilla visual y ajusta fuente, colores o márgenes.',
-          'Genera el PDF y revisa la vista previa real.',
+          'Revisa el texto en Markdown y guarda los cambios si los haces.',
+          'Elige una plantilla en Diseño y ajusta solo lo que necesites.',
+          'Pulsa Generar PDF para ver el resultado real en el visor.',
+          'Pulsa Ayuda de nuevo para volver al PDF sin regenerarlo.',
         ],
       )
     )
     layout.addWidget(
       self.create_help_card(
-        'Markdown recomendado',
+        'Markdown: botones y flujo',
         [
-          'Usa #, ## y ### para organizar títulos y subtítulos.',
+          'Nuevo crea un archivo Markdown vacío y lo abre en el editor.',
+          'Abrir permite seleccionar un archivo .md o .markdown desde Windows.',
+          'La caja de ruta permite escribir una ruta o elegir documentos recientes.',
+          'Cerrar cierra el Markdown actual y vuelve al estado inicial de la app.',
+          'Guardar escribe los cambios del editor en el archivo abierto.',
+          'Guardar como crea una copia en otra ruta y cambia a ese nuevo archivo.',
+          'Generar PDF convierte el Markdown actual usando la plantilla elegida.',
+          'Abrir PDF en Windows abre el último PDF generado con el visor del sistema.',
+          'La zona de arrastre acepta archivos Markdown soltados desde el explorador.',
+        ],
+      )
+    )
+    layout.addWidget(
+      self.create_help_card(
+        'Markdown: escritura recomendada',
+        [
+          'Usa # para el título principal, ## para secciones y ### para subsecciones.',
           'Usa listas, tablas, citas y bloques de código estándar de Markdown.',
-          'Evita añadir marcas visuales manuales para simular diseño.',
+          'Usa negrita y cursiva para énfasis semántico, no para maquetar a mano.',
+          'Evita simular diseño con espacios, saltos vacíos o símbolos decorativos.',
+          'Mantén el contenido limpio: el aspecto final se controla desde Diseño.',
         ],
       )
     )
     layout.addWidget(
       self.create_help_card(
-        'Diseño y plantillas',
+        'Diseño: flujo para crear una plantilla',
         [
-          'Las plantillas definen el estilo general del PDF.',
-          'Los ajustes de Diseño modifican la plantilla antes de generar.',
-          'Las plantillas personalizadas se guardan fuera del repositorio.',
+          'Selecciona una plantilla base parecida al resultado que quieres.',
+          'Ajusta fuente, tamaños, colores, márgenes, bloques, tablas y código.',
+          'Genera un PDF de prueba para revisar el resultado real.',
+          'Cuando el diseño te guste, pulsa Crear nueva plantilla.',
+          'Escribe un nombre claro para reconocerla después.',
+          'Las plantillas personalizadas se guardan en tus datos de usuario.',
+          'Si estás usando una plantilla personalizada, Guardar cambios actualiza esa plantilla.',
+          'Las plantillas predefinidas no se sobrescriben desde la app.',
         ],
       )
     )
     layout.addWidget(
       self.create_help_card(
-        'Salida del PDF',
+        'Diseño: secciones modificables',
         [
-          'El PDF se genera junto al Markdown seleccionado.',
-          'La vista previa muestra el PDF real, no una simulación.',
-          'Abrir PDF en Windows usa el visor predeterminado del sistema.',
+          'Plantilla visual define el punto de partida del documento.',
+          'Base controla fuente principal, tamaño del texto, color, interlineado y espacio entre párrafos.',
+          'Página controla los márgenes laterales y verticales del PDF.',
+          'Títulos controla tamaños y colores de los niveles 1, 2 y 3.',
+          'Énfasis controla los colores de negrita y cursiva.',
+          'Código controla fuente, tamaño y fondo de los bloques de código.',
+          'Bloques controla citas o bloques destacados: espacio interno, texto, borde y fondo.',
+          'Tablas controla espacio de celdas, texto, bordes y colores de cabecera.',
+        ],
+      )
+    )
+    layout.addWidget(
+      self.create_help_card(
+        'Diseño: botones',
+        [
+          'Crear nueva plantilla guarda los ajustes actuales como una plantilla personalizada.',
+          'Guardar cambios aparece con plantillas personalizadas y sobrescribe sus ajustes.',
+          'Los botones de color abren el selector para cambiar el color asociado.',
+          'Los controles numéricos se modifican con teclado o flechas, no con la rueda del ratón.',
+          'Después de cualquier cambio de diseño, vuelve a pulsar Generar PDF para ver el resultado.',
         ],
       )
     )

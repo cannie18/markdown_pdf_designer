@@ -93,6 +93,8 @@ La app permite:
 - abrir el PDF en el visor externo de Windows.
 - cambiar entre secciones `Markdown` y `Diseño` en el panel izquierdo;
 - mostrar la ayuda en el área de vista previa sin abandonar `Markdown` o `Diseño`;
+- explicar en la ayuda los botones de `Markdown`, el flujo de plantillas y las
+  secciones modificables de `Diseño`;
 - mantener visible la ayuda al alternar entre `Markdown` y `Diseño`;
 - usar `Ayuda` como interruptor para volver al PDF o a la guía inicial;
 - mantener arriba la fila de selección de Markdown en `Markdown`;
@@ -190,6 +192,7 @@ Los últimos ajustes importantes son:
 - las plantillas evitan que los títulos hereden el interlineado grande del texto normal;
 - el cuerpo de texto puede seguir justificándose según la plantilla, pero los títulos no;
 - el botón `Ayuda` muestra las instrucciones en el visor de la derecha sin cambiar el panel izquierdo y permite volver al PDF;
+- la ayuda combina una guía rápida con explicaciones detalladas de `Markdown` y `Diseño`;
 - el visor vacío muestra una guía breve de primer uso;
 - en `Markdown`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;
 - la versión portable por `.bat` no se ha tocado.

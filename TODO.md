@@ -22,6 +22,7 @@
 - Pestañas `Markdown` y `Diseño`.
 - Botón `Ayuda` integrado junto a `Markdown` y `Diseño`, con contenido mostrado en el visor.
 - `Ayuda` funciona como interruptor: muestra instrucciones y permite volver al PDF o a la guía inicial.
+- Ayuda ampliada con guía rápida, botones de `Markdown`, flujo de plantillas y secciones de `Diseño`.
 - Guía breve en el visor cuando todavía no hay PDF cargado.
 - Selector de plantillas predefinidas.
 - Carga automática en `Diseño` de los valores base de la plantilla seleccionada.
