@@ -453,6 +453,13 @@ class MainWindow(QMainWindow):
     pdf_panel_layout.addWidget(self.empty_preview_label, 1)
     pdf_panel_layout.addWidget(self.pdf_view, 1)
     self.pdf_view.setVisible(False)
+    self.help_preview_scroll = QScrollArea()
+    self.help_preview_scroll.setWidget(self.create_help_content())
+    self.help_preview_scroll.setWidgetResizable(True)
+    self.help_preview_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    self.help_preview_scroll.setFrameShape(QFrame.Shape.NoFrame)
+    pdf_panel_layout.addWidget(self.help_preview_scroll, 1)
+    self.help_preview_scroll.setVisible(False)
 
     self.drop_zone = DropZone()
     self.drop_zone.setMinimumWidth(0)
@@ -604,47 +611,14 @@ class MainWindow(QMainWindow):
     help_intro.setWordWrap(True)
     help_layout.addWidget(help_title)
     help_layout.addWidget(help_intro)
-    help_layout.addWidget(
-      self.create_help_card(
-        'Flujo básico',
-        [
-          'Abre, crea o arrastra un archivo Markdown.',
-          'Edita el texto si necesitas hacer cambios rápidos.',
-          'Elige una plantilla visual y ajusta fuente, colores o márgenes.',
-          'Genera el PDF y revisa la vista previa de la derecha.',
-        ],
-      )
+    help_note = QLabel(
+      'La ayuda completa se muestra en el visor de la derecha para aprovechar '
+      'el espacio de lectura. Vuelve a Archivo o Diseño para recuperar la '
+      'vista previa del PDF.'
     )
-    help_layout.addWidget(
-      self.create_help_card(
-        'Markdown recomendado',
-        [
-          'Usa #, ## y ### para organizar títulos y subtítulos.',
-          'Usa listas, tablas, citas y bloques de código estándar de Markdown.',
-          'Evita añadir marcas visuales manuales para simular diseño.',
-        ],
-      )
-    )
-    help_layout.addWidget(
-      self.create_help_card(
-        'Diseño y plantillas',
-        [
-          'Las plantillas definen el estilo general del PDF.',
-          'Los ajustes de Diseño modifican la plantilla antes de generar.',
-          'Las plantillas personalizadas se guardan fuera del repositorio.',
-        ],
-      )
-    )
-    help_layout.addWidget(
-      self.create_help_card(
-        'Salida del PDF',
-        [
-          'El PDF se genera junto al Markdown seleccionado.',
-          'La vista previa muestra el PDF real, no una simulación.',
-          'Abrir PDF en Windows usa el visor predeterminado del sistema.',
-        ],
-      )
-    )
+    help_note.setObjectName('sectionHelp')
+    help_note.setWordWrap(True)
+    help_layout.addWidget(help_note)
     help_layout.addStretch()
 
     self.help_scroll = QScrollArea()
@@ -863,6 +837,11 @@ class MainWindow(QMainWindow):
     '''Muestra una de las secciones principales del panel izquierdo.'''
 
     self.left_stack.setCurrentIndex(index)
+    if index == 2:
+      self.show_help_preview()
+    else:
+      self.show_document_preview()
+
     buttons = [
       self.file_tab_button,
       self.design_tab_button,
@@ -872,6 +851,86 @@ class MainWindow(QMainWindow):
       button.setProperty('active', button_index == index)
       button.style().unpolish(button)
       button.style().polish(button)
+
+  def show_document_preview(self) -> None:
+    '''Restaura el visor de PDF o la guia inicial.'''
+
+    self.help_preview_scroll.setVisible(False)
+    has_preview = self.current_pdf is not None and self.pdf_document.pageCount() > 0
+    self.pdf_view.setVisible(has_preview)
+    self.empty_preview_label.setVisible(not has_preview)
+
+  def show_help_preview(self) -> None:
+    '''Muestra la ayuda en el area amplia de vista previa.'''
+
+    self.pdf_view.setVisible(False)
+    self.empty_preview_label.setVisible(False)
+    self.help_preview_scroll.setVisible(True)
+
+  def create_help_content(self) -> QWidget:
+    '''Crea el contenido de ayuda que se muestra en el visor.'''
+
+    content = QWidget()
+    layout = QVBoxLayout(content)
+    layout.setContentsMargins(18, 18, 18, 18)
+    layout.setSpacing(12)
+
+    title = QLabel('Cómo usar Markdown PDF Designer')
+    title.setObjectName('sectionTitle')
+    title.setWordWrap(True)
+    intro = QLabel(
+      'La app convierte Markdown en PDF separando contenido y presentación. '
+      'El Markdown describe la estructura; las plantillas y los controles de '
+      'Diseño deciden cómo se verá el documento final.'
+    )
+    intro.setObjectName('sectionHelp')
+    intro.setWordWrap(True)
+
+    layout.addWidget(title)
+    layout.addWidget(intro)
+    layout.addWidget(
+      self.create_help_card(
+        'Flujo básico',
+        [
+          'Abre, crea o arrastra un archivo Markdown.',
+          'Edita el texto si necesitas hacer cambios rápidos.',
+          'Elige una plantilla visual y ajusta fuente, colores o márgenes.',
+          'Genera el PDF y revisa la vista previa real.',
+        ],
+      )
+    )
+    layout.addWidget(
+      self.create_help_card(
+        'Markdown recomendado',
+        [
+          'Usa #, ## y ### para organizar títulos y subtítulos.',
+          'Usa listas, tablas, citas y bloques de código estándar de Markdown.',
+          'Evita añadir marcas visuales manuales para simular diseño.',
+        ],
+      )
+    )
+    layout.addWidget(
+      self.create_help_card(
+        'Diseño y plantillas',
+        [
+          'Las plantillas definen el estilo general del PDF.',
+          'Los ajustes de Diseño modifican la plantilla antes de generar.',
+          'Las plantillas personalizadas se guardan fuera del repositorio.',
+        ],
+      )
+    )
+    layout.addWidget(
+      self.create_help_card(
+        'Salida del PDF',
+        [
+          'El PDF se genera junto al Markdown seleccionado.',
+          'La vista previa muestra el PDF real, no una simulación.',
+          'Abrir PDF en Windows usa el visor predeterminado del sistema.',
+        ],
+      )
+    )
+    layout.addStretch()
+    return content
 
   def create_help_card(self, title: str, items: list[str]) -> QFrame:
     '''Crea un bloque compacto de instrucciones para la seccion de ayuda.'''
@@ -1417,8 +1476,7 @@ class MainWindow(QMainWindow):
     self.drop_zone.setVisible(False)
     self.editor.setVisible(True)
     self.pdf_document.close()
-    self.pdf_view.setVisible(False)
-    self.empty_preview_label.setVisible(True)
+    self.show_document_preview()
     self.editor_dirty = False
     self.edit_button.setText('Cerrar')
     self.edit_button.setEnabled(True)
@@ -1467,8 +1525,7 @@ class MainWindow(QMainWindow):
     self.editor.clear()
     self.editor.setVisible(False)
     self.pdf_document.close()
-    self.pdf_view.setVisible(False)
-    self.empty_preview_label.setVisible(True)
+    self.show_document_preview()
     self.editor_dirty = False
     self.edit_button.setText('Cerrar')
     self.edit_button.setEnabled(False)
@@ -1538,8 +1595,7 @@ class MainWindow(QMainWindow):
     self.current_pdf = None
     self.remember_markdown(self.current_file)
     self.pdf_document.close()
-    self.pdf_view.setVisible(False)
-    self.empty_preview_label.setVisible(True)
+    self.show_document_preview()
     self.open_pdf_button.setEnabled(False)
     self.open_pdf_button.setVisible(False)
     self.editor_dirty = False
@@ -1635,6 +1691,7 @@ class MainWindow(QMainWindow):
     self.pdf_document.close()
     error = self.pdf_document.load(str(pdf_file))
     if error != QPdfDocument.Error.None_:
+      self.help_preview_scroll.setVisible(False)
       self.pdf_view.setVisible(False)
       self.empty_preview_label.setVisible(True)
       self.open_pdf_button.setEnabled(True)
@@ -1646,6 +1703,7 @@ class MainWindow(QMainWindow):
       )
       return
 
+    self.help_preview_scroll.setVisible(False)
     self.empty_preview_label.setVisible(False)
     self.pdf_view.setVisible(True)
     self.open_pdf_button.setEnabled(True)

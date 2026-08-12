@@ -19,7 +19,7 @@
 - Recordar tamaño, posición y monitor de la ventana.
 - Panel izquierdo con ancho mínimo basado en la fila de botones Markdown.
 - Pestañas `Archivo` y `Diseño`.
-- Sección `Ayuda` integrada junto a `Archivo` y `Diseño`.
+- Sección `Ayuda` integrada junto a `Archivo` y `Diseño`, con contenido mostrado en el visor.
 - Guía breve en el visor cuando todavía no hay PDF cargado.
 - Selector de plantillas predefinidas.
 - Carga automática en `Diseño` de los valores base de la plantilla seleccionada.
