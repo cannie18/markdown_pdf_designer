@@ -78,6 +78,8 @@ class PdfBuildError(RuntimeError):
 
 
 HTML_MARK_TOKEN_PREFIX = 'MDPDFMARK'
+TOC_TOKEN = 'MDPDFTOC'
+PAGEBREAK_TOKEN = 'MDPDFPAGEBREAK'
 ADMONITION_LABELS = {
   'NOTE': 'Nota',
   'TIP': 'Consejo',
@@ -690,6 +692,7 @@ def prepare_markdown_source(source: Path) -> tuple[Path, dict[str, str]]:
   markdown_text, mark_replacements = extract_mark_tags(markdown_text)
   markdown_text = normalize_basic_html(markdown_text)
   markdown_text = normalize_github_admonitions(markdown_text)
+  markdown_text = normalize_toc_and_pagebreaks(markdown_text)
 
   temp_file = tempfile.NamedTemporaryFile(
     mode='w',
@@ -759,6 +762,21 @@ def normalize_github_admonitions(markdown_text: str) -> str:
   return '\n'.join(output_lines) + ('\n' if markdown_text.endswith('\n') else '')
 
 
+def normalize_toc_and_pagebreaks(markdown_text: str) -> str:
+  '''Marca `[TOC]` y `<!-- pagebreak -->` para convertirlos a Typst real.'''
+
+  markdown_text = re.sub(
+    r'(?im)^\s*\[TOC\]\s*$',
+    TOC_TOKEN,
+    markdown_text,
+  )
+  return re.sub(
+    r'(?i)<!--\s*pagebreak\s*-->',
+    PAGEBREAK_TOKEN,
+    markdown_text,
+  )
+
+
 def apply_mark_replacements(typ_file: Path, replacements: dict[str, str]) -> None:
   '''Inserta resaltados Typst en los tokens generados para `<mark>`.'''
 
@@ -768,6 +786,18 @@ def apply_mark_replacements(typ_file: Path, replacements: dict[str, str]) -> Non
   typ_text = typ_file.read_text(encoding='utf-8')
   for token, content in replacements.items():
     typ_text = typ_text.replace(token, f'#highlight[{escape_typst_content(content)}]')
+  typ_file.write_text(typ_text, encoding='utf-8')
+
+
+def apply_special_markdown_tokens(typ_file: Path) -> None:
+  '''Convierte tokens de Markdown extendido en instrucciones Typst.'''
+
+  typ_text = typ_file.read_text(encoding='utf-8')
+  typ_text = typ_text.replace(
+    TOC_TOKEN,
+    '\n#outline(title: [Índice])\n',
+  )
+  typ_text = typ_text.replace(PAGEBREAK_TOKEN, '\n#pagebreak()\n')
   typ_file.write_text(typ_text, encoding='utf-8')
 
 
@@ -806,6 +836,8 @@ def run_command(command: list[str | Path]) -> None:
     [str(part) for part in command],
     cwd=ROOT_DIR,
     text=True,
+    encoding='utf-8',
+    errors='replace',
     capture_output=True,
     creationflags=creation_flags,
   )
@@ -860,6 +892,7 @@ def build_pdf(
       ]
     )
     apply_mark_replacements(typ_file, mark_replacements)
+    apply_special_markdown_tokens(typ_file)
     apply_table_width_mode(typ_file, style or PdfStyleOptions())
     run_command([typst, 'compile', typ_file, pdf_file])
   finally:

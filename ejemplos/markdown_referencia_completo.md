@@ -281,12 +281,11 @@ trata como comentario.
 
 <!-- Comentario interno que no debería renderizarse. -->
 
-Comentario usado como posible salto de página:
+Comentario usado como salto de página:
 
 <!-- pagebreak -->
 
-El texto posterior permite comprobar si la app ignora el comentario, lo mantiene
-oculto o lo convierte en salto de página explícito.
+El texto posterior debería comenzar en una página nueva.
 
 ## 22. Bloques Especiales Tipo Alerta
 

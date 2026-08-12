@@ -204,6 +204,7 @@ Las plantillas disponibles en la app son:
 - los títulos Markdown de nivel 4, 5 y 6 tienen estilos diferenciados;
 - los enlaces Markdown se muestran con color y subrayado y conservan el hipervínculo clicable;
 - la conversión normaliza HTML inline básico y alertas tipo GitHub antes de generar Typst;
+- `[TOC]` genera un índice y `<!-- pagebreak -->` genera un salto de página;
 - la versión portable `crear_pdf.bat` sigue funcionando;
 - `Ensayo APA / MLA` tiene jerarquía de títulos y espaciado corregido;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;

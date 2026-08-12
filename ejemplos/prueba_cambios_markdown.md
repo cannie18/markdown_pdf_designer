@@ -87,16 +87,13 @@ Este enlace debe saltar a la sección de [títulos de nivel 4 a 6](#titulos-secu
 Este enlace debe saltar a esta misma sección mediante un identificador
 personalizado: [enlaces internos de prueba](#enlaces-internos-prueba).
 
-## 6. Posible Salto De Página
+## 6. Salto De Página
 
-El siguiente comentario todavía sirve como caso de prueba para decidir si la app
-debe convertirlo en salto de página real.
+El siguiente comentario debe convertirse en un salto de página real.
 
 <!-- pagebreak -->
 
-Si este texto aparece justo después sin salto de página, el comentario se está
-ignorando. Si aparece en una página nueva, la app ya lo está interpretando como
-salto de página.
+Este texto debería empezar en una página nueva.
 
 ## 7. Texto Preformateado Por Sangría
 

@@ -62,6 +62,8 @@
   - `<strong>` y `<b>` como negrita;
   - `<em>` y `<i>` como cursiva.
 - Alertas tipo GitHub convertidas a citas con etiqueta legible.
+- `[TOC]` convertido en índice Typst.
+- `<!-- pagebreak -->` convertido en salto de página.
 - Separación entre plantillas de app y plantilla portable.
 - Primera fase de plantillas predefinidas:
   - `Estudio`;

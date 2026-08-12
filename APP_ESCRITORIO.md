@@ -216,6 +216,7 @@ Los últimos ajustes importantes son:
 - los títulos Markdown de nivel 4, 5 y 6 tienen estilos diferenciados;
 - los enlaces Markdown se muestran con color y subrayado y conservan el hipervínculo clicable;
 - la conversión normaliza HTML inline básico y alertas tipo GitHub antes de generar Typst;
+- `[TOC]` genera un índice y `<!-- pagebreak -->` genera un salto de página;
 - la ayuda combina una guía rápida con explicaciones detalladas de `Markdown` y `Diseño`;
 - el visor vacío muestra una guía breve de primer uso;
 - en `Markdown`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;
