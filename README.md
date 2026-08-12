@@ -94,6 +94,7 @@ La app permite, de momento:
 - consultar ayuda detallada sobre botones de Markdown, plantillas y secciones de Diseño;
 - ver una guía breve en el visor cuando todavía no hay PDF cargado;
 - elegir fuente, tamaño base, márgenes, tamaños de títulos y colores antes de generar;
+- elegir el color de fondo de la página del PDF;
 - definir colores independientes para títulos, negrita y cursiva;
 - ajustar interlineado, espaciado entre párrafos y estilos de código;
 - ajustar texto, fondo, borde y espaciado de bloques destacados;
@@ -185,6 +186,8 @@ Las plantillas disponibles en la app son:
 - la fila de ruta, `Nuevo` y `Abrir` permanece arriba en `Markdown`, haya o no documento abierto;
 - `Abrir` está junto a la caja de ruta y `Nuevo` después;
 - en `Diseño` siempre se muestra `Generar PDF` como acción inferior;
+- `Generar PDF` funciona desde `Diseño` y avisa si todavía no hay Markdown;
+- `Diseño` permite cambiar el color de fondo del documento PDF;
 - las plantillas personalizadas avisan si tienen cambios sin guardar al cerrar o cambiar de plantilla;
 - `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;
 - `Diseño` permite controlar texto, espaciado, bordes y cabecera de tablas;

@@ -30,6 +30,7 @@ class PdfStyleOptions:
   font_family: str = 'Arial'
   body_font_size: float = 10.5
   body_color: str = '#131b2e'
+  page_background_color: str = '#ffffff'
   paragraph_leading: float = 0.62
   paragraph_spacing: float = 0.82
   page_margin_x: float = 22
@@ -288,6 +289,7 @@ TEMPLATE_STYLE_PRESETS = {
     font_family='Verdana',
     body_font_size=13.5,
     body_color='#333333',
+    page_background_color='#fbf6e8',
     paragraph_leading=1.55,
     paragraph_spacing=1.65,
     page_margin_x=32,
@@ -606,10 +608,21 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
   '''
 
   template_text = template_file.read_text(encoding='utf-8')
+  page_background = normalize_hex_color(style.page_background_color)
+  if '__PAGE_BACKGROUND_COLOR__' not in template_text:
+    template_text = template_text.replace(
+      'margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),',
+      (
+        'margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),\n'
+        f'  fill: rgb("{page_background}"),'
+      ),
+      1,
+    )
   replacements = {
     '__BODY_FONT__': style.font_family,
     '__BODY_FONT_SIZE__': f'{style.body_font_size:g}',
     '__BODY_COLOR__': normalize_hex_color(style.body_color),
+    '__PAGE_BACKGROUND_COLOR__': page_background,
     '__PAR_LEADING__': f'{style.paragraph_leading:g}',
     '__PAR_SPACING__': f'{style.paragraph_spacing:g}',
     '__PAGE_MARGIN_X__': f'{style.page_margin_x:g}',

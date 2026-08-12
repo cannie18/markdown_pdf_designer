@@ -48,6 +48,7 @@
   - tamaño del texto;
   - color de fondo de cabecera;
   - color del texto de cabecera.
+- Opción de color de fondo de página del PDF.
 - Corrección de textos visibles de la app a español de España.
 - Separación entre plantillas de app y plantilla portable.
 - Primera fase de plantillas predefinidas:
@@ -121,7 +122,7 @@
   - Habría que implementar arrastre manual de ventana.
 - Revisar el comportamiento de la vista previa con PDFs largos.
 - Mejorar la pestaña de diseño para que permita regenerar el PDF sin perder contexto.
-- Mantener `Generar PDF` siempre visible en `Diseño`.
+- Mantener `Generar PDF` siempre visible y usable en `Diseño`.
 - Valorar si una galería futura de plantillas debe permitir duplicar y editar plantillas.
 - Reorganizar `Diseño` con iconos reconocibles para reducir texto visible.
 - Revisar más adelante si el botón `Ayuda` debe enlazar ejemplos de Markdown.

@@ -2,12 +2,10 @@
 // Prioriza alineacion izquierda, aire visual y bajo deslumbramiento.
 $definitions.typst()$
 
-#let page-background = rgb("#fbf6e8")
-
 #set page(
   paper: "a4",
   margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),
-  fill: page-background,
+  fill: rgb("__PAGE_BACKGROUND_COLOR__"),
   numbering: "1",
   number-align: bottom + center,
 )

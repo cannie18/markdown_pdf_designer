@@ -72,6 +72,7 @@ La app permite:
 - elegir tipo de fuente;
 - elegir tamaño base del texto;
 - elegir color del texto normal;
+- elegir color de fondo de la página del PDF;
 - ajustar interlineado y espacio entre párrafos;
 - elegir márgenes laterales y verticales en centímetros;
 - elegir tamaño de títulos de nivel 1, 2 y 3;
@@ -102,6 +103,8 @@ La app permite:
 - mantener arriba la fila de selección de Markdown en `Markdown`;
 - colocar `Abrir` junto a la caja de ruta y `Nuevo` después;
 - mostrar en `Diseño` siempre `Generar PDF` como acción inferior;
+- permitir pulsar `Generar PDF` desde `Diseño` y avisar si falta un Markdown;
+- controlar el color de fondo del documento PDF desde `Diseño`;
 - proteger cambios sin guardar en plantillas personalizadas al cerrar o cambiar de plantilla;
 - mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
 

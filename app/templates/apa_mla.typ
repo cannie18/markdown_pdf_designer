@@ -5,6 +5,7 @@ $definitions.typst()$
 #set page(
   paper: "a4",
   margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),
+  fill: rgb("__PAGE_BACKGROUND_COLOR__"),
   numbering: "1",
   number-align: bottom + center,
 )

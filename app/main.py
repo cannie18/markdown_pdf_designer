@@ -206,6 +206,7 @@ class MainWindow(QMainWindow):
       'bold': '#1f3552',
       'italic': '#131b2e',
       'body': '#131b2e',
+      'page_background': '#ffffff',
       'code_background': '#f4f1ec',
       'table_stroke': '#c8d0d8',
       'table_text': '#131b2e',
@@ -354,6 +355,7 @@ class MainWindow(QMainWindow):
     self.bold_color_button = self.create_color_button('bold')
     self.italic_color_button = self.create_color_button('italic')
     self.body_color_button = self.create_color_button('body')
+    self.page_background_color_button = self.create_color_button('page_background')
     self.code_background_color_button = self.create_color_button('code_background')
     self.table_stroke_color_button = self.create_color_button('table_stroke')
     self.table_text_color_button = self.create_color_button('table_text')
@@ -522,6 +524,7 @@ class MainWindow(QMainWindow):
           ('Fuente', self.font_combo),
           ('Tamaño texto', self.body_size_input),
           ('Color texto', self.body_color_button),
+          ('Fondo página', self.page_background_color_button),
           ('Interlineado', self.paragraph_leading_input),
           ('Espacio párrafos', self.paragraph_spacing_input),
         ],
@@ -846,7 +849,7 @@ class MainWindow(QMainWindow):
     self.open_pdf_button.setVisible(in_markdown and self.current_pdf is not None)
     self.open_pdf_button.setEnabled(in_markdown and self.current_pdf is not None)
     self.build_button.setVisible((in_markdown and has_markdown) or in_design)
-    self.build_button.setEnabled((in_markdown or in_design) and has_markdown)
+    self.build_button.setEnabled((in_markdown and has_markdown) or in_design)
 
   def show_document_preview(self) -> None:
     '''Restaura el visor de PDF o la guia inicial.'''
@@ -965,7 +968,7 @@ class MainWindow(QMainWindow):
         'Diseño: secciones modificables',
         [
           'Plantilla visual define el punto de partida del documento.',
-          'Base controla fuente principal, tamaño del texto, color, interlineado y espacio entre párrafos.',
+          'Base controla fuente principal, tamaño del texto, color, fondo de página, interlineado y espacio entre párrafos.',
           'Página controla los márgenes laterales y verticales del PDF.',
           'Títulos controla tamaños y colores de los niveles 1, 2 y 3.',
           'Énfasis controla los colores de negrita y cursiva.',
@@ -1092,6 +1095,7 @@ class MainWindow(QMainWindow):
       'bold': self.bold_color_button,
       'italic': self.italic_color_button,
       'body': self.body_color_button,
+      'page_background': self.page_background_color_button,
       'code_background': self.code_background_color_button,
       'table_stroke': self.table_stroke_color_button,
       'table_text': self.table_text_color_button,
@@ -1165,6 +1169,7 @@ class MainWindow(QMainWindow):
     self.heading_colors.update(
       {
         'body': style.body_color,
+        'page_background': style.page_background_color,
         'h1': style.heading_1_color,
         'h2': style.heading_2_color,
         'h3': style.heading_3_color,
@@ -1227,6 +1232,7 @@ class MainWindow(QMainWindow):
       font_family=self.font_combo.currentText(),
       body_font_size=self.body_size_input.value(),
       body_color=self.heading_colors['body'],
+      page_background_color=self.heading_colors['page_background'],
       paragraph_leading=paragraph_leading,
       paragraph_spacing=paragraph_spacing,
       page_margin_x=self.margin_x_input.value() * 10,
