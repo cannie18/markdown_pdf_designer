@@ -442,7 +442,7 @@ class MainWindow(QMainWindow):
     preview_label.setObjectName('previewTitle')
     self.empty_preview_label = QLabel(
       'Empieza abriendo o arrastrando un Markdown.\n\n'
-      '1. Revisa o edita el contenido en Archivo.\n'
+      '1. Revisa o edita el contenido en Markdown.\n'
       '2. Elige una plantilla y ajusta el estilo en Diseño.\n'
       '3. Pulsa Generar PDF para ver aquí el resultado real.'
     )
@@ -465,11 +465,11 @@ class MainWindow(QMainWindow):
     self.drop_zone.setMinimumWidth(0)
     self.drop_zone.file_dropped.connect(self.set_markdown_file)
 
-    self.file_tab_button = self.create_nav_button('Archivo', 0)
+    self.file_tab_button = self.create_nav_button('Markdown', 0)
     self.design_tab_button = self.create_nav_button('Diseño', 1)
     self.help_tab_button = QPushButton('Ayuda')
     self.help_tab_button.setObjectName('navButton')
-    self.help_tab_button.clicked.connect(self.show_help_preview)
+    self.help_tab_button.clicked.connect(self.toggle_help_preview)
 
     nav_row = QHBoxLayout()
     nav_row.addWidget(self.file_tab_button)
@@ -833,6 +833,14 @@ class MainWindow(QMainWindow):
 
     if not self.help_preview_scroll.isVisible():
       self.show_document_preview()
+
+  def toggle_help_preview(self) -> None:
+    '''Alterna entre la ayuda y el visor documental disponible.'''
+
+    if self.help_preview_scroll.isVisible():
+      self.show_document_preview()
+      return
+    self.show_help_preview()
 
   def show_help_preview(self) -> None:
     '''Muestra la ayuda en el area amplia de vista previa.'''
@@ -1466,7 +1474,7 @@ class MainWindow(QMainWindow):
     self.open_pdf_button.setVisible(False)
     self.build_button.setEnabled(True)
     self.build_button.setVisible(True)
-    self.status_label.setText('Archivo seleccionado. Pulsa Generar PDF.')
+    self.status_label.setText('Markdown seleccionado. Pulsa Generar PDF.')
 
   def load_markdown_into_editor(self) -> bool:
     '''Carga el Markdown actual en el editor sin marcarlo como modificado.'''

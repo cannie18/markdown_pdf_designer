@@ -89,7 +89,7 @@ La app permite, de momento:
 - generar el PDF con un botón;
 - ver el PDF generado dentro de la propia app;
 - abrir el PDF generado en el visor predeterminado de Windows;
-- consultar la ayuda integrada en el visor sin abandonar `Archivo` o `Diseño`;
+- consultar la ayuda integrada en el visor sin abandonar `Markdown` o `Diseño`;
 - ver una guía breve en el visor cuando todavía no hay PDF cargado;
 - elegir fuente, tamaño base, márgenes, tamaños de títulos y colores antes de generar;
 - definir colores independientes para títulos, negrita y cursiva;
@@ -106,7 +106,7 @@ La app permite, de momento:
 - evitar cambios accidentales en controles numéricos al usar la rueda del ratón;
 - recordar posición, monitor y tamaño de ventana;
 - mantener un ancho mínimo usable para controles y dejar que la vista previa use el espacio restante.
-- mantener siempre arriba la fila de selección de Markdown en `Archivo`.
+- mantener siempre arriba la fila de selección de Markdown en `Markdown`.
 
 Las opciones visuales de la app se aplican generando una plantilla Typst
 temporal a partir de la plantilla elegida en `app/templates/`. La plantilla
@@ -176,9 +176,9 @@ Las plantillas disponibles en la app son:
 - la última plantilla seleccionada se recuerda, pero al abrir la app se cargan los parámetros base de esa plantilla;
 - las plantillas personalizadas pueden actualizarse con `Guardar cambios`;
 - los controles numéricos de `Diseño` no cambian con la rueda del ratón;
-- el botón `Ayuda` muestra las instrucciones en el visor sin cambiar el panel izquierdo;
+- el botón `Ayuda` funciona como interruptor entre instrucciones y vista previa;
 - el visor vacío muestra los primeros pasos antes de generar el primer PDF;
-- la fila de ruta, `Nuevo` y `Abrir` permanece arriba en `Archivo`, haya o no documento abierto;
+- la fila de ruta, `Nuevo` y `Abrir` permanece arriba en `Markdown`, haya o no documento abierto;
 - `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;
 - `Diseño` permite controlar texto, espaciado, bordes y cabecera de tablas;
 - la versión portable `crear_pdf.bat` sigue funcionando;

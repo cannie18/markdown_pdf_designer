@@ -18,10 +18,10 @@
 - Abrir el PDF generado en el visor predeterminado de Windows.
 - Recordar tamaño, posición y monitor de la ventana.
 - Panel izquierdo con ancho mínimo basado en la fila de botones Markdown.
-- Fila de ruta, `Nuevo` y `Abrir` siempre arriba en `Archivo`.
-- Pestañas `Archivo` y `Diseño`.
-- Botón `Ayuda` integrado junto a `Archivo` y `Diseño`, con contenido mostrado en el visor.
-- La ayuda permanece visible al alternar entre `Archivo` y `Diseño`; se oculta al generar un PDF.
+- Fila de ruta, `Nuevo` y `Abrir` siempre arriba en `Markdown`.
+- Pestañas `Markdown` y `Diseño`.
+- Botón `Ayuda` integrado junto a `Markdown` y `Diseño`, con contenido mostrado en el visor.
+- `Ayuda` funciona como interruptor: muestra instrucciones y permite volver al PDF o a la guía inicial.
 - Guía breve en el visor cuando todavía no hay PDF cargado.
 - Selector de plantillas predefinidas.
 - Carga automática en `Diseño` de los valores base de la plantilla seleccionada.
@@ -117,6 +117,7 @@
 - Revisar el comportamiento de la vista previa con PDFs largos.
 - Mejorar la pestaña de diseño para que permita regenerar el PDF sin perder contexto.
 - Valorar si una galería futura de plantillas debe permitir duplicar y editar plantillas.
+- Reorganizar `Diseño` con iconos reconocibles para reducir texto visible.
 - Revisar más adelante si el botón `Ayuda` debe enlazar ejemplos de Markdown.
 
 ## Persistencia

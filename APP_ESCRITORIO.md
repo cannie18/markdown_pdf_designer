@@ -30,7 +30,7 @@ panel izquierdo cambiante | vista previa PDF
 
 El panel izquierdo tiene dos secciones y un botón de ayuda:
 
-- `Archivo`: abrir o arrastrar Markdown, revisar contenido y generar PDF.
+- `Markdown`: abrir o arrastrar Markdown, revisar contenido y generar PDF.
 - `Diseño`: elegir plantilla visual y ajustar fuente, tamaño, colores y espacios
   antes de volver a generar.
 - `Ayuda`: mostrar en el visor el flujo básico, el Markdown recomendado y el
@@ -91,10 +91,11 @@ La app permite:
 - generar el PDF;
 - mostrar el PDF generado dentro de la propia app;
 - abrir el PDF en el visor externo de Windows.
-- cambiar entre secciones `Archivo` y `Diseño` en el panel izquierdo;
-- mostrar la ayuda en el área de vista previa sin abandonar `Archivo` o `Diseño`;
-- mantener visible la ayuda al alternar entre `Archivo` y `Diseño`;
-- mantener arriba la fila de selección de Markdown en `Archivo`;
+- cambiar entre secciones `Markdown` y `Diseño` en el panel izquierdo;
+- mostrar la ayuda en el área de vista previa sin abandonar `Markdown` o `Diseño`;
+- mantener visible la ayuda al alternar entre `Markdown` y `Diseño`;
+- usar `Ayuda` como interruptor para volver al PDF o a la guía inicial;
+- mantener arriba la fila de selección de Markdown en `Markdown`;
 - mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
 
 ## Relación Con La Versión Portable
@@ -188,9 +189,9 @@ Los últimos ajustes importantes son:
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;
 - las plantillas evitan que los títulos hereden el interlineado grande del texto normal;
 - el cuerpo de texto puede seguir justificándose según la plantilla, pero los títulos no;
-- el botón `Ayuda` muestra las instrucciones en el visor de la derecha sin cambiar el panel izquierdo;
+- el botón `Ayuda` muestra las instrucciones en el visor de la derecha sin cambiar el panel izquierdo y permite volver al PDF;
 - el visor vacío muestra una guía breve de primer uso;
-- en `Archivo`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;
+- en `Markdown`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;
 - la versión portable por `.bat` no se ha tocado.
 
 Objetivos previstos:
