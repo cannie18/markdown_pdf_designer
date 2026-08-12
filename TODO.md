@@ -43,6 +43,7 @@
   - tamaño del texto.
 - Opciones de tablas:
   - espacio de celdas;
+  - modo de ancho: contenido o ancho disponible;
   - color de bordes;
   - color del texto;
   - tamaño del texto;

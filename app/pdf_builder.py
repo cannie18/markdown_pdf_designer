@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -50,6 +51,7 @@ class PdfStyleOptions:
   table_stroke_color: str = '#c8d0d8'
   table_text_color: str = '#131b2e'
   table_text_size: float = 10
+  table_width_mode: str = 'auto'
   table_header_background_color: str = '#eef2f7'
   table_header_text_color: str = '#1f3552'
   quote_inset: float = 0.85
@@ -671,6 +673,21 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
   return Path(temp_file.name)
 
 
+def apply_table_width_mode(typ_file: Path, style: PdfStyleOptions) -> None:
+  '''Ajusta columnas de tablas generadas por Pandoc.'''
+
+  if style.table_width_mode != 'full':
+    return
+
+  typ_text = typ_file.read_text(encoding='utf-8')
+  typ_text = re.sub(
+    r'(#table\(\n\s*columns:\s*)(\d+)(\s*,)',
+    r'\1(1fr,) * \2\3',
+    typ_text,
+  )
+  typ_file.write_text(typ_text, encoding='utf-8')
+
+
 def run_command(command: list[str | Path]) -> None:
   '''Ejecuta un comando externo y convierte errores en `PdfBuildError`.'''
 
@@ -731,6 +748,7 @@ def build_pdf(
         typ_file,
       ]
     )
+    apply_table_width_mode(typ_file, style or PdfStyleOptions())
     run_command([typst, 'compile', typ_file, pdf_file])
   finally:
     if template_file.exists():

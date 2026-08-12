@@ -81,6 +81,7 @@ La app permite:
 - elegir fuente, tamaño y fondo de los bloques de código;
 - elegir texto, fondo, borde y espaciado de bloques destacados;
 - elegir texto, espaciado, bordes y cabecera de tablas;
+- elegir si las tablas se ajustan al contenido o usan el ancho disponible;
 - consultar las opciones de diseño agrupadas por secciones compactas;
 - elegir una plantilla visual predefinida desde `Diseño`;
 - cargar en `Diseño` los ajustes base de la plantilla seleccionada;
@@ -105,6 +106,7 @@ La app permite:
 - mostrar en `Diseño` siempre `Generar PDF` como acción inferior;
 - permitir pulsar `Generar PDF` desde `Diseño` y avisar si falta un Markdown;
 - controlar el color de fondo del documento PDF desde `Diseño`;
+- controlar el modo de ancho de tablas desde `Diseño`;
 - proteger cambios sin guardar en plantillas personalizadas al cerrar o cambiar de plantilla;
 - mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
 

@@ -393,6 +393,10 @@ class MainWindow(QMainWindow):
     self.table_text_size_input.setSuffix(' pt')
     self.table_text_size_input.setValue(10)
 
+    self.table_width_mode_combo = QComboBox()
+    self.table_width_mode_combo.addItem('Ajustar al contenido', 'auto')
+    self.table_width_mode_combo.addItem('Usar ancho disponible', 'full')
+
     self.quote_inset_input = DesignDoubleSpinBox()
     self.quote_inset_input.setRange(0.2, 2.5)
     self.quote_inset_input.setSingleStep(0.05)
@@ -589,6 +593,7 @@ class MainWindow(QMainWindow):
         'Tablas',
         [
           ('Espacio celdas', self.table_inset_input),
+          ('Ancho tabla', self.table_width_mode_combo),
           ('Tamaño texto', self.table_text_size_input),
           ('Color texto', self.table_text_color_button),
           ('Bordes', self.table_stroke_color_button),
@@ -975,7 +980,7 @@ class MainWindow(QMainWindow):
           'Énfasis controla los colores de negrita y cursiva.',
           'Código controla fuente, tamaño y fondo de los bloques de código.',
           'Bloques controla citas o bloques destacados: espacio interno, texto, borde y fondo.',
-          'Tablas controla espacio de celdas, texto, bordes y colores de cabecera.',
+          'Tablas controla ancho, espacio de celdas, texto, bordes y colores de cabecera.',
         ],
       )
     )
@@ -1141,6 +1146,7 @@ class MainWindow(QMainWindow):
       self.code_size_input,
       self.table_inset_input,
       self.table_text_size_input,
+      self.table_width_mode_combo,
       self.quote_inset_input,
       self.quote_text_size_input,
     ]
@@ -1160,6 +1166,8 @@ class MainWindow(QMainWindow):
     self.code_size_input.setValue(style.code_font_size)
     self.table_inset_input.setValue(style.table_inset)
     self.table_text_size_input.setValue(style.table_text_size)
+    width_mode_index = self.table_width_mode_combo.findData(style.table_width_mode)
+    self.table_width_mode_combo.setCurrentIndex(max(0, width_mode_index))
     self.quote_inset_input.setValue(style.quote_inset)
     self.quote_text_size_input.setValue(style.quote_text_size)
 
@@ -1192,7 +1200,7 @@ class MainWindow(QMainWindow):
   def connect_design_change_signals(self) -> None:
     '''Conecta controles de Diseño al estado de plantilla modificada.'''
 
-    for combo in (self.font_combo, self.code_font_combo):
+    for combo in (self.font_combo, self.code_font_combo, self.table_width_mode_combo):
       combo.currentTextChanged.connect(self.mark_template_dirty)
 
     for spin_box in (
@@ -1253,6 +1261,7 @@ class MainWindow(QMainWindow):
       table_stroke_color=self.heading_colors['table_stroke'],
       table_text_color=self.heading_colors['table_text'],
       table_text_size=self.table_text_size_input.value(),
+      table_width_mode=str(self.table_width_mode_combo.currentData() or 'auto'),
       table_header_background_color=self.heading_colors['table_header_background'],
       table_header_text_color=self.heading_colors['table_header_text'],
       quote_inset=self.quote_inset_input.value(),

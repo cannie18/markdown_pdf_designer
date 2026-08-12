@@ -99,6 +99,7 @@ La app permite, de momento:
 - ajustar interlineado, espaciado entre párrafos y estilos de código;
 - ajustar texto, fondo, borde y espaciado de bloques destacados;
 - ajustar texto, espaciado, bordes y cabecera de tablas;
+- elegir si las tablas se ajustan al contenido o usan el ancho disponible;
 - elegir una plantilla visual predefinida;
 - crear una nueva plantilla desde los ajustes visuales actuales;
 - guardar cambios sobre una plantilla personalizada existente;
@@ -191,6 +192,7 @@ Las plantillas disponibles en la app son:
 - las plantillas personalizadas avisan si tienen cambios sin guardar al cerrar o cambiar de plantilla;
 - `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;
 - `Diseño` permite controlar texto, espaciado, bordes y cabecera de tablas;
+- `Diseño` permite elegir el modo de ancho de tablas: contenido o ancho disponible;
 - la versión portable `crear_pdf.bat` sigue funcionando;
 - `Ensayo APA / MLA` tiene jerarquía de títulos y espaciado corregido;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;
