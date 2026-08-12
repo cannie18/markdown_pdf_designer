@@ -1,4 +1,4 @@
-# pdf_apuntes
+# markdown_pdf_designer
 
 Herramienta local para convertir apuntes en Markdown a PDF:
 
@@ -45,7 +45,7 @@ Pandoc y Typst, evitando un preprocesador lleno de expresiones regulares.
 Desde PowerShell o `cmd.exe`:
 
 ```bat
-cd ruta\a\pdf_apuntes
+cd ruta\a\markdown_pdf_designer
 crear_pdf.bat ejemplos\prueba_apuntes.md
 ```
 
@@ -116,7 +116,8 @@ Las opciones visuales de la app se aplican generando una plantilla Typst
 temporal a partir de la plantilla elegida en `app/templates/`. La plantilla
 portable `templates/apuntes.typ` no se modifica.
 
-Las plantillas creadas por el usuario se guardan fuera del código de la app, en:
+Las plantillas creadas por el usuario se guardan fuera del código de la app, en
+la carpeta de datos histórica de la aplicación:
 
 ```text
 %APPDATA%\pdf_apuntes\templates
@@ -125,7 +126,7 @@ Las plantillas creadas por el usuario se guardan fuera del código de la app, en
 ## Estructura
 
 ```text
-pdf_apuntes/
+markdown_pdf_designer/
 ├── abrir_app.bat
 ├── app/
 │   ├── main.py
@@ -177,7 +178,7 @@ Las plantillas disponibles en la app son:
 Último estado comprobado:
 
 - la app Python genera PDF con todas las plantillas de `app/templates/`;
-- las plantillas personalizadas se guardan en `%APPDATA%\pdf_apuntes\templates`;
+- las plantillas personalizadas se guardan en `%APPDATA%\pdf_apuntes\templates` por compatibilidad histórica;
 - la última plantilla seleccionada se recuerda, pero al abrir la app se cargan los parámetros base de esa plantilla;
 - las plantillas personalizadas pueden actualizarse con `Guardar cambios`;
 - los controles numéricos de `Diseño` no cambian con la rueda del ratón;
@@ -203,7 +204,7 @@ Las plantillas disponibles en la app son:
 Siguiente conversación recomendada:
 
 ```text
-Continuamos en el proyecto pdf_apuntes. Lee README.md, APP_ESCRITORIO.md y TODO.md.
+Continuamos en el proyecto markdown_pdf_designer. Lee README.md, APP_ESCRITORIO.md y TODO.md.
 Quiero seguir desde la parte de plantillas/diseño de Markdown PDF Designer.
 No rompas crear_pdf.bat ni templates/apuntes.typ.
 En Python usa indentación de dos espacios y comillas simples cuando se pueda.

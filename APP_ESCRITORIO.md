@@ -131,7 +131,8 @@ app/templates/*.typ
 
 pertenecen a la app de escritorio.
 
-Las plantillas creadas por el usuario se guardan como datos de usuario en:
+Las plantillas creadas por el usuario se guardan como datos de usuario en la
+carpeta histórica de la aplicación:
 
 ```text
 %APPDATA%\pdf_apuntes\templates
@@ -193,7 +194,7 @@ Los últimos ajustes importantes son:
 
 - cada plantilla carga sus valores base en la pestaña `Diseño`;
 - la app recuerda la última plantilla seleccionada sin conservar cambios temporales como si fueran valores base;
-- las plantillas personalizadas se guardan fuera del repositorio, en `%APPDATA%\pdf_apuntes\templates`;
+- las plantillas personalizadas se guardan fuera del repositorio, en `%APPDATA%\pdf_apuntes\templates` por compatibilidad histórica;
 - las plantillas personalizadas pueden actualizarse con `Guardar cambios`;
 - los controles numéricos de diseño ignoran la rueda del ratón para evitar cambios accidentales;
 - `Bloques` permite ajustar espacio interno, color/tamaño del texto, borde y fondo;

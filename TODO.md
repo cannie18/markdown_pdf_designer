@@ -32,7 +32,7 @@
 - Creación de plantillas personalizadas desde los ajustes actuales de `Diseño`.
 - Actualización de plantillas personalizadas sin crear copias nuevas.
 - Protección de cambios sin guardar en plantillas personalizadas al cerrar o cambiar de plantilla.
-- Plantillas personalizadas guardadas en `%APPDATA%\pdf_apuntes\templates`.
+- Plantillas personalizadas guardadas en `%APPDATA%\pdf_apuntes\templates` por compatibilidad histórica.
 - Persistencia de la última plantilla seleccionada.
 - Controles numéricos protegidos frente a cambios accidentales con la rueda del ratón.
 - Opciones de bloques destacados:
@@ -161,7 +161,7 @@
 Recomendación para empezar un chat nuevo:
 
 ```text
-Continuamos en el proyecto pdf_apuntes.
+Continuamos en el proyecto markdown_pdf_designer.
 Lee README.md, APP_ESCRITORIO.md y TODO.md antes de tocar código.
 Quiero seguir con la parte de plantillas y opciones de diseño de Markdown PDF Designer.
 Mantén intacta la versión portable: crear_pdf.bat y templates/apuntes.typ.
