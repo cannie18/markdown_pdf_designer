@@ -685,6 +685,24 @@ class MainWindow(QMainWindow):
         border-radius: 4px;
         background: #ffffff;
       }
+      QComboBox QAbstractItemView {
+        border: 1px solid #b4c5ff;
+        selection-background-color: #dbe1ff;
+        selection-color: #00174b;
+        outline: 0;
+      }
+      QComboBox QAbstractItemView::item {
+        min-height: 26px;
+        padding: 5px 8px;
+      }
+      QComboBox QAbstractItemView::item:hover {
+        color: #00174b;
+        background: #edf1ff;
+      }
+      QComboBox QAbstractItemView::item:selected {
+        color: #00174b;
+        background: #dbe1ff;
+      }
       QPlainTextEdit {
         font-family: Consolas;
         font-size: 10pt;

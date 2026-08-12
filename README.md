@@ -111,6 +111,7 @@ La app permite, de momento:
 - recordar posición, monitor y tamaño de ventana;
 - mantener un ancho mínimo usable para controles y dejar que la vista previa use el espacio restante.
 - mantener siempre arriba la fila de selección de Markdown en `Markdown`.
+- resaltar en los desplegables la opción seleccionada y la opción bajo el mouse.
 
 Las opciones visuales de la app se aplican generando una plantilla Typst
 temporal a partir de la plantilla elegida en `app/templates/`. La plantilla
@@ -193,6 +194,7 @@ Las plantillas disponibles en la app son:
 - `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;
 - `Diseño` permite controlar texto, espaciado, bordes y cabecera de tablas;
 - `Diseño` permite elegir el modo de ancho de tablas: contenido o ancho disponible;
+- los desplegables distinguen visualmente la opción seleccionada y la opción bajo el mouse;
 - la versión portable `crear_pdf.bat` sigue funcionando;
 - `Ensayo APA / MLA` tiene jerarquía de títulos y espaciado corregido;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;

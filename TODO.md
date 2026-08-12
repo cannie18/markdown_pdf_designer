@@ -51,6 +51,7 @@
   - color del texto de cabecera.
 - Opción de color de fondo de página del PDF.
 - Corrección de textos visibles de la app a español de España.
+- Resaltado de opción seleccionada y opción bajo el mouse en desplegables.
 - Separación entre plantillas de app y plantilla portable.
 - Primera fase de plantillas predefinidas:
   - `Estudio`;

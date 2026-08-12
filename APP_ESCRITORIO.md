@@ -108,6 +108,7 @@ La app permite:
 - controlar el color de fondo del documento PDF desde `Diseño`;
 - controlar el modo de ancho de tablas desde `Diseño`;
 - proteger cambios sin guardar en plantillas personalizadas al cerrar o cambiar de plantilla;
+- resaltar en los desplegables la opción seleccionada y la opción bajo el mouse;
 - mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
 
 ## Relación Con La Versión Portable
@@ -205,6 +206,7 @@ Los últimos ajustes importantes son:
 - `Nuevo` abre un documento sin guardar y pide ubicación al guardar o generar;
 - en `Diseño` se ocultan `Cerrar`, `Guardar`, `Guardar como` y `Abrir PDF en Windows`, pero `Generar PDF` permanece visible;
 - los cambios de plantillas personalizadas se deben guardar, descartar o cancelar antes de cerrar o cambiar de plantilla;
+- los desplegables distinguen visualmente selección y opción bajo el mouse;
 - la ayuda combina una guía rápida con explicaciones detalladas de `Markdown` y `Diseño`;
 - el visor vacío muestra una guía breve de primer uso;
 - en `Markdown`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;
