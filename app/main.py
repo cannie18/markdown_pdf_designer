@@ -583,36 +583,29 @@ class MainWindow(QMainWindow):
     style_panel_layout.addLayout(self.create_template_group())
     style_panel_layout.addLayout(
       self.create_design_group(
-        'Base',
-        [
-          [('Fuente', self.font_combo)],
-          [
-            ('Tamaño texto', self.body_size_input),
-            ('Color texto', self.body_color_button),
-          ],
-          [('Fondo página', self.page_background_color_button)],
-          [
-            ('Interlineado', self.paragraph_leading_input),
-            ('Espacio párrafos', self.paragraph_spacing_input),
-          ],
-        ],
-      )
-    )
-    style_panel_layout.addLayout(
-      self.create_design_group(
         'Página',
         [
           [
             ('Margen lateral', self.margin_x_input),
             ('Margen vertical', self.margin_y_input),
           ],
+          [('Fondo página', self.page_background_color_button)],
         ],
       )
     )
     style_panel_layout.addLayout(
       self.create_design_group(
-        'Títulos',
+        'Texto',
         [
+          [('Fuente', self.font_combo)],
+          [
+            ('Tamaño texto', self.body_size_input),
+            ('Color texto', self.body_color_button),
+          ],
+          [
+            ('Interlineado', self.paragraph_leading_input),
+            ('Espacio párrafos', self.paragraph_spacing_input),
+          ],
           [
             ('Tamaño título 1', self.h1_size_input),
             ('Título 1', self.h1_color_button),
@@ -625,13 +618,6 @@ class MainWindow(QMainWindow):
             ('Tamaño título 3', self.h3_size_input),
             ('Título 3', self.h3_color_button),
           ],
-        ],
-      )
-    )
-    style_panel_layout.addLayout(
-      self.create_design_group(
-        'Enfasis',
-        [
           [
             ('Negrita', self.bold_color_button),
             ('Cursiva', self.italic_color_button),
@@ -1111,10 +1097,8 @@ class MainWindow(QMainWindow):
         'Diseño: secciones modificables',
         [
           'Plantilla visual define el punto de partida del documento.',
-          'Base controla fuente principal, tamaño del texto, color, fondo de página, interlineado y espacio entre párrafos.',
-          'Página controla los márgenes laterales y verticales del PDF.',
-          'Títulos controla tamaños y colores de los niveles 1, 2 y 3.',
-          'Énfasis controla los colores de negrita y cursiva.',
+          'Página controla los márgenes laterales, márgenes verticales y color de fondo del PDF.',
+          'Texto controla fuente principal, tamaño, color, interlineado, espacio entre párrafos, títulos y énfasis.',
           'Código controla fuente, tamaño y fondo de los bloques de código.',
           'Bloques controla citas o bloques destacados: espacio interno, texto, borde y fondo.',
           'Tablas controla ancho, espacio de celdas, texto, bordes y colores de cabecera.',

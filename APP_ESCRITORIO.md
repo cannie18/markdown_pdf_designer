@@ -200,7 +200,8 @@ Los últimos ajustes importantes son:
 - los controles numéricos de diseño ignoran la rueda del ratón para evitar cambios accidentales;
 - `Bloques` permite ajustar espacio interno, color/tamaño del texto, borde y fondo;
 - `Tablas` permite ajustar modo de ancho, espacio de celdas, color/tamaño del texto, bordes y cabecera;
-- `Base` permite ajustar el color de fondo de página del PDF;
+- `Página` agrupa márgenes y color de fondo del PDF;
+- `Texto` agrupa fuente, tamaño, color, espaciado, títulos y énfasis;
 - `Ensayo APA / MLA` usa tamaños distintos para títulos y subtítulos;
 - `Ensayo APA / MLA` ya no parte de `Espacio párrafos = 0`;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;
