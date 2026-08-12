@@ -62,7 +62,7 @@
   - `<strong>` y `<b>` como negrita;
   - `<em>` y `<i>` como cursiva.
 - Alertas tipo GitHub convertidas a citas con etiqueta legible.
-- Alertas tipo GitHub maquetadas con borde lateral y color por tipo.
+- Alertas tipo GitHub maquetadas con icono, borde lateral y color por tipo.
 - `[TOC]` convertido en índice Typst.
 - `<!-- pagebreak -->` convertido en salto de página.
 - Separación entre plantillas de app y plantilla portable.
@@ -145,7 +145,7 @@
 ## Compatibilidad Markdown
 
 - Ampliar soporte de HTML si aparecen casos reales más complejos que el HTML inline básico.
-- Valorar si se añaden iconos SVG a las alertas tipo GitHub.
+- Revisar si los colores internos de los iconos de alerta deben normalizarse con la paleta usada en el PDF.
 - Revisar el resultado visual del texto preformateado por sangría de cuatro espacios.
 - Mantener `ejemplos/markdown_referencia_completo.md` como banco de pruebas principal.
 - El banco de pruebas ya incluye metadatos YAML, `[TOC]`, imágenes con caption,

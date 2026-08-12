@@ -216,7 +216,7 @@ Los últimos ajustes importantes son:
 - los títulos Markdown de nivel 4, 5 y 6 tienen estilos diferenciados;
 - los enlaces Markdown se muestran con color y subrayado y conservan el hipervínculo clicable;
 - la conversión normaliza HTML inline básico y alertas tipo GitHub antes de generar Typst;
-- las alertas tipo GitHub se maquetan como bloques con borde lateral y color por tipo;
+- las alertas tipo GitHub se maquetan como bloques con icono, borde lateral y color por tipo;
 - `[TOC]` genera un índice y `<!-- pagebreak -->` genera un salto de página;
 - la ayuda combina una guía rápida con explicaciones detalladas de `Markdown` y `Diseño`;
 - el visor vacío muestra una guía breve de primer uso;

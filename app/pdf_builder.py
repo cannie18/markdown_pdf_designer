@@ -81,11 +81,11 @@ HTML_MARK_TOKEN_PREFIX = 'MDPDFMARK'
 TOC_TOKEN = 'MDPDFTOC'
 PAGEBREAK_TOKEN = 'MDPDFPAGEBREAK'
 ADMONITION_STYLES = {
-  'NOTE': ('Note', '#2f6feb'),
-  'TIP': ('Tip', '#2da44e'),
-  'IMPORTANT': ('Important', '#8957e5'),
-  'WARNING': ('Warning', '#bf8700'),
-  'CAUTION': ('Caution', '#cf222e'),
+  'NOTE': ('Note', '#2f6feb', 'note.svg'),
+  'TIP': ('Tip', '#2da44e', 'tip.svg'),
+  'IMPORTANT': ('Important', '#8957e5', 'important.svg'),
+  'WARNING': ('Warning', '#bf8700', 'warning.svg'),
+  'CAUTION': ('Caution', '#cf222e', 'caution.svg'),
 }
 
 
@@ -758,7 +758,7 @@ def normalize_github_admonitions(markdown_text: str) -> str:
     admonition_type = match.group(2).upper()
     label = ADMONITION_STYLES.get(
       admonition_type,
-      (admonition_type.title(), '#57606a'),
+      (admonition_type.title(), '#57606a', 'note.svg'),
     )[0]
     output_lines.append(f'{quote_prefix}**MDPDFALERT-{admonition_type} {label}**')
     output_lines.append(quote_prefix.rstrip())
@@ -815,10 +815,11 @@ def apply_github_admonition_styles(typ_file: Path) -> None:
     admonition_type = match.group(1).upper()
     label = match.group(2).strip()
     body = match.group(3).strip()
-    _default_label, color = ADMONITION_STYLES.get(
+    _default_label, color, icon_file = ADMONITION_STYLES.get(
       admonition_type,
-      (label, '#57606a'),
+      (label, '#57606a', 'note.svg'),
     )
+    icon_path = f'/assets/icons/{icon_file}'
     return (
       '#block(\n'
       '  above: 0.9em,\n'
@@ -826,6 +827,8 @@ def apply_github_admonition_styles(typ_file: Path) -> None:
       '  inset: (left: 0.9em, right: 0em, top: 0.25em, bottom: 0.25em),\n'
       '  stroke: (left: 3pt + rgb("' + color + '")),\n'
       ')[\n'
+      '  #box(width: 12pt, height: 12pt, image("' + icon_path + '", width: 11pt))\n'
+      '  #h(0.35em)\n'
       '  #text(weight: "bold", fill: rgb("' + color + '"))[' + label + ']\n'
       '  #v(0.55em)\n'
       f'  {body}\n'
@@ -935,7 +938,7 @@ def build_pdf(
     apply_special_markdown_tokens(typ_file)
     apply_github_admonition_styles(typ_file)
     apply_table_width_mode(typ_file, style or PdfStyleOptions())
-    run_command([typst, 'compile', typ_file, pdf_file])
+    run_command([typst, 'compile', '--root', ROOT_DIR, typ_file, pdf_file])
   finally:
     if template_file.exists():
       template_file.unlink()
