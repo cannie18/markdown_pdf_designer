@@ -13,21 +13,25 @@
 
 - App de escritorio básica con PySide6.
 - Abrir, crear, arrastrar, editar, cerrar, guardar y guardar como Markdown.
+- `Nuevo` abre un Markdown sin guardar y pide ubicación al guardar o generar PDF.
 - Generar PDF desde la app sin abrir consola visible.
 - Mostrar vista previa del PDF dentro de la app.
 - Abrir el PDF generado en el visor predeterminado de Windows.
 - Recordar tamaño, posición y monitor de la ventana.
 - Panel izquierdo con ancho mínimo basado en la fila de botones Markdown.
 - Fila de ruta, `Nuevo` y `Abrir` siempre arriba en `Markdown`.
+- `Abrir` queda junto a la caja de ruta y `Nuevo` después.
 - Pestañas `Markdown` y `Diseño`.
 - Botón `Ayuda` integrado junto a `Markdown` y `Diseño`, con contenido mostrado en el visor.
 - `Ayuda` funciona como interruptor: muestra instrucciones y permite volver al PDF o a la guía inicial.
+- `Ayuda` se desactiva visualmente al generar y mostrar un PDF.
 - Ayuda ampliada con guía rápida, botones de `Markdown`, flujo de plantillas y secciones de `Diseño`.
 - Guía breve en el visor cuando todavía no hay PDF cargado.
 - Selector de plantillas predefinidas.
 - Carga automática en `Diseño` de los valores base de la plantilla seleccionada.
 - Creación de plantillas personalizadas desde los ajustes actuales de `Diseño`.
 - Actualización de plantillas personalizadas sin crear copias nuevas.
+- Protección de cambios sin guardar en plantillas personalizadas al cerrar o cambiar de plantilla.
 - Plantillas personalizadas guardadas en `%APPDATA%\pdf_apuntes\templates`.
 - Persistencia de la última plantilla seleccionada.
 - Controles numéricos protegidos frente a cambios accidentales con la rueda del ratón.
@@ -117,6 +121,7 @@
   - Habría que implementar arrastre manual de ventana.
 - Revisar el comportamiento de la vista previa con PDFs largos.
 - Mejorar la pestaña de diseño para que permita regenerar el PDF sin perder contexto.
+- Mantener en `Diseño` solo acciones relacionadas con generar el PDF.
 - Valorar si una galería futura de plantillas debe permitir duplicar y editar plantillas.
 - Reorganizar `Diseño` con iconos reconocibles para reducir texto visible.
 - Revisar más adelante si el botón `Ayuda` debe enlazar ejemplos de Markdown.

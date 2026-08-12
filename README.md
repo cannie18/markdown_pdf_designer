@@ -81,6 +81,7 @@ También puedes arrastrar un archivo Markdown sobre `abrir_app.bat`.
 La app permite, de momento:
 
 - crear un archivo Markdown nuevo;
+- crear un Markdown nuevo sin elegir ubicación hasta guardarlo o generar PDF;
 - abrir un archivo `.md`;
 - arrastrar un archivo `.md`;
 - elegir entre los últimos Markdown usados desde el desplegable de ruta;
@@ -178,9 +179,13 @@ Las plantillas disponibles en la app son:
 - las plantillas personalizadas pueden actualizarse con `Guardar cambios`;
 - los controles numéricos de `Diseño` no cambian con la rueda del ratón;
 - el botón `Ayuda` funciona como interruptor entre instrucciones y vista previa;
+- al generar PDF se desactiva visualmente el botón `Ayuda` y vuelve el visor real;
 - la ayuda incluye guía rápida, botones de Markdown, flujo de plantillas y secciones modificables de `Diseño`;
 - el visor vacío muestra los primeros pasos antes de generar el primer PDF;
 - la fila de ruta, `Nuevo` y `Abrir` permanece arriba en `Markdown`, haya o no documento abierto;
+- `Abrir` está junto a la caja de ruta y `Nuevo` después;
+- en `Diseño` solo se muestra `Generar PDF` como acción inferior;
+- las plantillas personalizadas avisan si tienen cambios sin guardar al cerrar o cambiar de plantilla;
 - `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;
 - `Diseño` permite controlar texto, espaciado, bordes y cabecera de tablas;
 - la versión portable `crear_pdf.bat` sigue funcionando;

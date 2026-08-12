@@ -191,6 +191,10 @@ class MainWindow(QMainWindow):
     self.current_file: Path | None = None
     self.current_pdf: Path | None = None
     self.editor_dirty = False
+    self.active_left_section = 0
+    self.loading_style_options = False
+    self.selected_template_id = DEFAULT_TEMPLATE_ID
+    self.custom_template_dirty = False
     self.settings = QSettings('pdf_apuntes', 'Markdown PDF Designer')
     self.template_ids = self.sorted_template_ids(available_templates())
     if DEFAULT_TEMPLATE_ID not in self.template_ids:
@@ -428,6 +432,7 @@ class MainWindow(QMainWindow):
       max(0, self.template_combo.findData(DEFAULT_TEMPLATE_ID))
     )
     self.template_combo.currentIndexChanged.connect(self.handle_template_changed)
+    self.connect_design_change_signals()
 
     self.pdf_document = QPdfDocument(self)
     self.pdf_view = QPdfView()
@@ -479,8 +484,8 @@ class MainWindow(QMainWindow):
 
     file_row = QHBoxLayout()
     file_row.addWidget(self.file_input, 1)
-    file_row.addWidget(new_button)
     file_row.addWidget(open_button)
+    file_row.addWidget(new_button)
 
     file_page = QWidget()
     file_layout = QVBoxLayout(file_page)
@@ -807,6 +812,7 @@ class MainWindow(QMainWindow):
   def select_left_section(self, index: int) -> None:
     '''Muestra una de las secciones principales del panel izquierdo.'''
 
+    self.active_left_section = index
     self.left_stack.setCurrentIndex(index)
     buttons = [
       self.file_tab_button,
@@ -816,6 +822,31 @@ class MainWindow(QMainWindow):
       button.setProperty('active', button_index == index)
       button.style().unpolish(button)
       button.style().polish(button)
+    self.update_action_visibility()
+
+  def markdown_is_open(self) -> bool:
+    '''Indica si hay un Markdown abierto o nuevo en edición.'''
+
+    return self.editor.isVisible()
+
+  def update_action_visibility(self) -> None:
+    '''Actualiza botones inferiores segun la seccion activa.'''
+
+    has_markdown = self.markdown_is_open()
+    in_markdown = self.active_left_section == 0
+    in_design = self.active_left_section == 1
+
+    self.edit_button.setVisible(in_markdown and has_markdown)
+    self.edit_button.setEnabled(in_markdown and has_markdown)
+    self.save_button.setVisible(in_markdown and has_markdown)
+    self.save_button.setEnabled(in_markdown and has_markdown and self.editor_dirty)
+    self.save_as_button.setVisible(in_markdown and has_markdown)
+    self.save_as_button.setEnabled(in_markdown and has_markdown)
+
+    self.open_pdf_button.setVisible(in_markdown and self.current_pdf is not None)
+    self.open_pdf_button.setEnabled(in_markdown and self.current_pdf is not None)
+    self.build_button.setVisible((in_markdown or in_design) and has_markdown)
+    self.build_button.setEnabled((in_markdown or in_design) and has_markdown)
 
   def show_document_preview(self) -> None:
     '''Restaura el visor de PDF o la guia inicial.'''
@@ -890,7 +921,7 @@ class MainWindow(QMainWindow):
       self.create_help_card(
         'Markdown: botones y flujo',
         [
-          'Nuevo crea un archivo Markdown vacío y lo abre en el editor.',
+          'Nuevo abre un Markdown vacío sin elegir ubicación todavía.',
           'Abrir permite seleccionar un archivo .md o .markdown desde Windows.',
           'La caja de ruta permite escribir una ruta o elegir documentos recientes.',
           'Cerrar cierra el Markdown actual y vuelve al estado inicial de la app.',
@@ -1049,6 +1080,7 @@ class MainWindow(QMainWindow):
 
     self.heading_colors[color_key] = color.name()
     self.refresh_color_buttons()
+    self.mark_template_dirty()
 
   def refresh_color_buttons(self) -> None:
     '''Actualiza texto y fondo de los botones de color.'''
@@ -1089,6 +1121,7 @@ class MainWindow(QMainWindow):
   def apply_style_options(self, style: PdfStyleOptions) -> None:
     '''Carga un conjunto de opciones visuales en los controles de Diseño.'''
 
+    self.loading_style_options = True
     controlled_widgets = [
       self.font_combo,
       self.body_size_input,
@@ -1148,6 +1181,42 @@ class MainWindow(QMainWindow):
       }
     )
     self.refresh_color_buttons()
+    self.loading_style_options = False
+
+  def connect_design_change_signals(self) -> None:
+    '''Conecta controles de Diseño al estado de plantilla modificada.'''
+
+    for combo in (self.font_combo, self.code_font_combo):
+      combo.currentTextChanged.connect(self.mark_template_dirty)
+
+    for spin_box in (
+      self.body_size_input,
+      self.paragraph_leading_input,
+      self.paragraph_spacing_input,
+      self.margin_x_input,
+      self.margin_y_input,
+      self.h1_size_input,
+      self.h2_size_input,
+      self.h3_size_input,
+      self.code_size_input,
+      self.table_inset_input,
+      self.table_text_size_input,
+      self.quote_inset_input,
+      self.quote_text_size_input,
+    ):
+      spin_box.valueChanged.connect(self.mark_template_dirty)
+
+  def mark_template_dirty(self, *_args: object) -> None:
+    '''Marca cambios pendientes solo en plantillas personalizadas.'''
+
+    if self.loading_style_options:
+      return
+    if not is_custom_template(self.current_template_id()):
+      return
+
+    self.custom_template_dirty = True
+    self.update_template_status()
+    self.update_template_button.setEnabled(True)
 
   def current_style_options(self) -> PdfStyleOptions:
     '''Construye las opciones visuales actuales para el generador de PDF.'''
@@ -1234,15 +1303,81 @@ class MainWindow(QMainWindow):
     description = descriptions.get(template_id)
     if description is None:
       description = template_description(template_id) or 'Plantilla personalizada.'
+    if self.custom_template_dirty and is_custom_template(template_id):
+      description = f'{description} Cambios sin guardar.'
     self.template_status_label.setText(description)
 
   def handle_template_changed(self) -> None:
     '''Sincroniza la plantilla seleccionada con su preset visual.'''
 
     template_id = self.current_template_id()
+    previous_template_id = self.selected_template_id
+    if (
+      template_id != previous_template_id
+      and not self.confirm_custom_template_changes(previous_template_id)
+    ):
+      previous_index = self.template_combo.findData(previous_template_id)
+      self.template_combo.blockSignals(True)
+      self.template_combo.setCurrentIndex(max(0, previous_index))
+      self.template_combo.blockSignals(False)
+      self.update_template_status()
+      return
+
+    self.selected_template_id = template_id
+    self.custom_template_dirty = False
     self.apply_style_options(template_style_preset(template_id))
     self.update_template_status()
     self.update_template_button.setVisible(is_custom_template(template_id))
+    self.update_template_button.setEnabled(False)
+
+  def confirm_custom_template_changes(self, template_id: str) -> bool:
+    '''Pregunta qué hacer con cambios pendientes de una plantilla personalizada.'''
+
+    if not self.custom_template_dirty or not is_custom_template(template_id):
+      return True
+
+    answer = QMessageBox.question(
+      self,
+      'Cambios en plantilla',
+      (
+        'La plantilla personalizada tiene cambios sin guardar. '
+        '¿Quieres guardarlos antes de continuar?'
+      ),
+      QMessageBox.StandardButton.Yes
+      | QMessageBox.StandardButton.No
+      | QMessageBox.StandardButton.Cancel,
+      QMessageBox.StandardButton.Yes,
+    )
+    if answer == QMessageBox.StandardButton.Cancel:
+      return False
+    if answer == QMessageBox.StandardButton.Yes:
+      return self.save_custom_template_changes(template_id)
+
+    self.custom_template_dirty = False
+    return True
+
+  def save_custom_template_changes(self, template_id: str) -> bool:
+    '''Guarda los ajustes actuales sobre una plantilla personalizada.'''
+
+    if not is_custom_template(template_id):
+      return True
+
+    try:
+      update_custom_template_style(template_id, self.current_style_options())
+    except PdfBuildError as exc:
+      QMessageBox.critical(self, 'Error', str(exc))
+      return False
+    except OSError as exc:
+      QMessageBox.critical(self, 'Error', f'No se pudo actualizar la plantilla:\n{exc}')
+      return False
+
+    self.custom_template_dirty = False
+    self.update_template_status()
+    self.update_template_button.setEnabled(False)
+    self.status_label.setText(
+      f'Cambios guardados en la plantilla: {self.display_template_label(template_id)}'
+    )
+    return True
 
   def restore_design_settings(self) -> None:
     '''Restaura la última plantilla usada con sus valores base.'''
@@ -1322,18 +1457,7 @@ class MainWindow(QMainWindow):
     if not is_custom_template(template_id):
       return
 
-    try:
-      update_custom_template_style(template_id, self.current_style_options())
-    except PdfBuildError as exc:
-      QMessageBox.critical(self, 'Error', str(exc))
-      return
-    except OSError as exc:
-      QMessageBox.critical(self, 'Error', f'No se pudo actualizar la plantilla:\n{exc}')
-      return
-
-    self.status_label.setText(
-      f'Cambios guardados en la plantilla: {self.display_template_label(template_id)}'
-    )
+    self.save_custom_template_changes(template_id)
 
   def unique_template_id(self, label: str) -> str:
     '''Genera un identificador de plantilla disponible desde un nombre visible.'''
@@ -1436,6 +1560,9 @@ class MainWindow(QMainWindow):
     if self.editor_dirty and not self.confirm_save_before_close_editor():
       event.ignore()
       return
+    if not self.confirm_custom_template_changes(self.selected_template_id):
+      event.ignore()
+      return
 
     self.settings.setValue('window_geometry', self.saveGeometry())
     self.save_design_settings()
@@ -1454,31 +1581,24 @@ class MainWindow(QMainWindow):
       self.set_markdown_file(filename)
 
   def create_markdown_file(self) -> None:
-    '''Crea un archivo Markdown vacío y lo abre en el editor.'''
+    '''Crea un Markdown nuevo sin pedir ruta hasta guardar.'''
 
-    if not self.confirm_discard_unsaved_changes():
+    if self.markdown_is_open() and not self.confirm_save_before_close_editor():
       return
 
-    filename, _ = QFileDialog.getSaveFileName(
-      self,
-      'Crear Markdown',
-      str(Path.home() / 'nuevo_apunte.md'),
-      'Markdown (*.md);;Todos los archivos (*.*)',
-    )
-    if not filename:
-      return
-
-    path = Path(filename)
-    if path.suffix.lower() != '.md':
-      path = path.with_suffix('.md')
-
-    try:
-      path.write_text('', encoding='utf-8')
-    except OSError as exc:
-      QMessageBox.critical(self, 'Error', f'No se pudo crear el archivo:\n{exc}')
-      return
-
-    self.set_markdown_file(str(path))
+    self.current_file = None
+    self.current_pdf = None
+    self.file_input.setCurrentText('')
+    self.drop_zone.setVisible(False)
+    self.editor.blockSignals(True)
+    self.editor.clear()
+    self.editor.blockSignals(False)
+    self.editor.setVisible(True)
+    self.pdf_document.close()
+    self.refresh_document_preview_if_visible()
+    self.editor_dirty = False
+    self.update_action_visibility()
+    self.status_label.setText('Markdown nuevo sin guardar. Usa Guardar como para elegir ubicación.')
 
   def set_markdown_file(self, filename: str) -> None:
     '''Registra un Markdown seleccionado o arrastrado y reinicia la vista.'''
@@ -1506,16 +1626,7 @@ class MainWindow(QMainWindow):
     self.refresh_document_preview_if_visible()
     self.editor_dirty = False
     self.edit_button.setText('Cerrar')
-    self.edit_button.setEnabled(True)
-    self.edit_button.setVisible(True)
-    self.save_button.setEnabled(False)
-    self.save_button.setVisible(True)
-    self.save_as_button.setEnabled(True)
-    self.save_as_button.setVisible(True)
-    self.open_pdf_button.setEnabled(False)
-    self.open_pdf_button.setVisible(False)
-    self.build_button.setEnabled(True)
-    self.build_button.setVisible(True)
+    self.update_action_visibility()
     self.status_label.setText('Markdown seleccionado. Pulsa Generar PDF.')
 
   def load_markdown_into_editor(self) -> bool:
@@ -1539,7 +1650,7 @@ class MainWindow(QMainWindow):
   def close_markdown_file(self) -> None:
     '''Cierra el Markdown actual y vuelve al estado inicial de la app.'''
 
-    if self.current_file is None:
+    if not self.markdown_is_open():
       return
 
     if not self.confirm_save_before_close_editor():
@@ -1555,32 +1666,23 @@ class MainWindow(QMainWindow):
     self.refresh_document_preview_if_visible()
     self.editor_dirty = False
     self.edit_button.setText('Cerrar')
-    self.edit_button.setEnabled(False)
-    self.edit_button.setVisible(False)
-    self.save_button.setEnabled(False)
-    self.save_button.setVisible(False)
-    self.save_as_button.setEnabled(False)
-    self.save_as_button.setVisible(False)
-    self.open_pdf_button.setEnabled(False)
-    self.open_pdf_button.setVisible(False)
-    self.build_button.setEnabled(False)
-    self.build_button.setVisible(False)
+    self.update_action_visibility()
     self.status_label.setText('Listo.')
 
   def mark_editor_dirty(self) -> None:
     '''Marca el editor como modificado para proteger cambios sin guardar.'''
 
-    if self.current_file is None:
+    if not self.markdown_is_open():
       return
     self.editor_dirty = True
-    self.save_button.setEnabled(True)
+    self.update_action_visibility()
     self.status_label.setText('Hay cambios sin guardar.')
 
   def save_editor(self) -> bool:
     '''Guarda el contenido del editor en el Markdown actual.'''
 
     if self.current_file is None:
-      return True
+      return self.save_editor_as()
 
     try:
       self.current_file.write_text(self.editor.toPlainText(), encoding='utf-8')
@@ -1589,20 +1691,21 @@ class MainWindow(QMainWindow):
       return False
 
     self.editor_dirty = False
-    self.save_button.setEnabled(False)
+    self.update_action_visibility()
     self.status_label.setText('Cambios guardados.')
     return True
 
   def save_editor_as(self) -> bool:
     '''Guarda el Markdown actual en una ruta nueva y cambia a ese archivo.'''
 
-    if self.current_file is None:
+    if not self.markdown_is_open():
       return False
 
+    default_path = self.current_file or Path.home() / 'nuevo_apunte.md'
     filename, _ = QFileDialog.getSaveFileName(
       self,
       'Guardar Markdown como',
-      str(self.current_file),
+      str(default_path),
       'Markdown (*.md);;Todos los archivos (*.*)',
     )
     if not filename:
@@ -1623,10 +1726,8 @@ class MainWindow(QMainWindow):
     self.remember_markdown(self.current_file)
     self.pdf_document.close()
     self.refresh_document_preview_if_visible()
-    self.open_pdf_button.setEnabled(False)
-    self.open_pdf_button.setVisible(False)
     self.editor_dirty = False
-    self.save_button.setEnabled(False)
+    self.update_action_visibility()
     self.status_label.setText('Markdown guardado como archivo nuevo.')
     return True
 
@@ -1647,6 +1748,9 @@ class MainWindow(QMainWindow):
 
   def confirm_save_before_build(self) -> bool:
     '''Pregunta qué hacer con cambios pendientes antes de generar el PDF.'''
+
+    if self.current_file is None:
+      return self.save_editor_as()
 
     if not self.editor_dirty:
       return True
@@ -1686,17 +1790,19 @@ class MainWindow(QMainWindow):
   def generate_pdf(self) -> None:
     '''Inicia la generación del PDF con los valores actuales de la interfaz.'''
 
-    markdown_file = self.file_input.currentText().strip()
-    if not markdown_file:
-      QMessageBox.warning(self, 'Falta archivo', 'Selecciona un archivo Markdown.')
+    if not self.markdown_is_open():
+      QMessageBox.warning(self, 'Falta Markdown', 'Abre o crea un Markdown antes de generar.')
       return
     if not self.confirm_save_before_build():
+      return
+    if self.current_file is None:
+      QMessageBox.warning(self, 'Falta archivo', 'Guarda el Markdown antes de generar.')
       return
 
     self.build_button.setEnabled(False)
     self.status_label.setText('Generando PDF...')
     self.worker = BuildWorker(
-      markdown_file,
+      str(self.current_file),
       self.current_style_options(),
       self.current_template_id(),
     )
@@ -1718,11 +1824,8 @@ class MainWindow(QMainWindow):
     self.pdf_document.close()
     error = self.pdf_document.load(str(pdf_file))
     if error != QPdfDocument.Error.None_:
-      self.help_preview_scroll.setVisible(False)
-      self.pdf_view.setVisible(False)
-      self.empty_preview_label.setVisible(True)
-      self.open_pdf_button.setEnabled(True)
-      self.open_pdf_button.setVisible(True)
+      self.show_document_preview()
+      self.update_action_visibility()
       QMessageBox.warning(
         self,
         'Vista previa',
@@ -1730,11 +1833,8 @@ class MainWindow(QMainWindow):
       )
       return
 
-    self.help_preview_scroll.setVisible(False)
-    self.empty_preview_label.setVisible(False)
-    self.pdf_view.setVisible(True)
-    self.open_pdf_button.setEnabled(True)
-    self.open_pdf_button.setVisible(True)
+    self.show_document_preview()
+    self.update_action_visibility()
     self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
 
   def open_current_pdf(self) -> None:

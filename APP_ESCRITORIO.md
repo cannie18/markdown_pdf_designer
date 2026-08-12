@@ -66,6 +66,7 @@ La app permite:
 
 - abrir un archivo `.md`;
 - arrastrar un archivo `.md`;
+- crear un Markdown nuevo sin elegir ubicación hasta guardar o generar;
 - ver y editar opcionalmente el contenido;
 - preguntar antes de generar si hay cambios sin guardar;
 - elegir tipo de fuente;
@@ -97,7 +98,11 @@ La app permite:
   secciones modificables de `Diseño`;
 - mantener visible la ayuda al alternar entre `Markdown` y `Diseño`;
 - usar `Ayuda` como interruptor para volver al PDF o a la guía inicial;
+- desactivar visualmente `Ayuda` cuando vuelve el PDF al generar;
 - mantener arriba la fila de selección de Markdown en `Markdown`;
+- colocar `Abrir` junto a la caja de ruta y `Nuevo` después;
+- mostrar en `Diseño` solo `Generar PDF` como acción inferior;
+- proteger cambios sin guardar en plantillas personalizadas al cerrar o cambiar de plantilla;
 - mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
 
 ## Relación Con La Versión Portable
@@ -192,6 +197,9 @@ Los últimos ajustes importantes son:
 - las plantillas evitan que los títulos hereden el interlineado grande del texto normal;
 - el cuerpo de texto puede seguir justificándose según la plantilla, pero los títulos no;
 - el botón `Ayuda` muestra las instrucciones en el visor de la derecha sin cambiar el panel izquierdo y permite volver al PDF;
+- `Nuevo` abre un documento sin guardar y pide ubicación al guardar o generar;
+- en `Diseño` se ocultan `Cerrar`, `Guardar`, `Guardar como` y `Abrir PDF en Windows`;
+- los cambios de plantillas personalizadas se deben guardar, descartar o cancelar antes de cerrar o cambiar de plantilla;
 - la ayuda combina una guía rápida con explicaciones detalladas de `Markdown` y `Diseño`;
 - el visor vacío muestra una guía breve de primer uso;
 - en `Markdown`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;
