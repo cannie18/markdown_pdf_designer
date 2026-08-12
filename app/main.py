@@ -13,8 +13,8 @@ import sys
 import unicodedata
 from pathlib import Path
 
-from PySide6.QtCore import QSettings, Qt, QThread, Signal
-from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent, QWheelEvent
+from PySide6.QtCore import QSize, QSettings, Qt, QThread, Signal
+from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent, QIcon, QWheelEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
@@ -61,6 +61,7 @@ WINDOW_MIN_HEIGHT = 480
 RECENT_FILES_POPUP_MIN_WIDTH = 560
 RECENT_FILES_POPUP_MAX_WIDTH = 960
 SELECTED_TEMPLATE_SETTING = 'selected_template_id'
+ICON_DIR = Path(__file__).resolve().parents[1] / 'assets' / 'icons'
 TEMPLATE_LABELS = {
   'estudio': 'Estudio',
   'profesional': 'Profesional',
@@ -71,6 +72,36 @@ TEMPLATE_LABELS = {
   'informe_ejecutivo': 'Informe ejecutivo',
   'manual_tecnico': 'Manual técnico',
   'manuscrito_novela': 'Manuscrito / novela',
+}
+DESIGN_LABEL_ICONS = {
+  'Plantilla': 'template.svg',
+  'Fuente': 'font.svg',
+  'Tamaño texto': 'text-size.svg',
+  'Color texto': 'text-color.svg',
+  'Fondo página': 'page-background.svg',
+  'Interlineado': 'line-height.svg',
+  'Espacio párrafos': 'paragraph-spacing.svg',
+  'Margen lateral': 'margins.svg',
+  'Margen vertical': 'margins.svg',
+  'Tamaño título 1': 'heading-1.svg',
+  'Tamaño título 2': 'heading-2.svg',
+  'Tamaño título 3': 'heading-3.svg',
+  'Título 1': 'heading-1.svg',
+  'Título 2': 'heading-2.svg',
+  'Título 3': 'heading-3.svg',
+  'Negrita': 'bold.svg',
+  'Cursiva': 'italic.svg',
+  'Fuente código': 'code.svg',
+  'Tamaño código': 'text-size.svg',
+  'Fondo código': 'color-fill.svg',
+  'Espacio interno': 'quote-block.svg',
+  'Borde': 'quote-border.svg',
+  'Fondo': 'color-fill.svg',
+  'Espacio celdas': 'table-cell-padding.svg',
+  'Ancho tabla': 'table-width.svg',
+  'Bordes': 'table-border.svg',
+  'Fondo cabecera': 'color-fill.svg',
+  'Texto cabecera': 'text-color.svg',
 }
 TEMPLATE_ORDER = [
   'estudio',
@@ -237,32 +268,39 @@ class MainWindow(QMainWindow):
 
     open_button = QPushButton('Abrir')
     open_button.clicked.connect(self.choose_file)
+    self.set_button_icon(open_button, 'open.svg')
 
     new_button = QPushButton('Nuevo')
     new_button.clicked.connect(self.create_markdown_file)
+    self.set_button_icon(new_button, 'new-file.svg')
 
     self.edit_button = QPushButton('Cerrar')
     self.edit_button.clicked.connect(self.close_markdown_file)
+    self.set_button_icon(self.edit_button, 'close-file.svg')
     self.edit_button.setEnabled(False)
     self.edit_button.setVisible(False)
 
     self.save_button = QPushButton('Guardar')
     self.save_button.clicked.connect(self.save_editor)
+    self.set_button_icon(self.save_button, 'save.svg')
     self.save_button.setEnabled(False)
     self.save_button.setVisible(False)
 
     self.save_as_button = QPushButton('Guardar como')
     self.save_as_button.clicked.connect(self.save_editor_as)
+    self.set_button_icon(self.save_as_button, 'save-as.svg')
     self.save_as_button.setEnabled(False)
     self.save_as_button.setVisible(False)
 
     self.build_button = QPushButton('Generar PDF')
     self.build_button.clicked.connect(self.generate_pdf)
+    self.set_button_icon(self.build_button, 'generate-pdf.svg')
     self.build_button.setEnabled(False)
     self.build_button.setVisible(False)
 
     self.open_pdf_button = QPushButton('Abrir PDF en Windows')
     self.open_pdf_button.clicked.connect(self.open_current_pdf)
+    self.set_button_icon(self.open_pdf_button, 'preview.svg')
     self.open_pdf_button.setEnabled(False)
     self.open_pdf_button.setVisible(False)
 
@@ -413,12 +451,14 @@ class MainWindow(QMainWindow):
 
     self.create_template_button = QPushButton('Crear nueva plantilla')
     self.create_template_button.clicked.connect(self.create_custom_template)
+    self.set_button_icon(self.create_template_button, 'template-new.svg')
     self.create_template_button.setSizePolicy(
       QSizePolicy.Policy.Expanding,
       QSizePolicy.Policy.Fixed,
     )
     self.update_template_button = QPushButton('Guardar cambios')
     self.update_template_button.clicked.connect(self.update_custom_template)
+    self.set_button_icon(self.update_template_button, 'template-save.svg')
     self.update_template_button.setSizePolicy(
       QSizePolicy.Policy.Expanding,
       QSizePolicy.Policy.Fixed,
@@ -479,8 +519,11 @@ class MainWindow(QMainWindow):
 
     self.file_tab_button = self.create_nav_button('Markdown', 0)
     self.design_tab_button = self.create_nav_button('Diseño', 1)
+    self.set_button_icon(self.file_tab_button, 'code.svg')
+    self.set_button_icon(self.design_tab_button, 'settings.svg')
     self.help_tab_button = QPushButton('Ayuda')
     self.help_tab_button.setObjectName('navButton')
+    self.set_button_icon(self.help_tab_button, 'help.svg')
     self.help_tab_button.clicked.connect(self.toggle_help_preview)
 
     nav_row = QHBoxLayout()
@@ -836,6 +879,40 @@ class MainWindow(QMainWindow):
     button.clicked.connect(lambda: self.select_left_section(index))
     return button
 
+  def set_button_icon(self, button: QPushButton, icon_name: str) -> None:
+    '''Asigna un icono SVG si existe en assets/icons.'''
+
+    icon_file = ICON_DIR / icon_name
+    if not icon_file.exists():
+      return
+
+    button.setIcon(QIcon(str(icon_file)))
+    button.setIconSize(QSize(18, 18))
+
+  def create_design_label(self, text: str) -> QWidget:
+    '''Crea una etiqueta compacta con icono para el panel de diseño.'''
+
+    label_container = QWidget()
+    label_layout = QHBoxLayout(label_container)
+    label_layout.setContentsMargins(0, 0, 0, 0)
+    label_layout.setSpacing(5)
+    label_layout.addStretch(1)
+
+    icon_name = DESIGN_LABEL_ICONS.get(text)
+    if icon_name:
+      icon_file = ICON_DIR / icon_name
+      if icon_file.exists():
+        icon_label = QLabel()
+        icon_label.setPixmap(QIcon(str(icon_file)).pixmap(QSize(16, 16)))
+        icon_label.setFixedSize(16, 16)
+        label_layout.addWidget(icon_label)
+
+    text_label = QLabel(text)
+    text_label.setObjectName('designOptionLabel')
+    text_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+    label_layout.addWidget(text_label)
+    return label_container
+
   def select_left_section(self, index: int) -> None:
     '''Muestra una de las secciones principales del panel izquierdo.'''
 
@@ -1057,8 +1134,7 @@ class MainWindow(QMainWindow):
     template_row = QHBoxLayout()
     template_row.setContentsMargins(0, 0, 0, 0)
     template_row.setSpacing(8)
-    template_label_widget = QLabel('Plantilla')
-    template_label_widget.setAlignment(Qt.AlignmentFlag.AlignRight)
+    template_label_widget = self.create_design_label('Plantilla')
     template_row.addWidget(template_label_widget)
     template_row.addWidget(self.template_combo, 1)
 
@@ -1085,7 +1161,7 @@ class MainWindow(QMainWindow):
     form_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
     form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
     for label, widget in rows:
-      form_layout.addRow(label, widget)
+      form_layout.addRow(self.create_design_label(label), widget)
 
     group_layout.addLayout(form_layout)
     return group_layout

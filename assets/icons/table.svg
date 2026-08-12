@@ -1,0 +1,14 @@
+<svg viewBox="0 0 24 24" height="512" width="512" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Borde exterior de la tabla completa -->
+  <rect x="2" y="3" width="20" height="18" rx="2" />
+
+  <!-- Línea horizontal del encabezado (Fila superior) -->
+  <line x1="2" y1="8" x2="22" y2="8" />
+
+  <!-- Línea horizontal divisoria de las filas inferiores -->
+  <line x1="2" y1="14" x2="22" y2="14" />
+
+  <!-- Líneas verticales que crean las 3 columnas -->
+  <line x1="8.5" y1="3" x2="8.5" y2="21" />
+  <line x1="15.5" y1="3" x2="15.5" y2="21" />
+</svg>

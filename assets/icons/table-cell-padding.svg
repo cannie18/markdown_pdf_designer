@@ -1,0 +1,13 @@
+<svg viewBox="0 0 24 24" height="512" width="512" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Borde exterior de la celda de la tabla -->
+  <rect x="2" y="2" width="20" height="20" rx="2" />
+
+  <!-- Bloque de contenido interno (relleno con color para diferenciarlo) -->
+  <rect x="7" y="7" width="10" height="10" rx="1" fill="currentColor" fill-opacity="0.3" stroke-width="0" />
+
+  <!-- Líneas indicadoras de Padding (Esquinas superiores e inferiores que marcan el límite) -->
+  <!-- Top-Left -->
+  <path d="M6 7h1v-1" stroke-width="1.5" opacity="0.7" />
+  <!-- Bottom-Right -->
+  <path d="M18 17h-1v1" stroke-width="1.5" opacity="0.7" />
+</svg>
