@@ -23,7 +23,6 @@ from PySide6.QtWidgets import (
   QComboBox,
   QDoubleSpinBox,
   QFileDialog,
-  QFormLayout,
   QFrame,
   QHBoxLayout,
   QInputDialog,
@@ -102,6 +101,23 @@ DESIGN_LABEL_ICONS = {
   'Bordes': 'table-border.svg',
   'Fondo cabecera': 'color-fill.svg',
   'Texto cabecera': 'text-color.svg',
+}
+COLOR_BUTTON_LABELS = {
+  'h1': 'Color título 1',
+  'h2': 'Color título 2',
+  'h3': 'Color título 3',
+  'bold': 'Color negrita',
+  'italic': 'Color cursiva',
+  'body': 'Color texto',
+  'page_background': 'Fondo página',
+  'code_background': 'Fondo código',
+  'table_stroke': 'Bordes',
+  'table_text': 'Color texto',
+  'table_header_background': 'Fondo cabecera',
+  'table_header_text': 'Texto cabecera',
+  'quote_border': 'Borde',
+  'quote_background': 'Fondo',
+  'quote_text': 'Color texto',
 }
 TEMPLATE_ORDER = [
   'estudio',
@@ -569,12 +585,16 @@ class MainWindow(QMainWindow):
       self.create_design_group(
         'Base',
         [
-          ('Fuente', self.font_combo),
-          ('Tamaño texto', self.body_size_input),
-          ('Color texto', self.body_color_button),
-          ('Fondo página', self.page_background_color_button),
-          ('Interlineado', self.paragraph_leading_input),
-          ('Espacio párrafos', self.paragraph_spacing_input),
+          [('Fuente', self.font_combo)],
+          [
+            ('Tamaño texto', self.body_size_input),
+            ('Color texto', self.body_color_button),
+          ],
+          [('Fondo página', self.page_background_color_button)],
+          [
+            ('Interlineado', self.paragraph_leading_input),
+            ('Espacio párrafos', self.paragraph_spacing_input),
+          ],
         ],
       )
     )
@@ -582,8 +602,10 @@ class MainWindow(QMainWindow):
       self.create_design_group(
         'Página',
         [
-          ('Margen lateral', self.margin_x_input),
-          ('Margen vertical', self.margin_y_input),
+          [
+            ('Margen lateral', self.margin_x_input),
+            ('Margen vertical', self.margin_y_input),
+          ],
         ],
       )
     )
@@ -591,12 +613,18 @@ class MainWindow(QMainWindow):
       self.create_design_group(
         'Títulos',
         [
-          ('Tamaño título 1', self.h1_size_input),
-          ('Tamaño título 2', self.h2_size_input),
-          ('Tamaño título 3', self.h3_size_input),
-          ('Título 1', self.h1_color_button),
-          ('Título 2', self.h2_color_button),
-          ('Título 3', self.h3_color_button),
+          [
+            ('Tamaño título 1', self.h1_size_input),
+            ('Título 1', self.h1_color_button),
+          ],
+          [
+            ('Tamaño título 2', self.h2_size_input),
+            ('Título 2', self.h2_color_button),
+          ],
+          [
+            ('Tamaño título 3', self.h3_size_input),
+            ('Título 3', self.h3_color_button),
+          ],
         ],
       )
     )
@@ -604,8 +632,10 @@ class MainWindow(QMainWindow):
       self.create_design_group(
         'Enfasis',
         [
-          ('Negrita', self.bold_color_button),
-          ('Cursiva', self.italic_color_button),
+          [
+            ('Negrita', self.bold_color_button),
+            ('Cursiva', self.italic_color_button),
+          ],
         ],
       )
     )
@@ -613,9 +643,11 @@ class MainWindow(QMainWindow):
       self.create_design_group(
         'Código',
         [
-          ('Fuente código', self.code_font_combo),
-          ('Tamaño código', self.code_size_input),
-          ('Fondo código', self.code_background_color_button),
+          [('Fuente código', self.code_font_combo)],
+          [
+            ('Tamaño código', self.code_size_input),
+            ('Fondo código', self.code_background_color_button),
+          ],
         ],
       )
     )
@@ -623,11 +655,15 @@ class MainWindow(QMainWindow):
       self.create_design_group(
         'Bloques',
         [
-          ('Espacio interno', self.quote_inset_input),
-          ('Tamaño texto', self.quote_text_size_input),
-          ('Color texto', self.quote_text_color_button),
-          ('Borde', self.quote_border_color_button),
-          ('Fondo', self.quote_background_color_button),
+          [
+            ('Espacio interno', self.quote_inset_input),
+            ('Tamaño texto', self.quote_text_size_input),
+          ],
+          [
+            ('Color texto', self.quote_text_color_button),
+            ('Borde', self.quote_border_color_button),
+          ],
+          [('Fondo', self.quote_background_color_button)],
         ],
       )
     )
@@ -635,13 +671,19 @@ class MainWindow(QMainWindow):
       self.create_design_group(
         'Tablas',
         [
-          ('Espacio celdas', self.table_inset_input),
-          ('Ancho tabla', self.table_width_mode_combo),
-          ('Tamaño texto', self.table_text_size_input),
-          ('Color texto', self.table_text_color_button),
-          ('Bordes', self.table_stroke_color_button),
-          ('Fondo cabecera', self.table_header_background_color_button),
-          ('Texto cabecera', self.table_header_text_color_button),
+          [
+            ('Espacio celdas', self.table_inset_input),
+            ('Ancho tabla', self.table_width_mode_combo),
+          ],
+          [
+            ('Tamaño texto', self.table_text_size_input),
+            ('Color texto', self.table_text_color_button),
+          ],
+          [
+            ('Bordes', self.table_stroke_color_button),
+            ('Fondo cabecera', self.table_header_background_color_button),
+          ],
+          [('Texto cabecera', self.table_header_text_color_button)],
         ],
       )
     )
@@ -1143,7 +1185,11 @@ class MainWindow(QMainWindow):
     group_layout.addWidget(self.template_actions)
     return group_layout
 
-  def create_design_group(self, title: str, rows: list[tuple[str, QWidget]]) -> QVBoxLayout:
+  def create_design_group(
+    self,
+    title: str,
+    rows: list[list[tuple[str, QWidget]]],
+  ) -> QVBoxLayout:
     '''Crea una sección compacta para opciones de diseño relacionadas.'''
 
     group_layout = QVBoxLayout()
@@ -1154,22 +1200,43 @@ class MainWindow(QMainWindow):
     group_title.setObjectName('designGroupTitle')
     group_layout.addWidget(group_title)
 
-    form_layout = QFormLayout()
-    form_layout.setContentsMargins(0, 0, 0, 0)
-    form_layout.setHorizontalSpacing(8)
-    form_layout.setVerticalSpacing(5)
-    form_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
-    form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
-    for label, widget in rows:
-      form_layout.addRow(self.create_design_label(label), widget)
+    for row in rows:
+      row_layout = QHBoxLayout()
+      row_layout.setContentsMargins(0, 0, 0, 0)
+      row_layout.setSpacing(8)
+      for label, widget in row:
+        row_layout.addWidget(self.create_design_parameter(label, widget), 1)
+      group_layout.addLayout(row_layout)
 
-    group_layout.addLayout(form_layout)
     return group_layout
+
+  def create_design_parameter(self, label: str, widget: QWidget) -> QWidget:
+    '''Crea un parametro de diseño con icono y tooltip, sin texto visible.'''
+
+    parameter = QWidget()
+    parameter_layout = QHBoxLayout(parameter)
+    parameter_layout.setContentsMargins(0, 0, 0, 0)
+    parameter_layout.setSpacing(5)
+
+    icon_label = QLabel()
+    icon_label.setFixedSize(18, 18)
+    icon_label.setToolTip(label)
+    icon_name = DESIGN_LABEL_ICONS.get(label)
+    if icon_name:
+      icon_file = ICON_DIR / icon_name
+      if icon_file.exists():
+        icon_label.setPixmap(QIcon(str(icon_file)).pixmap(QSize(18, 18)))
+
+    widget.setToolTip(label)
+    parameter_layout.addWidget(icon_label)
+    parameter_layout.addWidget(widget, 1)
+    return parameter
 
   def create_color_button(self, color_key: str) -> QPushButton:
     '''Crea un boton que abre el selector para un color del PDF.'''
 
     button = QPushButton()
+    button.setMinimumWidth(42)
     button.clicked.connect(lambda: self.choose_heading_color(color_key))
     return button
 
@@ -1186,7 +1253,7 @@ class MainWindow(QMainWindow):
     self.mark_template_dirty()
 
   def refresh_color_buttons(self) -> None:
-    '''Actualiza texto y fondo de los botones de color.'''
+    '''Actualiza las muestras de color de los botones.'''
 
     buttons = {
       'h1': self.h1_color_button,
@@ -1207,20 +1274,12 @@ class MainWindow(QMainWindow):
     }
     for color_key, button in buttons.items():
       color = self.heading_colors[color_key]
-      button.setText(color)
+      label = COLOR_BUTTON_LABELS.get(color_key, 'Color')
+      button.setText('')
+      button.setToolTip(f'{label}: {color}')
       button.setStyleSheet(
-        f'background: {color}; color: {self.text_color_for_background(color)};'
+        f'background: {color}; border: 1px solid #7f8794;'
       )
-
-  def text_color_for_background(self, color: str) -> str:
-    '''Elige texto blanco o negro segun la luminosidad del color de fondo.'''
-
-    value = color.lstrip('#')
-    red = int(value[0:2], 16)
-    green = int(value[2:4], 16)
-    blue = int(value[4:6], 16)
-    brightness = (red * 299 + green * 587 + blue * 114) / 1000
-    return '#000000' if brightness > 150 else '#ffffff'
 
   def apply_style_options(self, style: PdfStyleOptions) -> None:
     '''Carga un conjunto de opciones visuales en los controles de Diseño.'''

@@ -109,7 +109,7 @@ La app permite:
 - controlar el modo de ancho de tablas desde `Diseño`;
 - proteger cambios sin guardar en plantillas personalizadas al cerrar o cambiar de plantilla;
 - resaltar en los desplegables la opción seleccionada y la opción bajo el mouse;
-- mostrar iconos SVG en las acciones principales y en las opciones de Diseño sin ocultar todavía el texto;
+- mostrar iconos SVG en las acciones principales y parámetros compactos en `Diseño`;
 - mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
 
 ## Relación Con La Versión Portable
@@ -211,7 +211,7 @@ Los últimos ajustes importantes son:
 - en `Diseño` se ocultan `Cerrar`, `Guardar`, `Guardar como` y `Abrir PDF en Windows`, pero `Generar PDF` permanece visible;
 - los cambios de plantillas personalizadas se deben guardar, descartar o cancelar antes de cerrar o cambiar de plantilla;
 - los desplegables distinguen visualmente selección y opción bajo el mouse;
-- las acciones principales y las opciones de Diseño usan iconos SVG cargados desde `assets/icons/`;
+- los parámetros de `Diseño` usan iconos SVG cargados desde `assets/icons/` y muestran el texto mediante tooltips;
 - la ayuda combina una guía rápida con explicaciones detalladas de `Markdown` y `Diseño`;
 - el visor vacío muestra una guía breve de primer uso;
 - en `Markdown`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;

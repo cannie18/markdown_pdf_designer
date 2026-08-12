@@ -89,7 +89,7 @@ La app permite, de momento:
 - generar el PDF con un botón;
 - ver el PDF generado dentro de la propia app;
 - abrir el PDF generado en el visor predeterminado de Windows;
-- mostrar iconos SVG en las acciones principales y en las opciones de Diseño;
+- mostrar iconos SVG en las acciones principales y en los parámetros de Diseño;
 - consultar la ayuda integrada en el visor sin abandonar `Markdown` o `Diseño`;
 - consultar ayuda detallada sobre botones de Markdown, plantillas y secciones de Diseño;
 - ver una guía breve en el visor cuando todavía no hay PDF cargado;
@@ -200,7 +200,7 @@ Las plantillas disponibles en la app son:
 - `Diseño` permite controlar texto, espaciado, bordes y cabecera de tablas;
 - `Diseño` permite elegir el modo de ancho de tablas: contenido o ancho disponible;
 - los desplegables distinguen visualmente la opción seleccionada y la opción bajo el mouse;
-- las acciones principales y las opciones de Diseño usan iconos SVG con texto visible;
+- los parámetros de `Diseño` se organizan en filas compactas con iconos y tooltips;
 - la versión portable `crear_pdf.bat` sigue funcionando;
 - `Ensayo APA / MLA` tiene jerarquía de títulos y espaciado corregido;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;

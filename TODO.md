@@ -52,7 +52,7 @@
 - Opción de color de fondo de página del PDF.
 - Corrección de textos visibles de la app a español de España.
 - Resaltado de opción seleccionada y opción bajo el mouse en desplegables.
-- Primera integración de iconos SVG en acciones principales y opciones de `Diseño` con texto visible.
+- Parámetros de `Diseño` reorganizados en filas compactas con iconos y tooltips.
 - Separación entre plantillas de app y plantilla portable.
 - Primera fase de plantillas predefinidas:
   - `Estudio`;
@@ -140,8 +140,7 @@
 - Mejorar la sección `Diseño` para que permita regenerar el PDF sin perder contexto.
 - Mantener `Generar PDF` siempre visible y usable en `Diseño`.
 - Valorar si una galería futura de plantillas debe permitir duplicar y editar plantillas.
-- Reorganizar `Diseño` con iconos reconocibles para reducir texto visible.
-- Valorar sustituir texto por iconos con tooltips en controles de `Diseño`.
+- Valorar si algunos botones de acción secundarios deberían pasar a modo solo icono.
 - Revisar más adelante si el botón `Ayuda` debe enlazar ejemplos de Markdown.
 
 ## Persistencia
