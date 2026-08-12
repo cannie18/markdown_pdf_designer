@@ -190,6 +190,7 @@ class MainWindow(QMainWindow):
     self.worker: BuildWorker | None = None
     self.current_file: Path | None = None
     self.current_pdf: Path | None = None
+    self.markdown_open = False
     self.editor_dirty = False
     self.active_left_section = 0
     self.loading_style_options = False
@@ -830,7 +831,7 @@ class MainWindow(QMainWindow):
   def markdown_is_open(self) -> bool:
     '''Indica si hay un Markdown abierto o nuevo en edición.'''
 
-    return self.editor.isVisible()
+    return self.markdown_open
 
   def update_action_visibility(self) -> None:
     '''Actualiza botones inferiores segun la seccion activa.'''
@@ -1594,6 +1595,7 @@ class MainWindow(QMainWindow):
 
     self.current_file = None
     self.current_pdf = None
+    self.markdown_open = True
     self.file_input.setCurrentText('')
     self.drop_zone.setVisible(False)
     self.editor.blockSignals(True)
@@ -1625,7 +1627,11 @@ class MainWindow(QMainWindow):
     self.remember_markdown(path)
     self.editor.clear()
     if not self.load_markdown_into_editor():
+      self.current_file = None
+      self.current_pdf = None
+      self.markdown_open = False
       return
+    self.markdown_open = True
     self.drop_zone.setVisible(False)
     self.editor.setVisible(True)
     self.pdf_document.close()
@@ -1664,6 +1670,7 @@ class MainWindow(QMainWindow):
 
     self.current_file = None
     self.current_pdf = None
+    self.markdown_open = False
     self.file_input.setCurrentText('')
     self.drop_zone.setVisible(True)
     self.editor.clear()
