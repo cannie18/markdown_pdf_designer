@@ -94,6 +94,7 @@ La app permite:
 - cambiar entre secciones `Archivo` y `Diseño` en el panel izquierdo;
 - mostrar la ayuda en el área de vista previa sin abandonar `Archivo` o `Diseño`;
 - mantener visible la ayuda al alternar entre `Archivo` y `Diseño`;
+- mantener arriba la fila de selección de Markdown en `Archivo`;
 - mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
 
 ## Relación Con La Versión Portable
@@ -189,6 +190,7 @@ Los últimos ajustes importantes son:
 - el cuerpo de texto puede seguir justificándose según la plantilla, pero los títulos no;
 - el botón `Ayuda` muestra las instrucciones en el visor de la derecha sin cambiar el panel izquierdo;
 - el visor vacío muestra una guía breve de primer uso;
+- en `Archivo`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;
 - la versión portable por `.bat` no se ha tocado.
 
 Objetivos previstos:

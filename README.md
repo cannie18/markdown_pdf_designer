@@ -106,6 +106,7 @@ La app permite, de momento:
 - evitar cambios accidentales en controles numéricos al usar la rueda del ratón;
 - recordar posición, monitor y tamaño de ventana;
 - mantener un ancho mínimo usable para controles y dejar que la vista previa use el espacio restante.
+- mantener siempre arriba la fila de selección de Markdown en `Archivo`.
 
 Las opciones visuales de la app se aplican generando una plantilla Typst
 temporal a partir de la plantilla elegida en `app/templates/`. La plantilla
@@ -177,6 +178,7 @@ Las plantillas disponibles en la app son:
 - los controles numéricos de `Diseño` no cambian con la rueda del ratón;
 - el botón `Ayuda` muestra las instrucciones en el visor sin cambiar el panel izquierdo;
 - el visor vacío muestra los primeros pasos antes de generar el primer PDF;
+- la fila de ruta, `Nuevo` y `Abrir` permanece arriba en `Archivo`, haya o no documento abierto;
 - `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;
 - `Diseño` permite controlar texto, espaciado, bordes y cabecera de tablas;
 - la versión portable `crear_pdf.bat` sigue funcionando;

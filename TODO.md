@@ -18,6 +18,7 @@
 - Abrir el PDF generado en el visor predeterminado de Windows.
 - Recordar tamaño, posición y monitor de la ventana.
 - Panel izquierdo con ancho mínimo basado en la fila de botones Markdown.
+- Fila de ruta, `Nuevo` y `Abrir` siempre arriba en `Archivo`.
 - Pestañas `Archivo` y `Diseño`.
 - Botón `Ayuda` integrado junto a `Archivo` y `Diseño`, con contenido mostrado en el visor.
 - La ayuda permanece visible al alternar entre `Archivo` y `Diseño`; se oculta al generar un PDF.

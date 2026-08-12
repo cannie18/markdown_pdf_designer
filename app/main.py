@@ -485,8 +485,8 @@ class MainWindow(QMainWindow):
     file_page = QWidget()
     file_layout = QVBoxLayout(file_page)
     file_layout.setContentsMargins(0, 0, 0, 0)
-    file_layout.addWidget(self.drop_zone)
     file_layout.addLayout(file_row)
+    file_layout.addWidget(self.drop_zone)
     file_layout.addWidget(self.editor, 1)
 
     design_page = QWidget()
