@@ -67,7 +67,7 @@ $definitions.typst()$
 #show strong: it => text(weight: "bold", fill: rgb("__BOLD_COLOR__"), it.body)
 #show emph: it => text(style: "italic", fill: rgb("__ITALIC_COLOR__"), it.body)
 // Enlaces.
-#show link: it => text(fill: rgb("#0057b8"), underline(it.body))
+#show link: it => text(fill: rgb("#0057b8"), underline(it))
 
 #set list(indent: 1.2em, body-indent: 0.55em)
 #set enum(indent: 1.2em, body-indent: 0.7em)

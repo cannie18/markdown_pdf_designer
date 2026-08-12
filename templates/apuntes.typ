@@ -72,7 +72,7 @@ $definitions.typst()$
 #show strong: it => text(weight: "bold", fill: rgb("#1f3552"), it.body)
 #show emph: it => text(style: "italic", it.body)
 // Enlaces.
-#show link: it => text(fill: rgb("#0057b8"), underline(it.body))
+#show link: it => text(fill: rgb("#0057b8"), underline(it))
 
 // Listas.
 // Markdown "- item" y "1. item".

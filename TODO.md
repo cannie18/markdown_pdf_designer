@@ -55,6 +55,13 @@
 - Parámetros de `Diseño` reorganizados en filas compactas con iconos y tooltips.
 - Títulos Markdown de nivel 4, 5 y 6 diferenciados visualmente en las plantillas.
 - Enlaces Markdown con formato visual diferenciado en el PDF.
+- Enlaces Markdown conservados como hipervínculos clicables tras aplicar estilo visual.
+- Soporte básico de HTML inline antes de convertir:
+  - `<mark>` como resaltado;
+  - `<br>` como salto manual;
+  - `<strong>` y `<b>` como negrita;
+  - `<em>` y `<i>` como cursiva.
+- Alertas tipo GitHub convertidas a citas con etiqueta legible.
 - Separación entre plantillas de app y plantilla portable.
 - Primera fase de plantillas predefinidas:
   - `Estudio`;
@@ -134,13 +141,8 @@
 
 ## Compatibilidad Markdown
 
-- Revisar soporte de HTML inline y bloques HTML:
-  - `<mark>` no se conserva actualmente como resaltado;
-  - `<br>` no genera salto visual;
-  - `<strong>` dentro de HTML no se convierte en negrita.
-- Decidir cómo representar alertas tipo GitHub:
-  - `> [!NOTE]`;
-  - `> [!WARNING]`.
+- Ampliar soporte de HTML si aparecen casos reales más complejos que el HTML inline básico.
+- Valorar estilos específicos para alertas tipo GitHub más allá de citas con etiqueta.
 - Revisar el resultado visual del texto preformateado por sangría de cuatro espacios.
 - Mantener `ejemplos/markdown_referencia_completo.md` como banco de pruebas principal.
 

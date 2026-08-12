@@ -83,7 +83,7 @@ $definitions.typst()$
 #show strong: it => text(weight: "bold", fill: rgb("__BOLD_COLOR__"), it.body)
 #show emph: it => text(weight: "bold", fill: rgb("__ITALIC_COLOR__"), it.body)
 // Enlaces.
-#show link: it => text(fill: rgb("#0057b8"), underline(it.body))
+#show link: it => text(fill: rgb("#0057b8"), underline(it))
 
 #set list(
   indent: 1.3em,

@@ -77,6 +77,16 @@ class PdfBuildError(RuntimeError):
   pass
 
 
+HTML_MARK_TOKEN_PREFIX = 'MDPDFMARK'
+ADMONITION_LABELS = {
+  'NOTE': 'Nota',
+  'TIP': 'Consejo',
+  'IMPORTANT': 'Importante',
+  'WARNING': 'Advertencia',
+  'CAUTION': 'Precaución',
+}
+
+
 TEMPLATE_STYLE_PRESETS = {
   'estudio': PdfStyleOptions(),
   'profesional': PdfStyleOptions(
@@ -673,6 +683,106 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
   return Path(temp_file.name)
 
 
+def prepare_markdown_source(source: Path) -> tuple[Path, dict[str, str]]:
+  '''Normaliza casos Markdown/HTML que Pandoc no conserva al convertir a Typst.'''
+
+  markdown_text = source.read_text(encoding='utf-8')
+  markdown_text, mark_replacements = extract_mark_tags(markdown_text)
+  markdown_text = normalize_basic_html(markdown_text)
+  markdown_text = normalize_github_admonitions(markdown_text)
+
+  temp_file = tempfile.NamedTemporaryFile(
+    mode='w',
+    encoding='utf-8',
+    delete=False,
+    dir=source.parent,
+    prefix=f'{source.stem}_processed_',
+    suffix=source.suffix,
+  )
+  with temp_file:
+    temp_file.write(markdown_text)
+  return Path(temp_file.name), mark_replacements
+
+
+def extract_mark_tags(markdown_text: str) -> tuple[str, dict[str, str]]:
+  '''Extrae `<mark>` para convertirlo después en resaltado Typst.'''
+
+  replacements: dict[str, str] = {}
+
+  def replace_mark(match: re.Match[str]) -> str:
+    token = f'{HTML_MARK_TOKEN_PREFIX}{len(replacements)}'
+    replacements[token] = match.group(1).strip()
+    return token
+
+  markdown_text = re.sub(
+    r'<mark\b[^>]*>(.*?)</mark>',
+    replace_mark,
+    markdown_text,
+    flags=re.IGNORECASE | re.DOTALL,
+  )
+  return markdown_text, replacements
+
+
+def normalize_basic_html(markdown_text: str) -> str:
+  '''Convierte HTML inline básico a Markdown equivalente.'''
+
+  replacements = [
+    (r'<(?:strong|b)\b[^>]*>(.*?)</(?:strong|b)>', r'**\1**'),
+    (r'<(?:em|i)\b[^>]*>(.*?)</(?:em|i)>', r'*\1*'),
+  ]
+  for pattern, replacement in replacements:
+    markdown_text = re.sub(
+      pattern,
+      replacement,
+      markdown_text,
+      flags=re.IGNORECASE | re.DOTALL,
+    )
+
+  return re.sub(r'<br\s*/?>', '  \n', markdown_text, flags=re.IGNORECASE)
+
+
+def normalize_github_admonitions(markdown_text: str) -> str:
+  '''Convierte alertas tipo GitHub en citas Markdown legibles.'''
+
+  output_lines: list[str] = []
+  for line in markdown_text.splitlines():
+    match = re.match(r'^(>\s*)\[!(\w+)\]\s*$', line, flags=re.IGNORECASE)
+    if not match:
+      output_lines.append(line)
+      continue
+
+    quote_prefix = match.group(1)
+    label = ADMONITION_LABELS.get(match.group(2).upper(), match.group(2).title())
+    output_lines.append(f'{quote_prefix}**{label}**')
+    output_lines.append(quote_prefix.rstrip())
+
+  return '\n'.join(output_lines) + ('\n' if markdown_text.endswith('\n') else '')
+
+
+def apply_mark_replacements(typ_file: Path, replacements: dict[str, str]) -> None:
+  '''Inserta resaltados Typst en los tokens generados para `<mark>`.'''
+
+  if not replacements:
+    return
+
+  typ_text = typ_file.read_text(encoding='utf-8')
+  for token, content in replacements.items():
+    typ_text = typ_text.replace(token, f'#highlight[{escape_typst_content(content)}]')
+  typ_file.write_text(typ_text, encoding='utf-8')
+
+
+def escape_typst_content(content: str) -> str:
+  '''Escapa texto simple para introducirlo dentro de contenido Typst.'''
+
+  return (
+    content
+    .replace('\\', '\\\\')
+    .replace('#', '\\#')
+    .replace('[', '\\[')
+    .replace(']', '\\]')
+  )
+
+
 def apply_table_width_mode(typ_file: Path, style: PdfStyleOptions) -> None:
   '''Ajusta columnas de tablas generadas por Pandoc.'''
 
@@ -727,6 +837,7 @@ def build_pdf(
 
   source_template_file = template_path(template_id)
   template_file = render_template(source_template_file, style or PdfStyleOptions())
+  processed_source, mark_replacements = prepare_markdown_source(source)
   typ_file = source.with_suffix('.typ')
   pdf_file = source.with_suffix('.pdf')
 
@@ -737,7 +848,7 @@ def build_pdf(
     run_command(
       [
         pandoc,
-        source,
+        processed_source,
         '-f',
         'markdown',
         '-t',
@@ -748,11 +859,14 @@ def build_pdf(
         typ_file,
       ]
     )
+    apply_mark_replacements(typ_file, mark_replacements)
     apply_table_width_mode(typ_file, style or PdfStyleOptions())
     run_command([typst, 'compile', typ_file, pdf_file])
   finally:
     if template_file.exists():
       template_file.unlink()
+    if processed_source.exists():
+      processed_source.unlink()
 
   if typ_file.exists():
     typ_file.unlink()
