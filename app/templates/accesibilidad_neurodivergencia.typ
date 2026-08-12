@@ -61,8 +61,29 @@ $definitions.typst()$
   ],
 )
 
+// Titulos secundarios.
+#show heading.where(level: 4): it => block(
+  above: 0.7em,
+  below: 0.25em,
+  text(size: (__BODY_FONT_SIZE__pt * 1.02), weight: "bold", fill: rgb("__H3_COLOR__"), it.body),
+)
+
+#show heading.where(level: 5): it => block(
+  above: 0.55em,
+  below: 0.2em,
+  text(size: __BODY_FONT_SIZE__pt, weight: "bold", fill: rgb("__H3_COLOR__"), it.body),
+)
+
+#show heading.where(level: 6): it => block(
+  above: 0.45em,
+  below: 0.15em,
+  text(size: (__BODY_FONT_SIZE__pt * 0.95), style: "italic", fill: rgb("__H3_COLOR__"), it.body),
+)
+// Enfasis.
 #show strong: it => text(weight: "bold", fill: rgb("__BOLD_COLOR__"), it.body)
 #show emph: it => text(weight: "bold", fill: rgb("__ITALIC_COLOR__"), it.body)
+// Enlaces.
+#show link: it => text(fill: rgb("#0057b8"), underline(it.body))
 
 #set list(
   indent: 1.3em,

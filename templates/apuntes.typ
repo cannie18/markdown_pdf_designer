@@ -50,10 +50,29 @@ $definitions.typst()$
   text(size: 12.5pt, weight: "bold", fill: rgb("#7a3f3f"), it.body),
 )
 
-// Enfasis de texto.
-// Markdown **negrita** y *cursiva*.
+// Titulos secundarios.
+#show heading.where(level: 4): it => block(
+  above: 0.7em,
+  below: 0.25em,
+  text(size: 11.2pt, weight: "bold", fill: rgb("#7a3f3f"), it.body),
+)
+
+#show heading.where(level: 5): it => block(
+  above: 0.55em,
+  below: 0.2em,
+  text(size: 11pt, weight: "bold", fill: rgb("#7a3f3f"), it.body),
+)
+
+#show heading.where(level: 6): it => block(
+  above: 0.45em,
+  below: 0.15em,
+  text(size: 10.5pt, style: "italic", fill: rgb("#7a3f3f"), it.body),
+)
+// Enfasis.
 #show strong: it => text(weight: "bold", fill: rgb("#1f3552"), it.body)
 #show emph: it => text(style: "italic", it.body)
+// Enlaces.
+#show link: it => text(fill: rgb("#0057b8"), underline(it.body))
 
 // Listas.
 // Markdown "- item" y "1. item".

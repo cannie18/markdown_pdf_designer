@@ -201,6 +201,8 @@ Las plantillas disponibles en la app son:
 - `Diseño` permite elegir el modo de ancho de tablas: contenido o ancho disponible;
 - los desplegables distinguen visualmente la opción seleccionada y la opción bajo el mouse;
 - los parámetros de `Diseño` se organizan en filas compactas con iconos y tooltips;
+- los títulos Markdown de nivel 4, 5 y 6 tienen estilos diferenciados;
+- los enlaces Markdown se muestran con color y subrayado;
 - la versión portable `crear_pdf.bat` sigue funcionando;
 - `Ensayo APA / MLA` tiene jerarquía de títulos y espaciado corregido;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;

@@ -213,6 +213,8 @@ Los últimos ajustes importantes son:
 - los cambios de plantillas personalizadas se deben guardar, descartar o cancelar antes de cerrar o cambiar de plantilla;
 - los desplegables distinguen visualmente selección y opción bajo el mouse;
 - los parámetros de `Diseño` usan iconos SVG cargados desde `assets/icons/` y muestran el texto mediante tooltips;
+- los títulos Markdown de nivel 4, 5 y 6 tienen estilos diferenciados;
+- los enlaces Markdown se muestran con color y subrayado;
 - la ayuda combina una guía rápida con explicaciones detalladas de `Markdown` y `Diseño`;
 - el visor vacío muestra una guía breve de primer uso;
 - en `Markdown`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;

@@ -53,6 +53,8 @@
 - Corrección de textos visibles de la app a español de España.
 - Resaltado de opción seleccionada y opción bajo el mouse en desplegables.
 - Parámetros de `Diseño` reorganizados en filas compactas con iconos y tooltips.
+- Títulos Markdown de nivel 4, 5 y 6 diferenciados visualmente en las plantillas.
+- Enlaces Markdown con formato visual diferenciado en el PDF.
 - Separación entre plantillas de app y plantilla portable.
 - Primera fase de plantillas predefinidas:
   - `Estudio`;
@@ -129,6 +131,18 @@
   - alineación;
   - espaciado;
   - pie de figura.
+
+## Compatibilidad Markdown
+
+- Revisar soporte de HTML inline y bloques HTML:
+  - `<mark>` no se conserva actualmente como resaltado;
+  - `<br>` no genera salto visual;
+  - `<strong>` dentro de HTML no se convierte en negrita.
+- Decidir cómo representar alertas tipo GitHub:
+  - `> [!NOTE]`;
+  - `> [!WARNING]`.
+- Revisar el resultado visual del texto preformateado por sangría de cuatro espacios.
+- Mantener `ejemplos/markdown_referencia_completo.md` como banco de pruebas principal.
 
 ## Interfaz
 
