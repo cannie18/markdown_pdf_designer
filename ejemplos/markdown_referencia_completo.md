@@ -8,6 +8,8 @@ keywords:
   - markdown
   - pdf
   - typst
+documentclass: article
+toc: true
 ---
 
 # Documento De Referencia Markdown
@@ -18,6 +20,17 @@ Debe poder abrirse desde la app, generar un PDF y mostrar diferencias claras
 cuando alguna parte del flujo no esté soportada todavía.
 
 [TOC]
+
+Metadatos esperados desde YAML:
+
+- Título: Documento De Referencia Markdown.
+- Subtítulo: Banco de pruebas para Markdown PDF Designer.
+- Autor: Equipo Markdown PDF Designer.
+- Fecha: 2026-08-12.
+- Idioma: español.
+
+La app debe decidir si estos metadatos solo viajan como información interna o si
+las plantillas los muestran en una portada, cabecera o bloque inicial.
 
 ---
 
@@ -107,6 +120,9 @@ Referencia reutilizable: consulta la [documentación de Markdown][markdown-docs]
 
 ## 9. Bloques De Código
 
+Código inline largo dentro de una frase:
+`ruta/muy/larga/de/ejemplo/para/comprobar/si/el_codigo_inline_parte_linea_correctamente_o_se_sale_del_margen`.
+
 Código sin lenguaje:
 
 ```
@@ -164,7 +180,22 @@ Código JSON:
 | Segunda fila         | Texto normal         | Resultado esperado   |
 +----------------------+----------------------+----------------------+
 
-## 13. Imágenes
+## 13. Tabla Muy Ancha
+
+| Columna con nombre largo A | Columna con nombre largo B | Columna con nombre largo C | Columna con nombre largo D | Columna con nombre largo E |
+| --- | --- | --- | --- | --- |
+| Texto largo para comprobar si la tabla respeta márgenes | Valor medio | Valor medio | Valor medio | Valor final |
+| Otra fila con contenido extenso y poco espacio horizontal | 123456789 | 987654321 | abcdefghijk | cierre |
+
+## 14. Escapes Dentro De Tablas
+
+| Caso | Markdown | Resultado esperado |
+| --- | --- | --- |
+| Barra vertical escapada | `A \| B` | Debe verse como una barra vertical dentro de la celda |
+| Código con barra | `valor \| alternativo` | No debe romper columnas |
+| Asterisco escapado | `\*texto\*` | No debe convertirse en cursiva |
+
+## 15. Imágenes
 
 Imagen local con ruta relativa desde este archivo:
 
@@ -173,7 +204,23 @@ Imagen local con ruta relativa desde este archivo:
 La app debería resolver la ruta relativa respecto a la carpeta del Markdown, no
 respecto al directorio desde el que se ejecuta la aplicación.
 
-## 14. Notas Al Pie
+Imagen con título o caption largo:
+
+![Diagrama local con texto alternativo y caption largo para comprobar cómo se ajusta una leyenda extensa dentro del ancho disponible](imagenes/imagen-ejemplo.svg "Diagrama Markdown a PDF")
+
+Imagen dentro de una lista:
+
+- Paso con imagen asociada:
+
+  ![Imagen dentro de una lista](imagenes/imagen-ejemplo.svg)
+
+Imagen dentro de una cita:
+
+> ![Imagen dentro de una cita](imagenes/imagen-ejemplo.svg)
+>
+> La app debe mostrar si este caso resulta visualmente aceptable.
+
+## 16. Notas Al Pie
 
 Este párrafo incluye una nota al pie breve.[^nota-breve]
 
@@ -181,10 +228,10 @@ También incluye una nota con más contenido.[^nota-larga]
 
 [^nota-breve]: Esta es una nota al pie sencilla.
 
-[^nota-larga]: Esta nota al pie tiene más texto para comprobar el ancho, el
-  salto de línea y la separación respecto al cuerpo principal del documento.
+[^nota-larga]: Esta nota al pie tiene más texto para comprobar el ancho, el salto
+  de línea y la separación respecto al cuerpo principal del documento.
 
-## 15. Definiciones
+## 17. Definiciones
 
 Markdown
 : Lenguaje de marcado ligero pensado para escribir texto estructurado de forma
@@ -197,7 +244,7 @@ PDF
 Typst
 : Motor de maquetación usado para convertir el contenido intermedio en PDF.
 
-## 16. Separadores
+## 18. Separadores
 
 Texto antes del separador.
 
@@ -205,7 +252,7 @@ Texto antes del separador.
 
 Texto después del separador.
 
-## 17. Matemáticas
+## 19. Matemáticas
 
 Fórmula inline: $E = mc^2$.
 
@@ -215,7 +262,7 @@ $$
 \int_0^1 x^2\,dx = \frac{1}{3}
 $$
 
-## 18. HTML Inline Y Bloques HTML
+## 20. HTML Inline Y Bloques HTML
 
 Markdown admite HTML en muchos procesadores. La app debe decidir si lo soporta,
 si lo ignora o si muestra una advertencia clara.
@@ -227,14 +274,21 @@ Texto con <mark>resaltado HTML</mark> y un salto manual <br> dentro de la línea
   en Typst.
 </div>
 
-## 19. Comentarios
+## 21. Comentarios
 
 El siguiente comentario HTML no debería verse en el PDF final si el conversor lo
 trata como comentario.
 
 <!-- Comentario interno que no debería renderizarse. -->
 
-## 20. Bloques Especiales Tipo Alerta
+Comentario usado como posible salto de página:
+
+<!-- pagebreak -->
+
+El texto posterior permite comprobar si la app ignora el comentario, lo mantiene
+oculto o lo convierte en salto de página explícito.
+
+## 22. Bloques Especiales Tipo Alerta
 
 > [!NOTE]
 > Este patrón se usa en GitHub para notas destacadas.
@@ -243,22 +297,70 @@ trata como comentario.
 > Este patrón no es Markdown básico. La app debe decidir si lo transforma, lo
 > deja como cita normal o lo documenta como no soportado.
 
-## 21. Enlaces Internos
+> [!TIP]
+> Un consejo debería diferenciarse de una advertencia si se decide aplicar estilo
+> específico a cada tipo de alerta.
+
+> [!IMPORTANT]
+> Una alerta importante suele necesitar mayor peso visual.
+
+> [!CAUTION]
+> Una precaución debería quedar claramente distinguida del contenido normal.
+
+## 23. Enlaces Internos {#enlaces-internos-personalizados}
 
 Este enlace apunta a la sección [Tablas Básicas](#tablas-básicas).
 
-## 22. Caracteres Y Escapes
+Este enlace apunta a una sección con identificador personalizado:
+[Enlaces internos personalizados](#enlaces-internos-personalizados).
+
+## 24. Enlaces A Archivos Locales
+
+Enlace a otro Markdown del proyecto: [prueba_apuntes.md](prueba_apuntes.md).
+
+Enlace a una imagen local: [imagen-ejemplo.svg](imagenes/imagen-ejemplo.svg).
+
+La app debe decidir si los enlaces a archivos locales se conservan como enlaces,
+si se transforman a rutas absolutas o si se muestran como texto normal.
+
+## 25. Caracteres Y Escapes
 
 Caracteres escapados: \*no cursiva\*, \`no código\`, \[no enlace\].
 
 Símbolos frecuentes: %, €, $, &, #, _, *, |, \, /, @.
 
-## 23. Texto Preformateado Por Sangría
+Unicode técnico: →, ←, ↔, ⇒, ≤, ≥, ≠, ±, ×, ÷, √, ∑, ∆, Ω, µ, ✓, ✗.
+
+## 26. Listas Mixtas Complejas
+
+1. Paso principal con explicación.
+
+   - Sublista no ordenada.
+   - Otro elemento con `código inline`.
+
+2. Paso con cita interna.
+
+   > Esta cita está dentro de una lista ordenada.
+
+3. Paso con bloque de código.
+
+   ```text
+   codigo_dentro_de_lista = true
+   ```
+
+4. Paso con tabla interna.
+
+   | Campo | Valor |
+   | --- | --- |
+   | contexto | lista |
+   | estado | prueba |
+
+## 27. Texto Preformateado Por Sangría
 
     Este bloque usa cuatro espacios iniciales.
     Debe tratarse como código o texto preformateado.
 
-## 24. Párrafo Final
+## 28. Párrafo Final
 
 Si este documento genera un PDF sin errores, la app tiene una base sólida para
 Markdown común. Las secciones que no se rendericen bien deben convertirse en

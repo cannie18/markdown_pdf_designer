@@ -145,6 +145,9 @@
 - Valorar estilos específicos para alertas tipo GitHub más allá de citas con etiqueta.
 - Revisar el resultado visual del texto preformateado por sangría de cuatro espacios.
 - Mantener `ejemplos/markdown_referencia_completo.md` como banco de pruebas principal.
+- El banco de pruebas ya incluye metadatos YAML, `[TOC]`, imágenes con caption,
+  enlaces locales, tablas anchas, escapes en tablas, Unicode técnico, listas
+  mixtas, `<!-- pagebreak -->` e identificadores personalizados.
 
 ## Interfaz
 
