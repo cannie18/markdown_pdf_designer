@@ -913,7 +913,26 @@ def build_pdf(
   source_template_file = template_path(template_id)
   template_file = render_template(source_template_file, style or PdfStyleOptions())
   processed_source, mark_replacements = prepare_markdown_source(source)
-  typ_file = source.with_suffix('.typ')
+  build_dir = ROOT_DIR / 'tmp' / 'app_builds'
+  build_dir.mkdir(parents=True, exist_ok=True)
+  typ_temp_file = tempfile.NamedTemporaryFile(
+    mode='w',
+    encoding='utf-8',
+    suffix='.typ',
+    prefix=f'{source.stem}_',
+    dir=build_dir,
+    delete=False,
+  )
+  typ_temp_file.close()
+  pdf_temp_file = tempfile.NamedTemporaryFile(
+    suffix='.pdf',
+    prefix=f'{source.stem}_',
+    dir=build_dir,
+    delete=False,
+  )
+  pdf_temp_file.close()
+  typ_file = Path(typ_temp_file.name)
+  temp_pdf_file = Path(pdf_temp_file.name)
   pdf_file = source.with_suffix('.pdf')
 
   pandoc = find_executable('pandoc')
@@ -938,12 +957,17 @@ def build_pdf(
     apply_special_markdown_tokens(typ_file)
     apply_github_admonition_styles(typ_file)
     apply_table_width_mode(typ_file, style or PdfStyleOptions())
-    run_command([typst, 'compile', '--root', ROOT_DIR, typ_file, pdf_file])
+    run_command([typst, 'compile', '--root', ROOT_DIR, typ_file, temp_pdf_file])
+    if pdf_file.exists():
+      pdf_file.unlink()
+    shutil.move(str(temp_pdf_file), pdf_file)
   finally:
     if template_file.exists():
       template_file.unlink()
     if processed_source.exists():
       processed_source.unlink()
+    if temp_pdf_file.exists():
+      temp_pdf_file.unlink()
 
   if typ_file.exists():
     typ_file.unlink()
