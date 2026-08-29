@@ -8,6 +8,7 @@ de la app. La conversión se delega en `app.pdf_builder`.
 from __future__ import annotations
 
 import re
+import shutil
 import subprocess
 import sys
 import unicodedata
@@ -61,6 +62,9 @@ RECENT_FILES_POPUP_MIN_WIDTH = 560
 RECENT_FILES_POPUP_MAX_WIDTH = 960
 SELECTED_TEMPLATE_SETTING = 'selected_template_id'
 ICON_DIR = Path(__file__).resolve().parents[1] / 'assets' / 'icons'
+PREVIEW_PDF_PATH = (
+  Path(__file__).resolve().parents[1] / 'tmp' / 'preview' / 'preview.pdf'
+)
 TEMPLATE_LABELS = {
   'estudio': 'Estudio',
   'profesional': 'Profesional',
@@ -143,6 +147,7 @@ class BuildWorker(QThread):
     markdown_file: str,
     style: PdfStyleOptions,
     template_id: str,
+    output_file: str,
   ) -> None:
     '''Guarda el archivo y las opciones visuales que se usarán al generar.'''
 
@@ -150,6 +155,7 @@ class BuildWorker(QThread):
     self.markdown_file = markdown_file
     self.style = style
     self.template_id = template_id
+    self.output_file = output_file
 
   def run(self) -> None:
     '''Lanza la generación del PDF y emite una señal de éxito o error.'''
@@ -159,6 +165,7 @@ class BuildWorker(QThread):
         self.markdown_file,
         style=self.style,
         template_id=self.template_id,
+        output_file=self.output_file,
       )
     except PdfBuildError as exc:
       self.failed.emit(str(exc))
@@ -319,6 +326,12 @@ class MainWindow(QMainWindow):
     self.set_button_icon(self.open_pdf_button, 'preview.svg')
     self.open_pdf_button.setEnabled(False)
     self.open_pdf_button.setVisible(False)
+
+    self.save_pdf_as_button = QPushButton('Guardar PDF como')
+    self.save_pdf_as_button.clicked.connect(self.save_current_pdf_as)
+    self.set_button_icon(self.save_pdf_as_button, 'save-as.svg')
+    self.save_pdf_as_button.setEnabled(False)
+    self.save_pdf_as_button.setVisible(False)
 
     self.status_label = QLabel('Listo.')
     self.status_label.setMinimumWidth(0)
@@ -512,7 +525,7 @@ class MainWindow(QMainWindow):
       'Empieza abriendo o arrastrando un Markdown.\n\n'
       '1. Revisa o edita el contenido en Markdown.\n'
       '2. Elige una plantilla y ajusta el estilo en Diseño.\n'
-      '3. Pulsa Generar PDF para ver aquí el resultado real.'
+      '3. Pulsa Generar PDF para actualizar la vista previa.'
     )
     self.empty_preview_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
     self.empty_preview_label.setWordWrap(True)
@@ -697,6 +710,7 @@ class MainWindow(QMainWindow):
 
     pdf_actions_row = QHBoxLayout()
     pdf_actions_row.addWidget(self.open_pdf_button)
+    pdf_actions_row.addWidget(self.save_pdf_as_button)
     pdf_actions_row.addWidget(self.build_button)
     pdf_actions_row.addStretch()
 
@@ -977,6 +991,8 @@ class MainWindow(QMainWindow):
 
     self.open_pdf_button.setVisible(in_markdown and self.current_pdf is not None)
     self.open_pdf_button.setEnabled(in_markdown and self.current_pdf is not None)
+    self.save_pdf_as_button.setVisible(self.current_pdf is not None)
+    self.save_pdf_as_button.setEnabled(self.current_pdf is not None)
     self.build_button.setVisible((in_markdown and has_markdown) or in_design)
     self.build_button.setEnabled((in_markdown and has_markdown) or in_design)
 
@@ -1055,7 +1071,8 @@ class MainWindow(QMainWindow):
           'Abre, crea o arrastra un archivo Markdown.',
           'Revisa el texto en Markdown y guarda los cambios si los haces.',
           'Elige una plantilla en Diseño y ajusta solo lo que necesites.',
-          'Pulsa Generar PDF para ver el resultado real en el visor.',
+          'Pulsa Generar PDF para actualizar la vista previa temporal.',
+          'Cuando el resultado te guste, usa Guardar PDF como para exportarlo.',
           'Pulsa Ayuda de nuevo para volver al PDF sin regenerarlo.',
         ],
       )
@@ -1070,8 +1087,9 @@ class MainWindow(QMainWindow):
           'Cerrar cierra el Markdown actual y vuelve al estado inicial de la app.',
           'Guardar escribe los cambios del editor en el archivo abierto.',
           'Guardar como crea una copia en otra ruta y cambia a ese nuevo archivo.',
-          'Generar PDF convierte el Markdown actual usando la plantilla elegida.',
-          'Abrir PDF en Windows abre el último PDF generado con el visor del sistema.',
+          'Generar PDF convierte el Markdown actual en una vista previa temporal.',
+          'Guardar PDF como exporta esa vista previa a la ruta que elijas.',
+          'Abrir PDF en Windows abre la vista previa actual con el visor del sistema.',
           'La zona de arrastre acepta archivos Markdown soltados desde el explorador.',
         ],
       )
@@ -1094,7 +1112,7 @@ class MainWindow(QMainWindow):
         [
           'Selecciona una plantilla base parecida al resultado que quieres.',
           'Ajusta fuente, tamaños, colores, márgenes, bloques, tablas y código.',
-          'Genera un PDF de prueba para revisar el resultado real.',
+          'Genera una vista previa PDF para revisar el resultado real.',
           'Cuando el diseño te guste, pulsa Crear nueva plantilla.',
           'Escribe un nombre claro para reconocerla después.',
           'Las plantillas personalizadas se guardan en tus datos de usuario.',
@@ -1124,7 +1142,7 @@ class MainWindow(QMainWindow):
           'Guardar cambios aparece con plantillas personalizadas y sobrescribe sus ajustes.',
           'Los botones de color abren el selector para cambiar el color asociado.',
           'Los controles numéricos se modifican con teclado o flechas, no con la rueda del ratón.',
-          'Después de cualquier cambio de diseño, vuelve a pulsar Generar PDF para ver el resultado.',
+          'Después de cualquier cambio de diseño, vuelve a pulsar Generar PDF para actualizar la vista previa.',
         ],
       )
     )
@@ -1970,12 +1988,14 @@ class MainWindow(QMainWindow):
       return
 
     self.unload_pdf_preview()
+    PREVIEW_PDF_PATH.parent.mkdir(parents=True, exist_ok=True)
     self.build_button.setEnabled(False)
-    self.status_label.setText('Generando PDF...')
+    self.status_label.setText('Generando vista previa PDF...')
     self.worker = BuildWorker(
       str(self.current_file),
       self.current_style_options(),
       self.current_template_id(),
+      str(PREVIEW_PDF_PATH),
     )
     self.worker.succeeded.connect(self.on_success)
     self.worker.failed.connect(self.on_error)
@@ -1986,7 +2006,7 @@ class MainWindow(QMainWindow):
     '''Actualiza la interfaz cuando el PDF se ha generado correctamente.'''
 
     self.current_pdf = Path(pdf_file)
-    self.status_label.setText(f'PDF generado: {pdf_file}')
+    self.status_label.setText('Vista previa PDF actualizada. Usa Guardar PDF como para exportarla.')
     self.load_pdf_preview(self.current_pdf)
 
   def load_pdf_preview(self, pdf_file: Path) -> None:
@@ -2007,6 +2027,40 @@ class MainWindow(QMainWindow):
     self.show_document_preview()
     self.update_action_visibility()
     self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+
+  def save_current_pdf_as(self) -> None:
+    '''Guarda una copia del PDF de vista previa en la ruta elegida.'''
+
+    if self.current_pdf is None or not self.current_pdf.exists():
+      QMessageBox.warning(self, 'Falta PDF', 'Genera una vista previa PDF antes de guardar.')
+      return
+
+    default_path = (
+      self.current_file.with_suffix('.pdf')
+      if self.current_file
+      else Path.home() / 'documento.pdf'
+    )
+    filename, _ = QFileDialog.getSaveFileName(
+      self,
+      'Guardar PDF como',
+      str(default_path),
+      'PDF (*.pdf);;Todos los archivos (*.*)',
+    )
+    if not filename:
+      return
+
+    target = Path(filename)
+    if target.suffix.lower() != '.pdf':
+      target = target.with_suffix('.pdf')
+
+    try:
+      shutil.copy2(self.current_pdf, target)
+    except OSError as exc:
+      self.status_label.setText('No se pudo guardar el PDF.')
+      QMessageBox.critical(self, 'Error', f'No se pudo guardar el PDF:\n{exc}')
+      return
+
+    self.status_label.setText(f'PDF guardado: {target.resolve()}')
 
   def open_current_pdf(self) -> None:
     '''Abre el PDF generado en el visor externo predeterminado de Windows.'''

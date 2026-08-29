@@ -193,7 +193,8 @@ Las plantillas disponibles en la app son:
 - la fila de ruta, `Nuevo` y `Abrir` permanece arriba en `Markdown`, haya o no documento abierto;
 - `Abrir` está junto a la caja de ruta y `Nuevo` después;
 - en `Diseño` siempre se muestra `Generar PDF` como acción inferior;
-- `Generar PDF` funciona desde `Diseño` y avisa si todavía no hay Markdown;
+- `Generar PDF` actualiza una vista previa temporal sobrescribible y avisa si todavía no hay Markdown;
+- `Guardar PDF como` exporta la vista previa actual a la ruta elegida por el usuario;
 - `Diseño` permite cambiar el color de fondo del documento PDF;
 - las plantillas personalizadas avisan si tienen cambios sin guardar al cerrar o cambiar de plantilla;
 - `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;

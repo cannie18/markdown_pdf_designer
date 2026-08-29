@@ -897,6 +897,7 @@ def build_pdf(
   input_file: str | Path,
   style: PdfStyleOptions | None = None,
   template_id: str = DEFAULT_TEMPLATE_ID,
+  output_file: str | Path | None = None,
 ) -> PdfResult:
   '''Genera un PDF desde un archivo Markdown usando Pandoc y Typst.
 
@@ -933,7 +934,12 @@ def build_pdf(
   pdf_temp_file.close()
   typ_file = Path(typ_temp_file.name)
   temp_pdf_file = Path(pdf_temp_file.name)
-  pdf_file = source.with_suffix('.pdf')
+  pdf_file = (
+    Path(output_file).resolve()
+    if output_file is not None
+    else source.with_suffix('.pdf')
+  )
+  pdf_file.parent.mkdir(parents=True, exist_ok=True)
 
   pandoc = find_executable('pandoc')
   typst = find_executable('typst')
