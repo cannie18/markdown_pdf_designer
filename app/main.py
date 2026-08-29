@@ -991,6 +991,17 @@ class MainWindow(QMainWindow):
     self.pdf_view.setVisible(has_preview)
     self.empty_preview_label.setVisible(not has_preview)
 
+  def unload_pdf_preview(self) -> None:
+    '''Libera el PDF cargado para poder sobrescribirlo en Windows.'''
+
+    old_document = self.pdf_document
+    self.pdf_document = QPdfDocument(self)
+    self.pdf_view.setDocument(self.pdf_document)
+    old_document.close()
+    QApplication.processEvents()
+    old_document.deleteLater()
+    QApplication.processEvents()
+
   def refresh_document_preview_if_visible(self) -> None:
     '''Actualiza el visor documental sin cerrar la ayuda activa.'''
 
@@ -1748,7 +1759,7 @@ class MainWindow(QMainWindow):
     self.editor.clear()
     self.editor.blockSignals(False)
     self.editor.setVisible(True)
-    self.pdf_document.close()
+    self.unload_pdf_preview()
     self.refresh_document_preview_if_visible()
     self.editor_dirty = False
     self.update_action_visibility()
@@ -1780,7 +1791,7 @@ class MainWindow(QMainWindow):
     self.markdown_open = True
     self.drop_zone.setVisible(False)
     self.editor.setVisible(True)
-    self.pdf_document.close()
+    self.unload_pdf_preview()
     self.refresh_document_preview_if_visible()
     self.editor_dirty = False
     self.edit_button.setText('Cerrar')
@@ -1821,7 +1832,7 @@ class MainWindow(QMainWindow):
     self.drop_zone.setVisible(True)
     self.editor.clear()
     self.editor.setVisible(False)
-    self.pdf_document.close()
+    self.unload_pdf_preview()
     self.refresh_document_preview_if_visible()
     self.editor_dirty = False
     self.edit_button.setText('Cerrar')
@@ -1883,7 +1894,7 @@ class MainWindow(QMainWindow):
     self.current_file = path.resolve()
     self.current_pdf = None
     self.remember_markdown(self.current_file)
-    self.pdf_document.close()
+    self.unload_pdf_preview()
     self.refresh_document_preview_if_visible()
     self.editor_dirty = False
     self.update_action_visibility()
@@ -1958,7 +1969,7 @@ class MainWindow(QMainWindow):
       QMessageBox.warning(self, 'Falta archivo', 'Guarda el Markdown antes de generar.')
       return
 
-    self.pdf_document.close()
+    self.unload_pdf_preview()
     self.build_button.setEnabled(False)
     self.status_label.setText('Generando PDF...')
     self.worker = BuildWorker(
@@ -1981,7 +1992,7 @@ class MainWindow(QMainWindow):
   def load_pdf_preview(self, pdf_file: Path) -> None:
     '''Carga el PDF generado en el visor embebido de Qt.'''
 
-    self.pdf_document.close()
+    self.unload_pdf_preview()
     error = self.pdf_document.load(str(pdf_file))
     if error != QPdfDocument.Error.None_:
       self.show_document_preview()

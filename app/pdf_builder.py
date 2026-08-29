@@ -965,7 +965,8 @@ def build_pdf(
     except OSError as exc:
       raise PdfBuildError(
         'No se pudo reemplazar el PDF final. '
-        'Ciérralo si está abierto en otro visor e inténtalo de nuevo.'
+        'Ciérralo si está abierto en otro visor e inténtalo de nuevo.\n\n'
+        f'Detalle técnico: {exc}'
       ) from exc
   finally:
     if template_file.exists():
