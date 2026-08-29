@@ -958,9 +958,15 @@ def build_pdf(
     apply_github_admonition_styles(typ_file)
     apply_table_width_mode(typ_file, style or PdfStyleOptions())
     run_command([typst, 'compile', '--root', ROOT_DIR, typ_file, temp_pdf_file])
-    if pdf_file.exists():
-      pdf_file.unlink()
-    shutil.move(str(temp_pdf_file), pdf_file)
+    try:
+      if pdf_file.exists():
+        pdf_file.unlink()
+      shutil.move(str(temp_pdf_file), pdf_file)
+    except OSError as exc:
+      raise PdfBuildError(
+        'No se pudo reemplazar el PDF final. '
+        'Ciérralo si está abierto en otro visor e inténtalo de nuevo.'
+      ) from exc
   finally:
     if template_file.exists():
       template_file.unlink()

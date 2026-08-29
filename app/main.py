@@ -1958,6 +1958,7 @@ class MainWindow(QMainWindow):
       QMessageBox.warning(self, 'Falta archivo', 'Guarda el Markdown antes de generar.')
       return
 
+    self.pdf_document.close()
     self.build_button.setEnabled(False)
     self.status_label.setText('Generando PDF...')
     self.worker = BuildWorker(
