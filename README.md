@@ -195,6 +195,7 @@ Las plantillas disponibles en la app son:
 - en `Diseño` siempre se muestra `Generar PDF` como acción inferior;
 - `Generar PDF` actualiza una vista previa temporal sobrescribible y avisa si todavía no hay Markdown;
 - `Guardar PDF como` exporta la vista previa actual a la ruta elegida por el usuario;
+- `Diseño` permite elegir entre PDF paginado y documento continuo de altura automática;
 - `Diseño` permite cambiar el color de fondo del documento PDF;
 - las plantillas personalizadas avisan si tienen cambios sin guardar al cerrar o cambiar de plantilla;
 - `Diseño` permite controlar texto, fondo, borde y espaciado de bloques destacados;
@@ -207,6 +208,7 @@ Las plantillas disponibles en la app son:
 - la conversión normaliza HTML inline básico y alertas tipo GitHub antes de generar Typst;
 - las alertas tipo GitHub se maquetan como bloques con icono, borde lateral y color por tipo;
 - `[TOC]` genera un índice y `<!-- pagebreak -->` genera un salto de página;
+- las listas con viñetas y numeración respetan el espaciado vertical configurado para el texto;
 - la versión portable `crear_pdf.bat` sigue funcionando;
 - `Ensayo APA / MLA` tiene jerarquía de títulos y espaciado corregido;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;

@@ -4,6 +4,7 @@ $definitions.typst()$
 
 #set page(
   paper: "a4",
+  __PAGE_HEIGHT_OPTION__
   margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),
   fill: rgb("__PAGE_BACKGROUND_COLOR__"),
   numbering: "1",
@@ -70,8 +71,8 @@ $definitions.typst()$
 // Enlaces.
 #show link: it => text(fill: rgb("#0057b8"), underline(it))
 
-#set list(indent: 1.25cm, body-indent: 0.55em)
-#set enum(indent: 1.25cm, body-indent: 0.7em)
+#set list(indent: 1.25cm, body-indent: 0.55em, spacing: __PAR_SPACING__em)
+#set enum(indent: 1.25cm, body-indent: 0.7em, spacing: __PAR_SPACING__em)
 
 #show quote: it => block(
   above: 0.9em,

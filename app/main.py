@@ -21,6 +21,7 @@ from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
   QApplication,
   QColorDialog,
+  QCheckBox,
   QComboBox,
   QDoubleSpinBox,
   QFileDialog,
@@ -82,6 +83,7 @@ DESIGN_LABEL_ICONS = {
   'Tamaño texto': 'text-size.svg',
   'Color texto': 'text-color.svg',
   'Fondo página': 'page-background.svg',
+  'Documento continuo': 'page-background.svg',
   'Interlineado': 'line-height.svg',
   'Espacio párrafos': 'paragraph-spacing.svg',
   'Margen lateral': 'margins.svg',
@@ -396,6 +398,9 @@ class MainWindow(QMainWindow):
     self.margin_y_input.setSuffix(' cm')
     self.margin_y_input.setValue(2.0)
 
+    self.continuous_document_checkbox = QCheckBox()
+    self.continuous_document_checkbox.setToolTip('Documento continuo')
+
     self.h1_size_input = DesignDoubleSpinBox()
     self.h1_size_input.setRange(6, 48)
     self.h1_size_input.setSingleStep(0.5)
@@ -602,6 +607,7 @@ class MainWindow(QMainWindow):
             ('Margen lateral', self.margin_x_input),
             ('Margen vertical', self.margin_y_input),
           ],
+          [('Documento continuo', self.continuous_document_checkbox)],
           [('Fondo página', self.page_background_color_button)],
         ],
       )
@@ -1126,8 +1132,9 @@ class MainWindow(QMainWindow):
         'Diseño: secciones modificables',
         [
           'Plantilla visual define el punto de partida del documento.',
-          'Página controla los márgenes laterales, márgenes verticales y color de fondo del PDF.',
+          'Página controla márgenes, fondo y si el PDF se pagina o queda como documento continuo.',
           'Texto controla fuente principal, tamaño, color, interlineado, espacio entre párrafos, títulos y énfasis.',
+          'Las viñetas y listas numeradas respetan el espaciado vertical del texto.',
           'Código controla fuente, tamaño y fondo de los bloques de código.',
           'Bloques controla citas o bloques destacados: espacio interno, texto, borde y fondo.',
           'Tablas controla ancho, espacio de celdas, texto, bordes y colores de cabecera.',
@@ -1305,6 +1312,7 @@ class MainWindow(QMainWindow):
       self.paragraph_spacing_input,
       self.margin_x_input,
       self.margin_y_input,
+      self.continuous_document_checkbox,
       self.h1_size_input,
       self.h2_size_input,
       self.h3_size_input,
@@ -1325,6 +1333,7 @@ class MainWindow(QMainWindow):
     self.paragraph_spacing_input.setValue(style.paragraph_spacing)
     self.margin_x_input.setValue(style.page_margin_x / 10)
     self.margin_y_input.setValue(style.page_margin_y / 10)
+    self.continuous_document_checkbox.setChecked(style.continuous_document)
     self.h1_size_input.setValue(style.heading_1_size)
     self.h2_size_input.setValue(style.heading_2_size)
     self.h3_size_input.setValue(style.heading_3_size)
@@ -1369,6 +1378,8 @@ class MainWindow(QMainWindow):
     for combo in (self.font_combo, self.code_font_combo, self.table_width_mode_combo):
       combo.currentTextChanged.connect(self.mark_template_dirty)
 
+    self.continuous_document_checkbox.toggled.connect(self.mark_template_dirty)
+
     for spin_box in (
       self.body_size_input,
       self.paragraph_leading_input,
@@ -1408,6 +1419,7 @@ class MainWindow(QMainWindow):
       body_font_size=self.body_size_input.value(),
       body_color=self.heading_colors['body'],
       page_background_color=self.heading_colors['page_background'],
+      continuous_document=self.continuous_document_checkbox.isChecked(),
       paragraph_leading=paragraph_leading,
       paragraph_spacing=paragraph_spacing,
       page_margin_x=self.margin_x_input.value() * 10,

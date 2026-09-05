@@ -4,6 +4,7 @@ $definitions.typst()$
 
 #set page(
   paper: "a4",
+  __PAGE_HEIGHT_OPTION__
   margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),
   fill: rgb("__PAGE_BACKGROUND_COLOR__"),
   numbering: "1",
@@ -88,12 +89,12 @@ $definitions.typst()$
 #set list(
   indent: 1.3em,
   body-indent: 0.7em,
-  spacing: 0.55em,
+  spacing: __PAR_SPACING__em,
 )
 #set enum(
   indent: 1.3em,
   body-indent: 0.8em,
-  spacing: 0.55em,
+  spacing: __PAR_SPACING__em,
 )
 
 #show quote: it => block(

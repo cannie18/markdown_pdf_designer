@@ -5,6 +5,7 @@ $definitions.typst()$
 // Pagina.
 #set page(
   paper: "a4",
+  __PAGE_HEIGHT_OPTION__
   margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),
   fill: rgb("__PAGE_BACKGROUND_COLOR__"),
   numbering: "1",
@@ -79,8 +80,8 @@ $definitions.typst()$
 #show link: it => text(fill: rgb("#0057b8"), underline(it))
 
 // Listas.
-#set list(indent: 1em, body-indent: 0.45em)
-#set enum(indent: 1em, body-indent: 0.55em)
+#set list(indent: 1em, body-indent: 0.45em, spacing: __PAR_SPACING__em)
+#set enum(indent: 1em, body-indent: 0.55em, spacing: __PAR_SPACING__em)
 
 // Cajas destacadas.
 #show quote: it => block(

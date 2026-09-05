@@ -32,6 +32,7 @@ class PdfStyleOptions:
   body_font_size: float = 10.5
   body_color: str = '#131b2e'
   page_background_color: str = '#ffffff'
+  continuous_document: bool = False
   paragraph_leading: float = 0.62
   paragraph_spacing: float = 0.82
   page_margin_x: float = 22
@@ -623,6 +624,14 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
 
   template_text = template_file.read_text(encoding='utf-8')
   page_background = normalize_hex_color(style.page_background_color)
+  page_height_option = 'height: auto,' if style.continuous_document else ''
+  if '__PAGE_HEIGHT_OPTION__' not in template_text and style.continuous_document:
+    template_text = re.sub(
+      r'(paper:\s*"[^"]+",)',
+      '\\1\n  __PAGE_HEIGHT_OPTION__',
+      template_text,
+      count=1,
+    )
   if '__PAGE_BACKGROUND_COLOR__' not in template_text:
     template_text = template_text.replace(
       'margin: (x: __PAGE_MARGIN_X__mm, y: __PAGE_MARGIN_Y__mm),',
@@ -637,6 +646,7 @@ def render_template(template_file: Path, style: PdfStyleOptions) -> Path:
     '__BODY_FONT_SIZE__': f'{style.body_font_size:g}',
     '__BODY_COLOR__': normalize_hex_color(style.body_color),
     '__PAGE_BACKGROUND_COLOR__': page_background,
+    '__PAGE_HEIGHT_OPTION__': page_height_option,
     '__PAR_LEADING__': f'{style.paragraph_leading:g}',
     '__PAR_SPACING__': f'{style.paragraph_spacing:g}',
     '__PAGE_MARGIN_X__': f'{style.page_margin_x:g}',
@@ -799,7 +809,7 @@ def apply_special_markdown_tokens(typ_file: Path) -> None:
   typ_text = typ_file.read_text(encoding='utf-8')
   typ_text = typ_text.replace(
     TOC_TOKEN,
-    '\n\n#block(above: 1em, below: 1em)[\n  #outline(title: [Índice])\n]\n\n',
+    '\n\n#v(1em)\n#outline(title: [Índice])\n#v(1em)\n\n',
   )
   break_command = '#colbreak()' if '#columns(' in typ_text else '#pagebreak()'
   typ_text = typ_text.replace(PAGEBREAK_TOKEN, f'\n{break_command}\n')
