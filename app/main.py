@@ -399,6 +399,8 @@ class MainWindow(QMainWindow):
     self.margin_y_input.setValue(2.0)
 
     self.continuous_document_checkbox = QCheckBox()
+    self.continuous_document_checkbox.setObjectName('continuousDocumentCheck')
+    self.continuous_document_checkbox.setFixedSize(28, 28)
     self.continuous_document_checkbox.setToolTip('Documento continuo')
 
     self.h1_size_input = DesignDoubleSpinBox()
@@ -847,6 +849,24 @@ class MainWindow(QMainWindow):
       #stylePanel QDoubleSpinBox {
         font-size: 9.5pt;
         min-height: 26px;
+      }
+      #continuousDocumentCheck {
+        background: transparent;
+      }
+      #continuousDocumentCheck::indicator {
+        width: 18px;
+        height: 18px;
+        border: 1px solid #7f8794;
+        border-radius: 3px;
+        background: #ffffff;
+      }
+      #continuousDocumentCheck::indicator:hover {
+        border-color: #004ac6;
+        background: #edf1ff;
+      }
+      #continuousDocumentCheck::indicator:checked {
+        border-color: #004ac6;
+        background: #004ac6;
       }
       #designGroupTitle {
         font-size: 10pt;
