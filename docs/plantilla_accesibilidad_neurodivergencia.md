@@ -98,7 +98,7 @@ Reglas generales:
 | Peso | Negrita |
 | Color | `#2f6f66` |
 | Espacio antes | `1.5em` |
-| Espacio después | `0.45em` |
+| Espacio después | `0.65em` |
 | Línea inferior | `1.5 pt`, color `#2f6f66` |
 | Separación texto/línea | `0.22em` |
 
@@ -110,7 +110,7 @@ Reglas generales:
 | Peso | Negrita |
 | Color | `#5a5f7a` |
 | Espacio antes | `1.1em` |
-| Espacio después | `0.32em` |
+| Espacio después | `0.45em` |
 | Línea inferior | `0.9 pt`, color `#5a5f7a` |
 | Separación texto/línea | `0.16em` |
 
@@ -118,9 +118,9 @@ Reglas generales:
 
 | Nivel | Tamaño | Estilo | Color | Espacio antes | Espacio después |
 | --- | --- | --- | --- | --- | --- |
-| 4 | `tamaño base * 1.02` | Negrita | `#5a5f7a` | `0.7em` | `0.12em` |
-| 5 | `tamaño base` | Negrita | `#5a5f7a` | `0.55em` | `0.1em` |
-| 6 | `tamaño base * 0.95` | Cursiva | `#5a5f7a` | `0.45em` | `0.08em` |
+| 4 | `tamaño base * 1.02` | Negrita | `#5a5f7a` | `0.7em` | `0.25em` |
+| 5 | `tamaño base` | Negrita | `#5a5f7a` | `0.55em` | `0.2em` |
+| 6 | `tamaño base * 0.95` | Cursiva | `#5a5f7a` | `0.45em` | `0.16em` |
 
 ## Énfasis
 
