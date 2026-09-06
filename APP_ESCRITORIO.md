@@ -1,5 +1,8 @@
 # Markdown PDF Designer
 
+> Documento complementario. Para pasar el contexto completo y actualizado de la
+> app a ChatGPT, usar `DOCUMENTACION_APP.md`.
+
 ## Qué Es
 
 Markdown PDF Designer es una app de escritorio local para generar PDF de
@@ -15,6 +18,7 @@ revisar opcionalmente el contenido
 elegir estilo visual
 generar PDF
 ver el resultado dentro de la app
+guardar el PDF final cuando el usuario decida
 ```
 
 La app está creada con Python y PySide6.
@@ -91,9 +95,10 @@ La app permite:
 - corregir automáticamente el espacio entre párrafos para que no quede por debajo del interlineado;
 - aplicar reglas propias a los títulos para evitar justificación, sangría heredada y guionado automático;
 - evitar cambios accidentales en controles numéricos al usar la rueda del ratón;
-- generar el PDF;
-- mostrar el PDF generado dentro de la propia app;
-- abrir el PDF en el visor externo de Windows.
+- generar una vista previa PDF temporal y sobrescribible;
+- mostrar la vista previa dentro de la propia app;
+- guardar la vista previa como PDF definitivo en una ruta elegida;
+- abrir la vista previa en el visor externo de Windows.
 - cambiar entre secciones `Markdown` y `Diseño` en el panel izquierdo;
 - mostrar la ayuda en el área de vista previa sin abandonar `Markdown` o `Diseño`;
 - explicar en la ayuda los botones de `Markdown`, el flujo de plantillas y las
@@ -111,6 +116,8 @@ La app permite:
 - resaltar en los desplegables la opción seleccionada y la opción bajo el mouse;
 - mostrar iconos SVG en las acciones principales y parámetros compactos en `Diseño`;
 - mostrar una guía breve en el visor cuando todavía no hay PDF cargado.
+- elegir entre PDF paginado y documento continuo de altura automática;
+- hacer que las listas respeten el espaciado vertical configurado para el texto.
 
 ## Relación Con La Versión Portable
 
@@ -218,6 +225,9 @@ Los últimos ajustes importantes son:
 - la conversión normaliza HTML inline básico y alertas tipo GitHub antes de generar Typst;
 - las alertas tipo GitHub se maquetan como bloques con icono, borde lateral y color por tipo;
 - `[TOC]` genera un índice y `<!-- pagebreak -->` genera un salto de página;
+- `Generar PDF` actualiza una vista previa temporal y `Guardar PDF como` exporta el archivo final;
+- `Diseño` permite elegir modo paginado o documento continuo de altura automática;
+- las listas respetan el espaciado vertical configurado para el texto;
 - la ayuda combina una guía rápida con explicaciones detalladas de `Markdown` y `Diseño`;
 - el visor vacío muestra una guía breve de primer uso;
 - en `Markdown`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;
@@ -231,7 +241,7 @@ Objetivos previstos:
 - portada opcional;
 - cabecera y pie de página configurables;
 - número de página y total de páginas;
-- salida a una carpeta elegida por el usuario;
+- recordar la última carpeta usada para exportar PDF;
 - soporte básico para imágenes locales referenciadas desde Markdown;
 - modo debug para conservar `.typ` intermedios;
 - mensajes de error más comprensibles;

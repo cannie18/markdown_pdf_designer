@@ -6,6 +6,9 @@ Herramienta local para convertir apuntes en Markdown a PDF:
 Markdown -> Pandoc -> Typst -> PDF
 ```
 
+Para una explicación completa de la app, sus funciones, arquitectura y estado
+actual, consulta `DOCUMENTACION_APP.md`.
+
 ## Modos de uso
 
 La herramienta puede funcionar de dos formas.
@@ -78,7 +81,7 @@ abrir_app.bat
 
 También puedes arrastrar un archivo Markdown sobre `abrir_app.bat`.
 
-La app permite, de momento:
+Actualmente la app permite:
 
 - crear un Markdown nuevo sin elegir ubicación hasta guardarlo o generar PDF;
 - abrir un archivo `.md`;

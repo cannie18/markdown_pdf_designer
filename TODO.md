@@ -17,6 +17,8 @@
 - Generar PDF desde la app sin abrir consola visible.
 - Mostrar vista previa del PDF dentro de la app.
 - Abrir el PDF generado en el visor predeterminado de Windows.
+- Generar una vista previa temporal sobrescribible.
+- Exportar la vista previa con `Guardar PDF como`.
 - Recordar tamaño, posición y monitor de la ventana.
 - Panel izquierdo con ancho mínimo basado en la fila de botones Markdown.
 - Fila de ruta, `Nuevo` y `Abrir` siempre arriba en `Markdown`.
@@ -50,6 +52,7 @@
   - color de fondo de cabecera;
   - color del texto de cabecera.
 - Opción de color de fondo de página del PDF.
+- Opción de documento continuo con altura automática.
 - Corrección de textos visibles de la app a español de España.
 - Resaltado de opción seleccionada y opción bajo el mouse en desplegables.
 - Parámetros de `Diseño` reorganizados en filas compactas con iconos y tooltips.
@@ -169,9 +172,7 @@
 
 - Revisar si conviene añadir un botón para restaurar valores base de la plantilla.
 - Revisar si conviene guardar ajustes por archivo Markdown.
-- Añadir más adelante una ruta de salida para el PDF.
-  - Durante las pruebas, mantener `Generar PDF` sobrescribiendo directamente.
-  - En el futuro, preguntar ubicación la primera vez y permitir `Guardar PDF como`.
+- Revisar si conviene recordar la última carpeta usada al exportar PDF.
 
 ## Pruebas
 
