@@ -203,7 +203,8 @@ Casos soportados y ajustados:
   - `<em>` y `<i>`.
 
 Las listas con viñetas y numeradas respetan el espaciado vertical configurado
-para el texto del documento.
+para el texto del documento. Además, al terminar un bloque de lista se añade un
+espacio inferior equivalente al espaciado de párrafo de la plantilla.
 
 ## Alertas Tipo GitHub
 

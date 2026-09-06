@@ -149,6 +149,7 @@ Listas con viñetas:
 | Sangría | `1.3em` |
 | Sangría del cuerpo | `0.7em` |
 | Espacio entre elementos | `1.65em` |
+| Espacio al terminar la lista | `1.65em` |
 
 Listas numeradas:
 
@@ -157,9 +158,10 @@ Listas numeradas:
 | Sangría | `1.3em` |
 | Sangría del cuerpo | `0.8em` |
 | Espacio entre elementos | `1.65em` |
+| Espacio al terminar la lista | `1.65em` |
 
-El espacio entre elementos usa el mismo valor que el espacio entre párrafos de
-la plantilla.
+El espacio entre elementos y el espacio inferior al terminar el bloque de lista
+usan el mismo valor que el espacio entre párrafos de la plantilla.
 
 ## Bloques Destacados Y Citas
 

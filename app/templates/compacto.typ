@@ -82,6 +82,8 @@ $definitions.typst()$
 // Listas.
 #set list(indent: 1em, body-indent: 0.45em, spacing: __PAR_SPACING__em)
 #set enum(indent: 1em, body-indent: 0.55em, spacing: __PAR_SPACING__em)
+#show list: it => block(below: __PAR_SPACING__em, it)
+#show enum: it => block(below: __PAR_SPACING__em, it)
 
 // Cajas destacadas.
 #show quote: it => block(

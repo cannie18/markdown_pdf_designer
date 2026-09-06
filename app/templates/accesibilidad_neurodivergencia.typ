@@ -96,6 +96,8 @@ $definitions.typst()$
   body-indent: 0.8em,
   spacing: __PAR_SPACING__em,
 )
+#show list: it => block(below: __PAR_SPACING__em, it)
+#show enum: it => block(below: __PAR_SPACING__em, it)
 
 #show quote: it => block(
   above: 0.9em,

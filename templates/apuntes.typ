@@ -78,6 +78,8 @@ $definitions.typst()$
 // Markdown "- item" y "1. item".
 #set list(indent: 1.2em, body-indent: 0.55em, spacing: 0.82em)
 #set enum(indent: 1.2em, body-indent: 0.7em, spacing: 0.82em)
+#show list: it => block(below: 0.82em, it)
+#show enum: it => block(below: 0.82em, it)
 
 // Cajas destacadas.
 // Markdown "> texto" se convierte en quote.
