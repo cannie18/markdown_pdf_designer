@@ -97,10 +97,10 @@ Reglas generales:
 | Tamaño | `20 pt` |
 | Peso | Negrita |
 | Color | `#2f6f66` |
-| Espacio antes | `1.5em` |
-| Espacio después | `0.65em` |
+| Espacio antes | `2em` |
+| Espacio después | `1em` explícito tras la línea |
 | Línea inferior | `1.5 pt`, color `#2f6f66` |
-| Separación texto/línea | `0.22em` |
+| Separación texto/línea | `0.06em` |
 
 ### Título De Nivel 3
 
@@ -109,18 +109,18 @@ Reglas generales:
 | Tamaño | `16 pt` |
 | Peso | Negrita |
 | Color | `#5a5f7a` |
-| Espacio antes | `1.1em` |
-| Espacio después | `0.45em` |
+| Espacio antes | `1.55em` |
+| Espacio después | `0.8em` explícito tras la línea |
 | Línea inferior | `0.9 pt`, color `#5a5f7a` |
-| Separación texto/línea | `0.16em` |
+| Separación texto/línea | `0.05em` |
 
 ### Títulos De Nivel 4 A 6
 
 | Nivel | Tamaño | Estilo | Color | Espacio antes | Espacio después |
 | --- | --- | --- | --- | --- | --- |
-| 4 | `tamaño base * 1.02` | Negrita | `#5a5f7a` | `0.7em` | `0.25em` |
-| 5 | `tamaño base` | Negrita | `#5a5f7a` | `0.55em` | `0.2em` |
-| 6 | `tamaño base * 0.95` | Cursiva | `#5a5f7a` | `0.45em` | `0.16em` |
+| 4 | `tamaño base * 1.02` | Negrita | `#5a5f7a` | `1em` | `0.5em` explícito |
+| 5 | `tamaño base` | Negrita | `#5a5f7a` | `0.85em` | `0.4em` explícito |
+| 6 | `tamaño base * 0.95` | Cursiva | `#5a5f7a` | `0.7em` | `0.35em` explícito |
 
 ## Énfasis
 

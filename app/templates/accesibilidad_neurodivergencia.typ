@@ -41,44 +41,55 @@ $definitions.typst()$
 )
 
 #show heading.where(level: 2): it => block(
-  above: 1.5em,
-  below: 0.65em,
+  above: 2em,
+  below: 0em,
   breakable: false,
   [
     #text(size: __H2_SIZE__pt, weight: "bold", fill: rgb("__H2_COLOR__"), it.body)
-    #v(0.22em)
+    #v(0.06em)
     #line(length: 100%, stroke: 1.5pt + rgb("__H2_COLOR__"))
+    #v(1em)
   ],
 )
 
 #show heading.where(level: 3): it => block(
-  above: 1.1em,
-  below: 0.45em,
+  above: 1.55em,
+  below: 0em,
   breakable: false,
   [
     #text(size: __H3_SIZE__pt, weight: "bold", fill: rgb("__H3_COLOR__"), it.body)
-    #v(0.16em)
+    #v(0.05em)
     #line(length: 100%, stroke: 0.9pt + rgb("__H3_COLOR__"))
+    #v(0.8em)
   ],
 )
 
 // Titulos secundarios.
 #show heading.where(level: 4): it => block(
-  above: 0.7em,
-  below: 0.25em,
-  text(size: (__BODY_FONT_SIZE__pt * 1.02), weight: "bold", fill: rgb("__H3_COLOR__"), it.body),
+  above: 1em,
+  below: 0em,
+  [
+    #text(size: (__BODY_FONT_SIZE__pt * 1.02), weight: "bold", fill: rgb("__H3_COLOR__"), it.body)
+    #v(0.5em)
+  ],
 )
 
 #show heading.where(level: 5): it => block(
-  above: 0.55em,
-  below: 0.2em,
-  text(size: __BODY_FONT_SIZE__pt, weight: "bold", fill: rgb("__H3_COLOR__"), it.body),
+  above: 0.85em,
+  below: 0em,
+  [
+    #text(size: __BODY_FONT_SIZE__pt, weight: "bold", fill: rgb("__H3_COLOR__"), it.body)
+    #v(0.4em)
+  ],
 )
 
 #show heading.where(level: 6): it => block(
-  above: 0.45em,
-  below: 0.16em,
-  text(size: (__BODY_FONT_SIZE__pt * 0.95), style: "italic", fill: rgb("__H3_COLOR__"), it.body),
+  above: 0.7em,
+  below: 0em,
+  [
+    #text(size: (__BODY_FONT_SIZE__pt * 0.95), style: "italic", fill: rgb("__H3_COLOR__"), it.body)
+    #v(0.35em)
+  ],
 )
 // Enfasis.
 #show strong: it => text(weight: "bold", fill: rgb("__BOLD_COLOR__"), it.body)

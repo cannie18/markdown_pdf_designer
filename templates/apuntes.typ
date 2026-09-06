@@ -39,35 +39,50 @@ $definitions.typst()$
 
 // Titulo de segundo nivel: Markdown "## Seccion".
 #show heading.where(level: 2): it => block(
-  above: 1.2em,
-  below: 0.5em,
-  text(size: 16pt, weight: "bold", fill: rgb("#2e6f73"), it.body),
+  above: 1.7em,
+  below: 0em,
+  [
+    #text(size: 16pt, weight: "bold", fill: rgb("#2e6f73"), it.body)
+    #v(0.85em)
+  ],
 )
 
 // Titulo de tercer nivel: Markdown "### Subseccion".
 #show heading.where(level: 3): it => block(
-  above: 0.9em,
-  below: 0.35em,
-  text(size: 12.5pt, weight: "bold", fill: rgb("#7a3f3f"), it.body),
+  above: 1.25em,
+  below: 0em,
+  [
+    #text(size: 12.5pt, weight: "bold", fill: rgb("#7a3f3f"), it.body)
+    #v(0.65em)
+  ],
 )
 
 // Titulos secundarios.
 #show heading.where(level: 4): it => block(
-  above: 0.7em,
-  below: 0.25em,
-  text(size: 11.2pt, weight: "bold", fill: rgb("#7a3f3f"), it.body),
+  above: 1em,
+  below: 0em,
+  [
+    #text(size: 11.2pt, weight: "bold", fill: rgb("#7a3f3f"), it.body)
+    #v(0.5em)
+  ],
 )
 
 #show heading.where(level: 5): it => block(
-  above: 0.55em,
-  below: 0.2em,
-  text(size: 11pt, weight: "bold", fill: rgb("#7a3f3f"), it.body),
+  above: 0.85em,
+  below: 0em,
+  [
+    #text(size: 11pt, weight: "bold", fill: rgb("#7a3f3f"), it.body)
+    #v(0.4em)
+  ],
 )
 
 #show heading.where(level: 6): it => block(
-  above: 0.45em,
-  below: 0.16em,
-  text(size: 10.5pt, style: "italic", fill: rgb("#7a3f3f"), it.body),
+  above: 0.7em,
+  below: 0em,
+  [
+    #text(size: 10.5pt, style: "italic", fill: rgb("#7a3f3f"), it.body)
+    #v(0.35em)
+  ],
 )
 // Enfasis.
 #show strong: it => text(weight: "bold", fill: rgb("#1f3552"), it.body)
