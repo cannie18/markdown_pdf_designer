@@ -160,6 +160,9 @@ Plantillas actuales:
 - `Profesional`: informe sobrio de uso general.
 - `Compacto`: dos columnas y menor consumo de páginas.
 
+La ficha completa de estilos de `Accesibilidad y neurodivergencia` está en
+`docs/plantilla_accesibilidad_neurodivergencia.md`.
+
 Las plantillas personalizadas se crean desde la app y se guardan fuera del
 repositorio, en:
 
