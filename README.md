@@ -212,6 +212,7 @@ Las plantillas disponibles en la app son:
 - las alertas tipo GitHub se maquetan como bloques con icono, borde lateral y color por tipo;
 - `[TOC]` genera un índice y `<!-- pagebreak -->` genera un salto de página;
 - las listas con viñetas y numeración respetan el espaciado vertical configurado para el texto y añaden separación al terminar el bloque;
+- los títulos usan más espacio superior que inferior para diferenciar bloques de contenido;
 - la versión portable `crear_pdf.bat` sigue funcionando;
 - `Ensayo APA / MLA` tiene jerarquía de títulos y espaciado corregido;
 - `Manuscrito / novela` ya no coloca el primer título a mitad de página;

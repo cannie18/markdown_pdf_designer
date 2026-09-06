@@ -34,8 +34,8 @@ $definitions.typst()$
 #show heading: set text(hyphenate: false)
 
 #show heading.where(level: 1): it => block(
-  above: 0.2em,
-  below: 0.7em,
+  above: 1em,
+  below: 0.45em,
   [
     #text(size: __H1_SIZE__pt, weight: "bold", fill: rgb("__H1_COLOR__"), it.body)
     #v(0.15em)

@@ -31,9 +31,9 @@ $definitions.typst()$
 
 #show heading.where(level: 1): it => [
   #pagebreak(weak: true)
-  #v(1em)
-  #align(center, text(size: __H1_SIZE__pt, weight: "regular", fill: rgb("__H1_COLOR__"), it.body))
   #v(2em)
+  #align(center, text(size: __H1_SIZE__pt, weight: "regular", fill: rgb("__H1_COLOR__"), it.body))
+  #v(1em)
 ]
 
 #show heading.where(level: 2): it => block(

@@ -22,6 +22,7 @@ La plantilla prioriza:
 - fondo suave de bajo deslumbramiento;
 - fuente sans-serif legible;
 - títulos muy diferenciados;
+- más espacio por encima que por debajo de los títulos;
 - bloques, tablas y código con contraste moderado;
 - evitar cursiva real en énfasis, usando negrita en su lugar.
 
@@ -84,8 +85,8 @@ Reglas generales:
 | Tamaño | `27 pt` |
 | Peso | Negrita |
 | Color | `#24435a` |
-| Espacio antes | `0.2em` |
-| Espacio después | `1.2em` |
+| Espacio antes | `1.8em` |
+| Espacio después | `0.9em` |
 | Línea inferior | `2.2 pt`, color `#24435a` |
 | Separación texto/línea | `0.28em` |
 

@@ -206,6 +206,9 @@ Las listas con viñetas y numeradas respetan el espaciado vertical configurado
 para el texto del documento. Además, al terminar un bloque de lista se añade un
 espacio inferior equivalente al espaciado de párrafo de la plantilla.
 
+Los títulos usan más espacio superior que inferior para separarse del bloque
+anterior y quedar asociados al contenido que introducen.
+
 ## Alertas Tipo GitHub
 
 La app reconoce alertas tipo GitHub:

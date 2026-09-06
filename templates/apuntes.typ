@@ -32,7 +32,8 @@ $definitions.typst()$
 
 // Titulo principal: Markdown "# Titulo".
 #show heading.where(level: 1): it => block(
-  below: 1.1em,
+  above: 1.4em,
+  below: 0.65em,
   text(size: 24pt, weight: "bold", fill: rgb("#1f3552"), it.body),
 )
 

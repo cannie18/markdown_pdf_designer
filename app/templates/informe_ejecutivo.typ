@@ -29,8 +29,8 @@ $definitions.typst()$
 #show heading: set text(hyphenate: false)
 
 #show heading.where(level: 1): it => block(
-  above: 0.5em,
-  below: 1em,
+  above: 1.3em,
+  below: 0.65em,
   width: 100%,
   inset: (x: 0.9em, y: 0.65em),
   radius: 2pt,

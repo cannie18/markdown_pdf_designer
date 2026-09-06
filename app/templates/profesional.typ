@@ -34,8 +34,8 @@ $definitions.typst()$
 #show heading: set text(hyphenate: false)
 
 #show heading.where(level: 1): it => block(
-  above: 0.3em,
-  below: 1.1em,
+  above: 1.5em,
+  below: 0.7em,
   width: 100%,
   inset: (x: 0.9em, y: 0.65em),
   radius: 2pt,
