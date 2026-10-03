@@ -34,6 +34,8 @@ Reglas generales:
     `[Texto del enlace](https://ejemplo.com)`
 14. Usa imagenes con ruta relativa y texto alternativo:
     `![Descripcion de la imagen](imagenes/archivo.png)`
+    Si la imagen esta en la misma carpeta que el Markdown, usa solo el nombre:
+    `![Descripcion de la imagen](archivo.png)`
 15. Usa tablas Markdown simples cuando haya informacion comparativa.
 16. Usa citas con `>` cuando el contenido sea una cita, nota destacada o bloque de apoyo.
 17. Usa bloques de codigo con triple acento grave e indica el lenguaje cuando sea posible.
@@ -126,4 +128,3 @@ Indice:
 
 [TOC]
 ````
-

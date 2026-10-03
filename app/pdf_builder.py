@@ -881,6 +881,38 @@ def apply_table_width_mode(typ_file: Path, style: PdfStyleOptions) -> None:
   typ_file.write_text(typ_text, encoding='utf-8')
 
 
+def copy_typst_image_resources(typ_file: Path, source_dir: Path, build_dir: Path) -> None:
+  '''Copia imagenes locales para que Typst las resuelva desde el `.typ` temporal.'''
+
+  typ_text = typ_file.read_text(encoding='utf-8')
+  for image_path in sorted(set(re.findall(r'image\("([^"]+)"', typ_text))):
+    if not is_relative_resource_path(image_path):
+      continue
+
+    source_file = (source_dir / image_path).resolve()
+    try:
+      source_file.relative_to(source_dir)
+    except ValueError:
+      continue
+
+    if not source_file.is_file():
+      continue
+
+    target_file = build_dir / Path(image_path)
+    target_file.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source_file, target_file)
+
+
+def is_relative_resource_path(path_text: str) -> bool:
+  '''Indica si una ruta de imagen debe copiarse desde la carpeta del Markdown.'''
+
+  if not path_text or path_text.startswith(('/', '\\')):
+    return False
+  if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', path_text):
+    return False
+  return not Path(path_text).is_absolute()
+
+
 def run_command(command: list[str | Path]) -> None:
   '''Ejecuta un comando externo y convierte errores en `PdfBuildError`.'''
 
@@ -973,6 +1005,7 @@ def build_pdf(
     apply_special_markdown_tokens(typ_file)
     apply_github_admonition_styles(typ_file)
     apply_table_width_mode(typ_file, style or PdfStyleOptions())
+    copy_typst_image_resources(typ_file, source.parent, build_dir)
     run_command([typst, 'compile', '--root', ROOT_DIR, typ_file, temp_pdf_file])
     try:
       if pdf_file.exists():
