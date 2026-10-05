@@ -104,7 +104,8 @@ La app permite:
 - generar una vista previa PDF temporal y sobrescribible;
 - mostrar la vista previa dentro de la propia app;
 - localizar un bloque del Markdown al pulsar sobre la vista previa PDF, con
-  resaltado temporal y suspensión si el texto no coincide con el PDF generado;
+  resaltado temporal cuando la sección `Markdown` está seleccionada y suspensión
+  si el texto no coincide con el PDF generado;
 - guardar la vista previa como PDF definitivo en una ruta elegida;
 - abrir la vista previa en el visor externo de Windows.
 - cambiar entre secciones `Markdown` y `Diseño` en el panel izquierdo;

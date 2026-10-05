@@ -74,9 +74,8 @@ class PdfNavigationTests(unittest.TestCase):
     self.app.processEvents()
     return view.page_at(point)
 
-  def test_click_switches_to_markdown_and_highlights_block_without_editing(self):
+  def test_click_in_markdown_highlights_block_without_editing(self):
     block = next(b for b in self.result.navigation['blocks'] if b['first'] == 19)
-    self.window.select_left_section(1)
     self.click_pdf(block['start']['page'] - 1, 100,
                    (block['start']['y'] + block['end']['y']) / 2)
     self.assertEqual(self.window.active_left_section, 0)
@@ -84,6 +83,16 @@ class PdfNavigationTests(unittest.TestCase):
     self.assertEqual(len(self.window.editor.extraSelections()), 1)
     self.assertFalse(self.window.editor_dirty)
     self.assertFalse(self.window.editor.textCursor().hasSelection())
+
+  def test_click_in_design_does_not_move_cursor_or_change_section(self):
+    block = next(b for b in self.result.navigation['blocks'] if b['first'] == 19)
+    cursor_position = self.window.editor.textCursor().position()
+    self.window.select_left_section(1)
+    self.click_pdf(block['start']['page'] - 1, 100,
+                   (block['start']['y'] + block['end']['y']) / 2)
+    self.assertEqual(self.window.active_left_section, 1)
+    self.assertEqual(self.window.editor.textCursor().position(), cursor_position)
+    self.assertEqual(self.window.editor.extraSelections(), [])
 
   def test_changed_markdown_disables_jump_even_if_marked_saved(self):
     self.window.editor.insertPlainText('Changed ')

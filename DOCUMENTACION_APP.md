@@ -104,8 +104,10 @@ La ayuda solo desaparece cuando:
 
 Un clic normal sobre un bloque de la vista previa coloca el cursor al comienzo
 del bloque correspondiente en el editor Markdown y lo resalta durante un
-instante. Si el panel izquierdo está en Diseño, cambia a Markdown. El salto
-no modifica el texto ni selecciona contenido para sustituirlo al escribir.
+instante. Esta navegación solo está activa cuando el panel izquierdo muestra
+`Markdown`. En `Diseño`, pulsar sobre un bloque del PDF no cambia de sección
+ni mueve el cursor. El salto no modifica el texto ni selecciona contenido para
+sustituirlo al escribir.
 
 En tablas, imágenes, listas y bloques de código se localiza el comienzo del
 bloque, no una celda o palabra concreta. Los enlaces conservan su función:

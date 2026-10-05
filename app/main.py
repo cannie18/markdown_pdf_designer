@@ -1164,7 +1164,8 @@ class MainWindow(QMainWindow):
         'PDF: localizar contenido en Markdown',
         [
           'Un clic normal sobre un bloque del PDF lleva al comienzo de ese bloque en el editor.',
-          'Si estás en Diseño, se abre Markdown y el bloque se resalta brevemente sin modificar su contenido.',
+          'Esta navegación solo funciona mientras está seleccionada la sección Markdown.',
+          'En Diseño, pulsar sobre un bloque del PDF no cambia de sección ni mueve el cursor.',
           'En tablas, imágenes, listas y código se localiza el bloque completo, no la celda o palabra exacta.',
           'Los enlaces mantienen su función: los externos abren su destino y los internos navegan por el PDF.',
           'Si el Markdown ha cambiado desde la generación, genera el PDF de nuevo para recuperar el salto.',
@@ -2085,6 +2086,8 @@ class MainWindow(QMainWindow):
   def jump_to_markdown_block(self, page: int, x: float, y: float) -> None:
     '''Lleva el editor al bloque de la vista previa sin modificar el Markdown.'''
 
+    if self.active_left_section != 0:
+      return
     if not self.markdown_is_open() or not self.pdf_navigation:
       return
     if text_digest(self.editor.toPlainText()) != self.pdf_navigation['digest']:
@@ -2099,7 +2102,6 @@ class MainWindow(QMainWindow):
     last = self.editor.document().findBlockByNumber(block['last'] - 1)
     if not first.isValid() or not last.isValid():
       return
-    self.select_left_section(0)
     cursor = QTextCursor(first)
     self.editor.setTextCursor(cursor)
     self.editor.centerCursor()
