@@ -189,6 +189,7 @@ Casos soportados y ajustados:
 - listas anidadas;
 - enlaces clicables con color y subrayado;
 - tablas;
+- ajustes individuales de tablas mediante bloques `table-style`;
 - citas;
 - bloques de código;
 - código inline;
@@ -209,6 +210,51 @@ espacio inferior equivalente al espaciado de párrafo de la plantilla.
 
 Los títulos usan más espacio superior que inferior para separarse del bloque
 anterior y quedar asociados al contenido que introducen.
+
+## Estilos Individuales De Tablas
+
+Las tablas normales usan los valores de `Diseño > Tablas`. Para ajustar una
+tabla concreta, colócala dentro de un bloque con la clase `table-style`:
+
+```markdown
+::: {.table-style font-size=8pt cell-padding=2pt table-width=full columns="1,4,2"}
+
+| ID | Descripción | Estado |
+| --- | --- | --- |
+| 01 | Texto largo que necesita más espacio. | En curso |
+
+:::
+```
+
+Opciones disponibles (todas son opcionales):
+
+| Opción | Ejemplo | Efecto |
+| --- | --- | --- |
+| `font-size` | `8pt` | Tamaño de letra de las celdas, incluida la cabecera. |
+| `cell-padding` | `2pt` | Espacio interno de las celdas. Se admite `0pt`. |
+| `table-width` | `full` | Usa el ancho disponible, con columnas iguales si no hay proporciones. |
+| `table-width` | `auto` | Ajusta las columnas al contenido. |
+| `columns` | `"1,4,2"` | Reparte el ancho disponible en proporciones de 1, 4 y 2 partes. |
+
+Los tamaños se expresan en puntos (`pt`); también se admite un número sin
+unidad, que se interpreta como puntos. `columns` requiere un número positivo
+por columna. Si lo indicas, sus proporciones tienen prioridad sobre
+`table-width` y ocupan el ancho disponible.
+
+El bloque debe contener exactamente una tabla; deja las explicaciones y los
+títulos fuera del bloque. Los ajustes se aplican solo a esa tabla. Sus colores,
+bordes y demás estilos siguen usando la plantilla. Las tablas siguientes
+recuperan los ajustes generales, y `table-width=auto` local se respeta aunque
+en Diseño hayas seleccionado ancho completo.
+
+Para una tabla ancha, prueba primero a reducir el espacio de las celdas y dar
+más proporción a las columnas de texto largo. Si hace falta, reduce la letra.
+No se garantiza que cualquier tabla quepa sin saltos: muchas columnas o palabras
+largas pueden requerir dividir la información. En `Compacto`, el espacio
+disponible es el de una columna. Estos ajustes no cambian la orientación de
+la página y son una extensión de la app, no del flujo portable por `.bat`.
+
+Puedes probar los casos con `ejemplos/prueba_estilos_tablas.md`.
 
 ## Imágenes Y Tamaños
 
@@ -345,6 +391,7 @@ Archivos clave:
   de usuario.
 - `app/pdf_builder.py`: lógica de conversión Markdown -> Typst -> PDF.
 - `app/filters/image_layout.lua`: filtro Pandoc para alinear imágenes aisladas.
+- `app/filters/table_layout.lua`: filtro Pandoc para anchos y estilos locales de tablas.
 - `app/templates/*.typ`: plantillas dinámicas usadas por la app.
 - `templates/apuntes.typ`: plantilla de la versión portable.
 - `crear_pdf.bat`: flujo portable básico por consola.

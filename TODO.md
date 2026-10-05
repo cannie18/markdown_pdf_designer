@@ -51,6 +51,9 @@
   - tamaño del texto;
   - color de fondo de cabecera;
   - color del texto de cabecera.
+- Ajustes individuales de tablas mediante bloques Markdown `table-style`:
+  tamaño de letra, espacio interno, modo de ancho y proporciones de columnas.
+- Ejemplo de estilos locales: `ejemplos/prueba_estilos_tablas.md`.
 - Opción de color de fondo de página del PDF.
 - Opción de documento continuo con altura automática.
 - Corrección de textos visibles de la app a español de España.

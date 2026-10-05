@@ -107,6 +107,9 @@ Actualmente la app permite:
 - ajustar texto, fondo, borde y espaciado de bloques destacados;
 - ajustar texto, espaciado, bordes y cabecera de tablas;
 - elegir si las tablas se ajustan al contenido o usan el ancho disponible;
+- ajustar cada tabla desde Markdown con bloques `table-style`: tamaño de letra,
+  espacio interno, modo de ancho y proporciones de columnas (véase
+  `ejemplos/prueba_estilos_tablas.md`);
 - elegir una plantilla visual predefinida;
 - crear una nueva plantilla desde los ajustes visuales actuales;
 - guardar cambios sobre una plantilla personalizada existente;

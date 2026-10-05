@@ -866,21 +866,6 @@ def escape_typst_content(content: str) -> str:
   )
 
 
-def apply_table_width_mode(typ_file: Path, style: PdfStyleOptions) -> None:
-  '''Ajusta columnas de tablas generadas por Pandoc.'''
-
-  if style.table_width_mode != 'full':
-    return
-
-  typ_text = typ_file.read_text(encoding='utf-8')
-  typ_text = re.sub(
-    r'(#table\(\n\s*columns:\s*)(\d+)(\s*,)',
-    r'\1(1fr,) * \2\3',
-    typ_text,
-  )
-  typ_file.write_text(typ_text, encoding='utf-8')
-
-
 def copy_typst_image_resources(typ_file: Path, source_dir: Path, build_dir: Path) -> None:
   '''Copia imagenes locales para que Typst las resuelva desde el `.typ` temporal.'''
 
@@ -997,6 +982,9 @@ def build_pdf(
         'typst',
         '-s',
         f'--lua-filter={ROOT_DIR / "app" / "filters" / "image_layout.lua"}',
+        f'--lua-filter={ROOT_DIR / "app" / "filters" / "table_layout.lua"}',
+        '-M',
+        f'mdpdf-table-width={(style or PdfStyleOptions()).table_width_mode}',
         f'--template={template_file}',
         '-o',
         typ_file,
@@ -1005,7 +993,6 @@ def build_pdf(
     apply_mark_replacements(typ_file, mark_replacements)
     apply_special_markdown_tokens(typ_file)
     apply_github_admonition_styles(typ_file)
-    apply_table_width_mode(typ_file, style or PdfStyleOptions())
     copy_typst_image_resources(typ_file, source.parent, build_dir)
     run_command([typst, 'compile', '--root', ROOT_DIR, typ_file, temp_pdf_file])
     try:

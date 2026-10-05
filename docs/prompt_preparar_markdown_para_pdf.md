@@ -50,6 +50,21 @@ Reglas generales:
     Deja la imagen en un parrafo separado; las imagenes dentro de una frase
     mantienen su posicion en el texto.
 15. Usa tablas Markdown simples cuando haya informacion comparativa.
+    Si una tabla necesita ajustes propios, usa un bloque como este:
+
+    ::: {.table-style font-size=8pt cell-padding=2pt table-width=full columns="1,4,2"}
+
+    | ID | Descripcion | Estado |
+    | --- | --- | --- |
+    | 01 | Texto largo con mas espacio disponible. | En curso |
+
+    :::
+
+    Incluye exactamente una tabla por bloque. Las opciones son opcionales:
+    font-size y cell-padding se indican en puntos; table-width puede ser auto
+    o full; columns contiene una proporcion positiva por columna y, si se
+    indica, reparte todo el ancho disponible. No apliques estos ajustes a todas
+    las tablas si no hace falta. En Compacto, el ancho es el de la columna.
 16. Usa citas con `>` cuando el contenido sea una cita, nota destacada o bloque de apoyo.
 17. Usa bloques de codigo con triple acento grave e indica el lenguaje cuando sea posible.
 18. Para alertas tipo GitHub, usa exactamente estos formatos:
