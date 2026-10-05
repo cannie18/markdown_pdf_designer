@@ -242,6 +242,22 @@ Esta sintaxis usa la extensión de atributos de imágenes de Pandoc; no todos
 los visores Markdown muestran estos tamaños. Puedes probarla con
 `ejemplos/prueba_tamanos_imagenes.md`.
 
+En la app, las imágenes en su propio párrafo se centran por defecto, con o sin
+pie de figura. Puedes elegir la alineación por imagen:
+
+```markdown
+![Diagrama](diagrama.png){width=50% align=center}
+
+![Diagrama](diagrama.png){width=50% align=left}
+
+![](diagrama.png){width=50% align=right}
+```
+
+Los valores admitidos son `left`, `center` y `right`. La alineación se aplica
+dentro del ancho disponible, también en columnas, listas y citas. Las imágenes
+insertadas dentro de una frase conservan su posición en el texto. El flujo
+portable por `.bat` no aplica esta extensión de alineación de la app.
+
 ## Alertas Tipo GitHub
 
 La app reconoce alertas tipo GitHub:
@@ -328,6 +344,7 @@ Archivos clave:
 - `app/main.py`: interfaz PySide6, navegación, editor, vista previa y acciones
   de usuario.
 - `app/pdf_builder.py`: lógica de conversión Markdown -> Typst -> PDF.
+- `app/filters/image_layout.lua`: filtro Pandoc para alinear imágenes aisladas.
 - `app/templates/*.typ`: plantillas dinámicas usadas por la app.
 - `templates/apuntes.typ`: plantilla de la versión portable.
 - `crear_pdf.bat`: flujo portable básico por consola.

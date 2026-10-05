@@ -74,6 +74,8 @@ La app permite:
 - ver y editar opcionalmente el contenido;
 - insertar imágenes locales y ajustar su tamaño desde Markdown con atributos
   como `![Descripción](imagen.png){width=50%}` o `{width=8cm}`;
+- centrar imágenes aisladas por defecto y elegir su alineación mediante
+  `align=left`, `align=center` o `align=right` junto al tamaño;
 - preguntar antes de generar si hay cambios sin guardar;
 - elegir tipo de fuente;
 - elegir tamaño base del texto;

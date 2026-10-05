@@ -44,6 +44,11 @@ Reglas generales:
     Indica solo una dimension para conservar la proporcion automaticamente.
     Usa `{width=8cm height=3cm}` si necesitas encajar la imagen en un espacio
     de ancho y alto concretos; el encaje puede recortar parte de la imagen.
+    Las imagenes en su propio parrafo se centran por defecto en la app.
+    Para elegir la alineacion, usa `{width=50% align=left}`,
+    `{width=50% align=center}` o `{width=50% align=right}`.
+    Deja la imagen en un parrafo separado; las imagenes dentro de una frase
+    mantienen su posicion en el texto.
 15. Usa tablas Markdown simples cuando haya informacion comparativa.
 16. Usa citas con `>` cuando el contenido sea una cita, nota destacada o bloque de apoyo.
 17. Usa bloques de codigo con triple acento grave e indica el lenguaje cuando sea posible.

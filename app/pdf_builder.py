@@ -996,6 +996,7 @@ def build_pdf(
         '-t',
         'typst',
         '-s',
+        f'--lua-filter={ROOT_DIR / "app" / "filters" / "image_layout.lua"}',
         f'--template={template_file}',
         '-o',
         typ_file,

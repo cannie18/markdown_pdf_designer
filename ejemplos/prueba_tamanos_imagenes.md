@@ -43,3 +43,32 @@ su proporcion, es preferible indicar una sola dimension.
   ![Diagrama dentro de una lista](imagenes/imagen-ejemplo.svg){width=50%}
 
 - El porcentaje se calcula respecto al espacio disponible en ese elemento.
+
+## Imagen sin pie: centrada por defecto
+
+El texto alternativo vacio permite comprobar el centrado sin pie de figura.
+
+![](imagenes/imagen-ejemplo.svg){width=50%}
+
+## Alineacion izquierda
+
+![Diagrama a la izquierda](imagenes/imagen-ejemplo.svg){width=50% align=left}
+
+## Alineacion central explicita
+
+![Diagrama centrado](imagenes/imagen-ejemplo.svg){width=50% align=center}
+
+## Alineacion derecha
+
+![Diagrama a la derecha](imagenes/imagen-ejemplo.svg){width=50% align=right}
+
+## Imagen alineada dentro de una cita
+
+> Una imagen aislada se alinea dentro del espacio disponible en la cita.
+>
+> ![](imagenes/imagen-ejemplo.svg){width=50% align=right}
+
+## Imagen dentro de una frase
+
+Esta imagen ![](imagenes/imagen-ejemplo.svg){width=2cm} permanece dentro del
+texto, sin convertir la frase en un bloque centrado.

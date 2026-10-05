@@ -140,6 +140,8 @@
 - Implementado: tamaño por imagen con atributos Pandoc `width` y `height`,
   por ejemplo `{width=50%}`, `{width=8cm}` o `{height=3cm}`.
 - Ejemplo de prueba: `ejemplos/prueba_tamanos_imagenes.md`.
+- Implementado en la app: centrado por defecto de imágenes aisladas y
+  alineación por imagen con `align=left`, `align=center` o `align=right`.
 - Mostrar errores claros si una imagen local no existe.
 - Decidir más adelante si se soportan imágenes remotas o si deben descargarse antes.
 - Valorar controles de diseño para imágenes:

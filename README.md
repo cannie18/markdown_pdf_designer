@@ -92,6 +92,8 @@ Actualmente la app permite:
 - generar el PDF con un botón;
 - insertar imágenes locales con rutas relativas al Markdown y definir su tamaño
   con atributos como `![Descripción](imagen.png){width=50%}` o `{width=8cm}`;
+- centrar imágenes aisladas por defecto o elegir su alineación con
+  `{width=50% align=left}`, `align=center` o `align=right`;
 - ver el PDF generado dentro de la propia app;
 - abrir el PDF generado en el visor predeterminado de Windows;
 - mostrar iconos SVG en las acciones principales y en los parámetros de Diseño;

@@ -1132,6 +1132,8 @@ class MainWindow(QMainWindow):
           'El porcentaje se refiere al ancho disponible; en Compacto, al de la columna.',
           'Si indicas solo width o solo height, se conserva la proporción de la imagen. Por ejemplo: {height=3cm}.',
           'Puedes combinar ambas dimensiones: {width=8cm height=3cm}; la imagen se encaja en ese espacio.',
+          'Las imágenes en su propio párrafo se centran por defecto. Usa {width=50% align=left}, align=center o align=right para elegir la alineación.',
+          'Las imágenes dentro de una frase mantienen su posición en el texto.',
           'Evita simular diseño con espacios, saltos vacíos o símbolos decorativos.',
           'Mantén el contenido limpio: el aspecto final se controla desde Diseño.',
         ],
