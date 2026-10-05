@@ -36,6 +36,14 @@ Reglas generales:
     `![Descripcion de la imagen](imagenes/archivo.png)`
     Si la imagen esta en la misma carpeta que el Markdown, usa solo el nombre:
     `![Descripcion de la imagen](archivo.png)`
+    Para controlar el ancho, anade los atributos inmediatamente despues:
+    `![Descripcion de la imagen](archivo.png){width=50%}`
+    o `![Descripcion de la imagen](archivo.png){width=8cm}`.
+    El porcentaje se refiere al ancho disponible (de la columna si hay varias).
+    Tambien puedes fijar solo la altura con `{height=3cm}`.
+    Indica solo una dimension para conservar la proporcion automaticamente.
+    Usa `{width=8cm height=3cm}` si necesitas encajar la imagen en un espacio
+    de ancho y alto concretos; el encaje puede recortar parte de la imagen.
 15. Usa tablas Markdown simples cuando haya informacion comparativa.
 16. Usa citas con `>` cuando el contenido sea una cita, nota destacada o bloque de apoyo.
 17. Usa bloques de codigo con triple acento grave e indica el lenguaje cuando sea posible.

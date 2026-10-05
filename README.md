@@ -90,6 +90,8 @@ Actualmente la app permite:
 - cargar el Markdown directamente en el editor al abrirlo;
 - guardar o guardar como el Markdown;
 - generar el PDF con un botón;
+- insertar imágenes locales con rutas relativas al Markdown y definir su tamaño
+  con atributos como `![Descripción](imagen.png){width=50%}` o `{width=8cm}`;
 - ver el PDF generado dentro de la propia app;
 - abrir el PDF generado en el visor predeterminado de Windows;
 - mostrar iconos SVG en las acciones principales y en los parámetros de Diseño;
@@ -163,8 +165,8 @@ markdown_pdf_designer/
 
 El flujo principal `Markdown -> PDF` ya funciona. Las próximas mejoras previstas
 se centran en la experiencia visual de la app: iconos, organización de controles,
-plantillas, portada, cabecera, pie, salida configurable y soporte futuro para
-imágenes locales referenciadas desde Markdown.
+plantillas, portada, cabecera, pie y controles visuales para imágenes. Las
+imágenes locales y sus tamaños ya se pueden indicar desde el Markdown.
 
 ## Plantillas de la app
 

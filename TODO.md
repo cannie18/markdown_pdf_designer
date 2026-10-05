@@ -135,8 +135,11 @@
 
 ## Imágenes
 
-- Preparar soporte futuro para imágenes referenciadas desde Markdown.
-- Resolver rutas relativas respecto a la carpeta del `.md`, no respecto a la app.
+- Implementado: imágenes locales con rutas relativas desde la carpeta del `.md`
+  y sus subcarpetas.
+- Implementado: tamaño por imagen con atributos Pandoc `width` y `height`,
+  por ejemplo `{width=50%}`, `{width=8cm}` o `{height=3cm}`.
+- Ejemplo de prueba: `ejemplos/prueba_tamanos_imagenes.md`.
 - Mostrar errores claros si una imagen local no existe.
 - Decidir más adelante si se soportan imágenes remotas o si deben descargarse antes.
 - Valorar controles de diseño para imágenes:

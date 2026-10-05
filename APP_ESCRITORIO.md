@@ -72,6 +72,8 @@ La app permite:
 - arrastrar un archivo `.md`;
 - crear un Markdown nuevo sin elegir ubicación hasta guardar o generar;
 - ver y editar opcionalmente el contenido;
+- insertar imágenes locales y ajustar su tamaño desde Markdown con atributos
+  como `![Descripción](imagen.png){width=50%}` o `{width=8cm}`;
 - preguntar antes de generar si hay cambios sin guardar;
 - elegir tipo de fuente;
 - elegir tamaño base del texto;

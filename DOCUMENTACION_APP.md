@@ -192,6 +192,7 @@ Casos soportados y ajustados:
 - citas;
 - bloques de código;
 - código inline;
+- imágenes locales con rutas relativas al Markdown y tamaño mediante atributos;
 - metadatos YAML cuando Pandoc los interpreta;
 - caracteres Unicode;
 - `[TOC]` como índice automático;
@@ -208,6 +209,38 @@ espacio inferior equivalente al espaciado de párrafo de la plantilla.
 
 Los títulos usan más espacio superior que inferior para separarse del bloque
 anterior y quedar asociados al contenido que introducen.
+
+## Imágenes Y Tamaños
+
+Las rutas de las imágenes locales se resuelven desde la carpeta del Markdown.
+Si la imagen está en la misma carpeta, basta con su nombre. También se admiten
+subcarpetas, como `imagenes/diagrama.png`.
+
+Añade los atributos de tamaño inmediatamente después de la ruta:
+
+```markdown
+![Diagrama](diagrama.png){width=50%}
+
+![Diagrama](imagenes/diagrama.png){width=8cm}
+
+![Diagrama](imagenes/diagrama.png){height=3cm}
+
+![Diagrama](imagenes/diagrama.png){width=8cm height=3cm}
+```
+
+`width` indica el ancho y `height` la altura. Se pueden usar unidades como
+`cm`, `mm`, `in`, `pt` y `px`. El porcentaje de ancho se refiere al espacio
+disponible para el contenido, no al ancho original de la imagen ni al papel
+completo. En `Compacto`, se refiere al ancho de la columna.
+
+Para mantener la proporción original, indica solo ancho o solo altura. Si
+especificas ambas dimensiones, Typst encaja la imagen en ese espacio y puede
+recortar sus bordes. Evita alturas porcentuales en el modo continuo, cuya
+altura se calcula automáticamente.
+
+Esta sintaxis usa la extensión de atributos de imágenes de Pandoc; no todos
+los visores Markdown muestran estos tamaños. Puedes probarla con
+`ejemplos/prueba_tamanos_imagenes.md`.
 
 ## Alertas Tipo GitHub
 
@@ -362,7 +395,6 @@ Estado funcional actual:
 
 Mejoras previstas o pendientes de decidir:
 
-- soporte para imágenes locales referenciadas desde Markdown;
 - controles visuales para imágenes;
 - portada opcional;
 - cabecera y pie de página configurables;
