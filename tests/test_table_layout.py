@@ -23,6 +23,15 @@ class TableLayoutTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn(columns, result.stdout)
 
+  def test_headers_disable_hyphenation_without_changing_body(self):
+    for markdown in (TABLE, '::: {.table-style font-size=8pt}\n\n' + TABLE + '\n\n:::'):
+      with self.subTest(markdown=markdown):
+        result = self.convert(markdown)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        header, body = result.stdout.split('table.hline()', 1)
+        self.assertEqual(header.count('hyphenate: false'), 3)
+        self.assertNotIn('hyphenate: false', body)
+
   def test_local_styles_override_global_mode_without_affecting_next_table(self):
     result = self.convert(
       '::: {.table-style font-size=8pt cell-padding=0pt table-width=auto}\n\n'

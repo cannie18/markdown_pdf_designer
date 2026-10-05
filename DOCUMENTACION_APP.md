@@ -241,6 +241,11 @@ unidad, que se interpreta como puntos. `columns` requiere un número positivo
 por columna. Si lo indicas, sus proporciones tienen prioridad sobre
 `table-width` y ocupan el ancho disponible.
 
+Los encabezados de las tablas priorizan los saltos entre palabras y no usan
+guionado automático, tanto en tablas normales como en tablas con estilos
+locales. Si una palabra sola supera el ancho de la columna, debes ampliar
+esa columna o reducir el tamaño de letra para evitar cortes forzados.
+
 El bloque debe contener exactamente una tabla; deja las explicaciones y los
 títulos fuera del bloque. Los ajustes se aplican solo a esa tabla. Sus colores,
 bordes y demás estilos siguen usando la plantilla. Las tablas siguientes

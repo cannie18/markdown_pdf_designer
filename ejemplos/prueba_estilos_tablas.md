@@ -66,3 +66,16 @@ No todas las tablas caben con cualquier tamano de texto. Si una columna sigue
 siendo demasiado estrecha, dale una proporcion mayor, reduce el espacio de
 las celdas o divide la informacion en varias tablas. En Compacto, el ancho
 disponible es el de una columna, no el de la pagina completa.
+
+## Encabezados largos sin division de palabras
+
+Los encabezados saltan entre palabras, evitando dividirlas con guiones. El
+ancho de la columna debe permitir que quepa la palabra mas larga.
+
+::: {.table-style font-size=9pt cell-padding=3pt columns="1,1,1"}
+
+| Fecha de la ultima revision | Persona responsable del documento | Estado actual de la tarea |
+| --- | --- | --- |
+| 5 de octubre | Equipo de trabajo | Pendiente de revision |
+
+:::

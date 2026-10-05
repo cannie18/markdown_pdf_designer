@@ -11,7 +11,13 @@ local function point_value(value, name, allow_zero)
   return tostring(number) .. 'pt'
 end
 
-local function configure_columns(tbl, attributes)
+local function configure_table(tbl, attributes)
+  for _, row in ipairs(tbl.head.rows) do
+    for _, cell in ipairs(row.cells) do
+      cell.attributes['typst:text:hyphenate'] = 'false'
+    end
+  end
+
   local mode = attributes['table-width'] or default_width
   if mode ~= 'auto' and mode ~= 'full' then
     error('Tabla: usa table-width=auto o table-width=full.')
@@ -67,7 +73,7 @@ local function style_table(div)
     if not allowed[key] then error('Tabla: opcion desconocida: ' .. key .. '.') end
   end
 
-  local tbl = configure_columns(div.content[1], div.attributes)
+  local tbl = configure_table(div.content[1], div.attributes)
   local rules = {'#['}
   if div.attributes['font-size'] then
     rules[#rules + 1] = '#show table.cell: set text(size: ' ..
@@ -91,5 +97,5 @@ return {
     end
   end},
   {traverse = 'topdown', Div = style_table,
-    Table = function(tbl) return configure_columns(tbl, {}) end},
+    Table = function(tbl) return configure_table(tbl, {}) end},
 }
