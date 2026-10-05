@@ -95,6 +95,7 @@ Actualmente la app permite:
 - centrar imágenes aisladas por defecto o elegir su alineación con
   `{width=50% align=left}`, `align=center` o `align=right`;
 - ver el PDF generado dentro de la propia app;
+- pulsar sobre un bloque del PDF para localizarlo y resaltarlo en el Markdown;
 - abrir el PDF generado en el visor predeterminado de Windows;
 - mostrar iconos SVG en las acciones principales y en los parámetros de Diseño;
 - consultar la ayuda integrada en el visor sin abandonar `Markdown` o `Diseño`;

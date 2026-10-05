@@ -16,6 +16,8 @@
 - `Nuevo` abre un Markdown sin guardar y pide ubicación al guardar o generar PDF.
 - Generar PDF desde la app sin abrir consola visible.
 - Mostrar vista previa del PDF dentro de la app.
+- Clic sobre bloques de la vista previa para localizar y resaltar el Markdown
+  correspondiente, con enlaces prioritarios y protección frente a texto desactualizado.
 - Abrir el PDF generado en el visor predeterminado de Windows.
 - Generar una vista previa temporal sobrescribible.
 - Exportar la vista previa con `Guardar PDF como`.

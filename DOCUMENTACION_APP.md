@@ -100,6 +100,34 @@ La ayuda solo desaparece cuando:
 
 ## Flujo De Generación Y Exportación
 
+### Navegar Del PDF Al Markdown
+
+Un clic normal sobre un bloque de la vista previa coloca el cursor al comienzo
+del bloque correspondiente en el editor Markdown y lo resalta durante un
+instante. Si el panel izquierdo está en Diseño, cambia a Markdown. El salto
+no modifica el texto ni selecciona contenido para sustituirlo al escribir.
+
+En tablas, imágenes, listas y bloques de código se localiza el comienzo del
+bloque, no una celda o palabra concreta. Los enlaces conservan su función:
+los externos abren su destino y los internos navegan dentro del PDF.
+
+La correspondencia se calcula durante la generación con posiciones reales
+de la maquetación, también en documentos continuos y plantillas de columnas.
+No hay sincronización automática del scroll. Si el Markdown cambia después
+de generar el PDF, el salto queda suspendido hasta regenerarlo o recuperar
+exactamente el texto que produjo esa vista previa. Guardar el Markdown
+modificado no actualiza por sí solo la correspondencia.
+
+Los márgenes, espacios entre bloques y estructuras que los lectores Markdown
+no puedan relacionar con seguridad pueden no responder al clic. Se conserva
+el lector Pandoc habitual para generar el contenido; no se cambia el formato
+del documento para obtener posiciones. La navegación pertenece a la vista
+previa de la app, no al PDF exportado ni al flujo portable.
+
+Ejemplo para probar: `ejemplos/prueba_navegacion_pdf.md`.
+
+### Generar Y Exportar
+
 `Generar PDF` no guarda directamente el PDF final junto al Markdown. La app
 genera una vista previa temporal en:
 
@@ -410,6 +438,9 @@ Archivos clave:
 - `app/pdf_builder.py`: lógica de conversión Markdown -> Typst -> PDF.
 - `app/filters/image_layout.lua`: filtro Pandoc para alinear imágenes aisladas.
 - `app/filters/table_layout.lua`: filtro Pandoc para anchos y estilos locales de tablas.
+- `app/filters/source_navigation.lua`: relación de bloques con líneas Markdown y marcas de posición.
+- `app/source_navigation.py`: mapa de líneas y localización de bloques en páginas y columnas.
+- `app/pdf_preview.py`: visor con clic sobre bloques y enlaces.
 - `app/templates/*.typ`: plantillas dinámicas usadas por la app.
 - `templates/apuntes.typ`: plantilla de la versión portable.
 - `crear_pdf.bat`: flujo portable básico por consola.

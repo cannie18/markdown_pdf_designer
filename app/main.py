@@ -14,8 +14,8 @@ import sys
 import unicodedata
 from pathlib import Path
 
-from PySide6.QtCore import QSize, QSettings, Qt, QThread, Signal
-from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent, QIcon, QWheelEvent
+from PySide6.QtCore import QEvent, QSize, QSettings, Qt, QThread, QTimer, Signal
+from PySide6.QtGui import QColor, QCloseEvent, QDragEnterEvent, QDropEvent, QIcon, QTextCursor, QWheelEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
@@ -38,6 +38,7 @@ from PySide6.QtWidgets import (
   QSplitter,
   QStackedWidget,
   QStyle,
+  QTextEdit,
   QVBoxLayout,
   QWidget,
 )
@@ -55,6 +56,8 @@ from .pdf_builder import (
   template_style_preset,
   update_custom_template_style,
 )
+from .pdf_preview import PdfPreview
+from .source_navigation import block_at, text_digest
 
 
 PREVIEW_PANEL_MIN_WIDTH = 320
@@ -141,7 +144,7 @@ TEMPLATE_ORDER = [
 class BuildWorker(QThread):
   '''Ejecuta la conversión en segundo plano para no bloquear la interfaz.'''
 
-  succeeded = Signal(str)
+  succeeded = Signal(str, object)
   failed = Signal(str)
 
   def __init__(
@@ -168,11 +171,12 @@ class BuildWorker(QThread):
         style=self.style,
         template_id=self.template_id,
         output_file=self.output_file,
+        include_navigation=True,
       )
     except PdfBuildError as exc:
       self.failed.emit(str(exc))
       return
-    self.succeeded.emit(str(result.pdf_file))
+    self.succeeded.emit(str(result.pdf_file), result.navigation)
 
 
 class DropZone(QFrame):
@@ -246,6 +250,7 @@ class MainWindow(QMainWindow):
     self.worker: BuildWorker | None = None
     self.current_file: Path | None = None
     self.current_pdf: Path | None = None
+    self.pdf_navigation: dict | None = None
     self.markdown_open = False
     self.editor_dirty = False
     self.active_left_section = 0
@@ -345,6 +350,9 @@ class MainWindow(QMainWindow):
     self.editor.setMinimumWidth(0)
     self.editor.setVisible(False)
     self.editor.textChanged.connect(self.mark_editor_dirty)
+    self.navigation_highlight_timer = QTimer(self)
+    self.navigation_highlight_timer.setSingleShot(True)
+    self.navigation_highlight_timer.timeout.connect(lambda: self.editor.setExtraSelections([]))
 
     self.font_combo = QComboBox()
     self.font_combo.addItems([
@@ -518,7 +526,8 @@ class MainWindow(QMainWindow):
     self.connect_design_change_signals()
 
     self.pdf_document = QPdfDocument(self)
-    self.pdf_view = QPdfView()
+    self.pdf_view = PdfPreview()
+    self.pdf_view.block_clicked.connect(self.jump_to_markdown_block)
     self.pdf_view.setDocument(self.pdf_document)
     self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
     self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
@@ -1042,6 +1051,7 @@ class MainWindow(QMainWindow):
     old_document.close()
     QApplication.processEvents()
     old_document.deleteLater()
+    QApplication.sendPostedEvents(old_document, QEvent.Type.DeferredDelete)
     QApplication.processEvents()
 
   def refresh_document_preview_if_visible(self) -> None:
@@ -1100,6 +1110,7 @@ class MainWindow(QMainWindow):
           'Pulsa Generar PDF para actualizar la vista previa temporal.',
           'Cuando el resultado te guste, usa Guardar PDF como para exportarlo.',
           'Pulsa Ayuda de nuevo para volver al PDF sin regenerarlo.',
+          'Pulsa sobre un bloque del PDF para localizarlo en el editor Markdown.',
         ],
       )
     )
@@ -1145,6 +1156,19 @@ class MainWindow(QMainWindow):
           'Si el contenido de una columna queda partido en demasiadas líneas, dale más proporción con columns. El reparto automático todavía no garantiza un resultado equilibrado.',
           'Evita simular diseño con espacios, saltos vacíos o símbolos decorativos.',
           'Mantén el contenido limpio: el aspecto final se controla desde Diseño.',
+        ],
+      )
+    )
+    layout.addWidget(
+      self.create_help_card(
+        'PDF: localizar contenido en Markdown',
+        [
+          'Un clic normal sobre un bloque del PDF lleva al comienzo de ese bloque en el editor.',
+          'Si estás en Diseño, se abre Markdown y el bloque se resalta brevemente sin modificar su contenido.',
+          'En tablas, imágenes, listas y código se localiza el bloque completo, no la celda o palabra exacta.',
+          'Los enlaces mantienen su función: los externos abren su destino y los internos navegan por el PDF.',
+          'Si el Markdown ha cambiado desde la generación, genera el PDF de nuevo para recuperar el salto.',
+          'Las zonas y bloques sin correspondencia segura no llevan a una posición aproximada.',
         ],
       )
     )
@@ -2050,12 +2074,43 @@ class MainWindow(QMainWindow):
     self.worker.finished.connect(lambda: self.build_button.setEnabled(True))
     self.worker.start()
 
-  def on_success(self, pdf_file: str) -> None:
+  def on_success(self, pdf_file: str, navigation: dict | None = None) -> None:
     '''Actualiza la interfaz cuando el PDF se ha generado correctamente.'''
 
     self.current_pdf = Path(pdf_file)
+    self.pdf_navigation = navigation
     self.status_label.setText('Vista previa PDF actualizada. Usa Guardar PDF como para exportarla.')
     self.load_pdf_preview(self.current_pdf)
+
+  def jump_to_markdown_block(self, page: int, x: float, y: float) -> None:
+    '''Lleva el editor al bloque de la vista previa sin modificar el Markdown.'''
+
+    if not self.markdown_is_open() or not self.pdf_navigation:
+      return
+    if text_digest(self.editor.toPlainText()) != self.pdf_navigation['digest']:
+      self.status_label.setText('El Markdown ha cambiado. Genera el PDF de nuevo para localizar sus bloques.')
+      return
+    sizes = [(self.pdf_document.pagePointSize(i).width(), self.pdf_document.pagePointSize(i).height())
+             for i in range(self.pdf_document.pageCount())]
+    block = block_at(self.pdf_navigation, page, x, y, sizes)
+    if block is None:
+      return
+    first = self.editor.document().findBlockByNumber(block['first'] - 1)
+    last = self.editor.document().findBlockByNumber(block['last'] - 1)
+    if not first.isValid() or not last.isValid():
+      return
+    self.select_left_section(0)
+    cursor = QTextCursor(first)
+    self.editor.setTextCursor(cursor)
+    self.editor.centerCursor()
+    self.editor.setFocus()
+    highlight = QTextEdit.ExtraSelection()
+    highlight.cursor = QTextCursor(cursor)
+    highlight.cursor.setPosition(last.position() + last.length() - 1, QTextCursor.MoveMode.KeepAnchor)
+    highlight.format.setBackground(QColor('#dceeff'))
+    self.editor.setExtraSelections([highlight])
+    self.navigation_highlight_timer.start(1500)
+    self.status_label.setText(f'Bloque localizado en Markdown, línea {block["first"]}.')
 
   def load_pdf_preview(self, pdf_file: Path) -> None:
     '''Carga el PDF generado en el visor embebido de Qt.'''

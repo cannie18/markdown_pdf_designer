@@ -16,6 +16,8 @@ import tempfile
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
 
+from .source_navigation import navigation_map
+
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 APP_DIR = Path(__file__).resolve().parent
@@ -70,6 +72,7 @@ class PdfResult:
   template_file: Path
   pdf_file: Path
   typ_file: Path
+  navigation: dict | None = None
 
 
 class PdfBuildError(RuntimeError):
@@ -898,7 +901,7 @@ def is_relative_resource_path(path_text: str) -> bool:
   return not Path(path_text).is_absolute()
 
 
-def run_command(command: list[str | Path]) -> None:
+def run_command(command: list[str | Path]) -> str:
   '''Ejecuta un comando externo y convierte errores en `PdfBuildError`.'''
 
   creation_flags = subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
@@ -912,7 +915,7 @@ def run_command(command: list[str | Path]) -> None:
     creationflags=creation_flags,
   )
   if completed.returncode == 0:
-    return
+    return completed.stdout
 
   details = '\n'.join(
     part for part in (completed.stdout.strip(), completed.stderr.strip()) if part
@@ -925,6 +928,7 @@ def build_pdf(
   style: PdfStyleOptions | None = None,
   template_id: str = DEFAULT_TEMPLATE_ID,
   output_file: str | Path | None = None,
+  include_navigation: bool = False,
 ) -> PdfResult:
   '''Genera un PDF desde un archivo Markdown usando Pandoc y Typst.
 
@@ -939,6 +943,7 @@ def build_pdf(
     raise PdfBuildError('Selecciona un archivo Markdown con extensión .md o .markdown.')
 
   source_template_file = template_path(template_id)
+  original_text = source.read_text(encoding='utf-8')
   template_file = render_template(source_template_file, style or PdfStyleOptions())
   processed_source, mark_replacements = prepare_markdown_source(source)
   build_dir = ROOT_DIR / 'tmp' / 'app_builds'
@@ -970,6 +975,7 @@ def build_pdf(
 
   pandoc = find_executable('pandoc')
   typst = find_executable('typst')
+  navigation = None
 
   try:
     run_command(
@@ -981,6 +987,8 @@ def build_pdf(
         '-t',
         'typst',
         '-s',
+        *([f'--lua-filter={APP_DIR / "filters" / "source_navigation.lua"}']
+          if include_navigation else []),
         f'--lua-filter={ROOT_DIR / "app" / "filters" / "image_layout.lua"}',
         f'--lua-filter={ROOT_DIR / "app" / "filters" / "table_layout.lua"}',
         '-M',
@@ -995,6 +1003,18 @@ def build_pdf(
     apply_github_admonition_styles(typ_file)
     copy_typst_image_resources(typ_file, source.parent, build_dir)
     run_command([typst, 'compile', '--root', ROOT_DIR, typ_file, temp_pdf_file])
+    if include_navigation:
+      markers = json.loads(run_command([
+        typst, 'query', '--root', ROOT_DIR, typ_file, '<mdpdf-source>', '--field', 'value',
+      ]))
+      template_text = template_file.read_text(encoding='utf-8')
+      columns_match = re.search(r'#columns\(\s*(\d+)', template_text)
+      options = style or PdfStyleOptions()
+      navigation = navigation_map(
+        markers, original_text, processed_source.read_text(encoding='utf-8'),
+        int(columns_match.group(1)) if columns_match else 1,
+        options.page_margin_x * 72 / 25.4, options.page_margin_y * 72 / 25.4,
+      )
     try:
       if pdf_file.exists():
         pdf_file.unlink()
@@ -1021,4 +1041,5 @@ def build_pdf(
     template_file=source_template_file,
     pdf_file=pdf_file,
     typ_file=typ_file,
+    navigation=navigation,
   )
