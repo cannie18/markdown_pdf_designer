@@ -98,6 +98,13 @@ La ayuda solo desaparece cuando:
 - el usuario vuelve a pulsar `Ayuda`;
 - se genera una nueva vista previa PDF.
 
+El contenido se organiza por tareas. Comienza con una guía rápida numerada y
+continúa con apartados independientes para archivos y acciones, escritura
+Markdown, imágenes, tablas, funciones especiales, vista previa PDF, secciones
+de diseño, plantillas y controles. Cada apartado agrupa sus propias
+instrucciones mediante subtítulos y listas, evitando mezclar opciones de temas
+distintos.
+
 ## Flujo De Generación Y Exportación
 
 ### Navegar Del PDF Al Markdown

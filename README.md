@@ -199,7 +199,7 @@ Las plantillas disponibles en la app son:
 - los controles numéricos de `Diseño` no cambian con la rueda del ratón;
 - el botón `Ayuda` funciona como interruptor entre instrucciones y vista previa;
 - al generar PDF se desactiva visualmente el botón `Ayuda` y vuelve el visor real;
-- la ayuda incluye guía rápida, botones de Markdown, flujo de plantillas y secciones modificables de `Diseño`;
+- la ayuda incluye una guía rápida numerada y apartados independientes para archivos, escritura, imágenes, tablas, vista previa, diseño y plantillas;
 - el visor vacío muestra los primeros pasos antes de generar el primer PDF;
 - la fila de ruta, `Nuevo` y `Abrir` permanece arriba en `Markdown`, haya o no documento abierto;
 - `Abrir` está junto a la caja de ruta y `Nuevo` después;

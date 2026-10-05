@@ -7,6 +7,7 @@ de la app. La conversión se delega en `app.pdf_builder`.
 
 from __future__ import annotations
 
+import html
 import re
 import shutil
 import subprocess
@@ -930,9 +931,15 @@ class MainWindow(QMainWindow):
         padding: 10px;
       }
       #helpCardTitle {
-        font-size: 10.5pt;
+        font-size: 12pt;
         font-weight: 700;
         color: #26364a;
+      }
+      #helpCardSectionTitle {
+        font-size: 10pt;
+        font-weight: 700;
+        color: #2e6f73;
+        padding-top: 4px;
       }
       #helpCardText {
         color: #434655;
@@ -1104,30 +1111,53 @@ class MainWindow(QMainWindow):
       self.create_help_card(
         'Guía rápida',
         [
-          'Abre, crea o arrastra un archivo Markdown.',
-          'Revisa el texto en Markdown y guarda los cambios si los haces.',
-          'Elige una plantilla en Diseño y ajusta solo lo que necesites.',
-          'Pulsa Generar PDF para actualizar la vista previa temporal.',
-          'Cuando el resultado te guste, usa Guardar PDF como para exportarlo.',
-          'Pulsa Ayuda de nuevo para volver al PDF sin regenerarlo.',
-          'Pulsa sobre un bloque del PDF para localizarlo en el editor Markdown.',
+          (
+            '',
+            [
+              'Abre, crea o arrastra un archivo Markdown.',
+              'Revisa el contenido y guarda los cambios.',
+              'Elige una plantilla en Diseño y ajusta lo necesario.',
+              'Pulsa Generar PDF para actualizar la vista previa.',
+              'Revisa el resultado y usa Guardar PDF como para exportarlo.',
+              'Pulsa Ayuda otra vez para volver al PDF sin regenerarlo.',
+            ],
+            True,
+          ),
         ],
       )
     )
     layout.addWidget(
       self.create_help_card(
-        'Markdown: botones y flujo',
+        'Markdown: archivos y acciones',
         [
-          'Nuevo abre un Markdown vacío sin elegir ubicación todavía.',
-          'Abrir permite seleccionar un archivo .md o .markdown desde Windows.',
-          'La caja de ruta permite escribir una ruta o elegir documentos recientes.',
-          'Cerrar cierra el Markdown actual y vuelve al estado inicial de la app.',
-          'Guardar escribe los cambios del editor en el archivo abierto.',
-          'Guardar como crea una copia en otra ruta y cambia a ese nuevo archivo.',
-          'Generar PDF convierte el Markdown actual en una vista previa temporal.',
-          'Guardar PDF como exporta esa vista previa a la ruta que elijas.',
-          'Abrir PDF en Windows abre la vista previa actual con el visor del sistema.',
-          'La zona de arrastre acepta archivos Markdown soltados desde el explorador.',
+          (
+            'Abrir o crear',
+            [
+              'Abrir selecciona un archivo `.md` o `.markdown`.',
+              'La caja de ruta permite escribir una ruta o elegir un documento reciente.',
+              'También puedes soltar un Markdown en la zona de arrastre.',
+              'Nuevo abre un documento vacío; elegirás su ubicación cuando lo guardes.',
+            ],
+            False,
+          ),
+          (
+            'Guardar y cerrar',
+            [
+              'Guardar escribe los cambios en el archivo abierto.',
+              'Guardar como crea otro archivo y pasa a trabajar sobre esa copia.',
+              'Cerrar cierra el Markdown actual y vuelve al estado inicial.',
+            ],
+            False,
+          ),
+          (
+            'Crear y exportar el PDF',
+            [
+              'Generar PDF actualiza una vista previa temporal que se sobrescribe.',
+              'Guardar PDF como exporta la vista previa a la ruta que elijas.',
+              'Abrir PDF en Windows abre la vista previa en el visor del sistema.',
+            ],
+            False,
+          ),
         ],
       )
     )
@@ -1135,89 +1165,227 @@ class MainWindow(QMainWindow):
       self.create_help_card(
         'Markdown: escritura recomendada',
         [
-          'Usa # para el título principal, ## para secciones y ### para subsecciones.',
-          'Usa listas, tablas, citas y bloques de código estándar de Markdown.',
-          'Usa negrita y cursiva para énfasis semántico, no para maquetar a mano.',
-          'Inserta imágenes locales con ![Descripción](imagen.png), usando rutas relativas al Markdown.',
-          'Para indicar tamaño, añade atributos justo después: ![Descripción](imagen.png){width=50%} o {width=8cm}.',
-          'El porcentaje se refiere al ancho disponible; en Compacto, al de la columna.',
-          'Si indicas solo width o solo height, se conserva la proporción de la imagen. Por ejemplo: {height=3cm}.',
-          'Puedes combinar ambas dimensiones: {width=8cm height=3cm}; la imagen se encaja en ese espacio.',
-          'Las imágenes en su propio párrafo se centran por defecto. Usa {width=50% align=left}, align=center o align=right para elegir la alineación.',
-          'Las imágenes dentro de una frase mantienen su posición en el texto.',
-          'Para ajustar solo una tabla, colócala entre ::: {.table-style font-size=8pt cell-padding=2pt table-width=full columns="1,4,2"} y una línea final :::.',
-          'Deja una línea en blanco antes y después de la tabla dentro del bloque. Incluye exactamente una tabla por bloque.',
-          'font-size cambia la letra y cell-padding el espacio interno en puntos. table-width admite auto o full; columns indica una proporción positiva por columna.',
-          'columns="1,4,2" da cuatro partes de ancho a la segunda columna. Las opciones son opcionales y solo afectan a esa tabla.',
-          'Puedes indicar solo font-size=8pt; las opciones que omitas mantienen los valores de Diseño.',
-          'auto calcula los anchos según encabezados y contenido: una cabecera larga puede ensanchar una columna aunque sus datos sean números cortos.',
-          'full reparte el ancho disponible por igual. columns permite elegir las proporciones de izquierda a derecha y tiene prioridad sobre el modo de ancho.',
-          'Los encabezados de las tablas saltan entre palabras sin guionado automático. Si una palabra supera el ancho de su columna, amplíala o reduce la letra.',
-          'Si el contenido de una columna queda partido en demasiadas líneas, dale más proporción con columns. El reparto automático todavía no garantiza un resultado equilibrado.',
-          'Evita simular diseño con espacios, saltos vacíos o símbolos decorativos.',
-          'Mantén el contenido limpio: el aspecto final se controla desde Diseño.',
+          (
+            'Estructura',
+            [
+              'Usa `#` para el título principal, `##` para secciones y `###` para subsecciones.',
+              'Separa títulos, párrafos, listas, citas, tablas y bloques de código con líneas en blanco.',
+              'Usa listas con `-` y listas numeradas con `1.`, `2.`, `3.`.',
+              'Usa `>` para citas y triple acento grave para bloques de código.',
+            ],
+            False,
+          ),
+          (
+            'Énfasis y enlaces',
+            [
+              'Usa `**texto**` para negrita, `*texto*` para cursiva y acentos graves para código en línea.',
+              'Escribe enlaces como `[texto descriptivo](https://ejemplo.com)`.',
+            ],
+            False,
+          ),
+          (
+            'Buenas prácticas',
+            [
+              'Mantén el Markdown semántico: la apariencia final se controla desde Diseño.',
+              'Evita simular diseño con espacios, tabulaciones, líneas vacías o símbolos repetidos.',
+              'No saltes niveles de título salvo que la estructura lo requiera.',
+            ],
+            False,
+          ),
         ],
       )
     )
     layout.addWidget(
       self.create_help_card(
-        'PDF: localizar contenido en Markdown',
+        'Markdown: imágenes',
         [
-          'Un clic normal sobre un bloque del PDF lleva al comienzo de ese bloque en el editor.',
-          'Esta navegación solo funciona mientras está seleccionada la sección Markdown.',
-          'En Diseño, pulsar sobre un bloque del PDF no cambia de sección ni mueve el cursor.',
-          'En tablas, imágenes, listas y código se localiza el bloque completo, no la celda o palabra exacta.',
-          'Los enlaces mantienen su función: los externos abren su destino y los internos navegan por el PDF.',
-          'Si el Markdown ha cambiado desde la generación, genera el PDF de nuevo para recuperar el salto.',
-          'Las zonas y bloques sin correspondencia segura no llevan a una posición aproximada.',
+          (
+            'Insertar',
+            [
+              'Usa una ruta relativa: `![Descripción](imagen.png)` si está junto al Markdown.',
+              'Para una subcarpeta: `![Descripción](imagenes/imagen.png)`.',
+            ],
+            False,
+          ),
+          (
+            'Tamaño',
+            [
+              'Añade el tamaño después de la imagen: `{width=50%}`, `{width=8cm}` o `{height=3cm}`.',
+              'Indica solo ancho o altura para conservar la proporción original.',
+              'Si indicas ambos, como `{width=8cm height=3cm}`, la imagen se encaja en ese espacio.',
+              'El porcentaje usa el ancho disponible; en Compacto, el de la columna.',
+            ],
+            False,
+          ),
+          (
+            'Alineación',
+            [
+              'Las imágenes aisladas se centran por defecto.',
+              'Usa `align=left`, `align=center` o `align=right` junto al tamaño.',
+              'Las imágenes dentro de una frase mantienen su posición en el texto.',
+            ],
+            False,
+          ),
         ],
       )
     )
     layout.addWidget(
       self.create_help_card(
-        'Diseño: flujo para crear una plantilla',
+        'Markdown: tablas',
         [
-          'Selecciona una plantilla base parecida al resultado que quieres.',
-          'Ajusta fuente, tamaños, colores, márgenes, bloques, tablas y código.',
-          'Genera una vista previa PDF para revisar el resultado real.',
-          'Cuando el diseño te guste, pulsa Crear nueva plantilla.',
-          'Escribe un nombre claro para reconocerla después.',
-          'Las plantillas personalizadas se guardan en tus datos de usuario.',
-          'Si estás usando una plantilla personalizada, Guardar cambios actualiza esa plantilla.',
-          'Las plantillas predefinidas no se sobrescriben desde la app.',
+          (
+            'Estilo general',
+            [
+              'Las tablas normales usan los valores configurados en `Diseño > Tablas`.',
+              '`auto` calcula el ancho según encabezados y contenido; `full` reparte el ancho disponible por igual.',
+              'Los encabezados saltan entre palabras y evitan el guionado automático.',
+            ],
+            False,
+          ),
+          (
+            'Ajustar una tabla concreta',
+            [
+              'Encierra exactamente una tabla entre `::: {.table-style ...}` y una línea final `:::`.',
+              'Deja una línea en blanco antes y después de la tabla dentro del bloque.',
+              'Las opciones son independientes: puedes indicar solo `font-size=8pt`.',
+              '`font-size` cambia la letra y `cell-padding` el espacio interior de las celdas.',
+              '`table-width` admite `auto` o `full`.',
+              '`columns="1,4,2"` reparte el ancho de izquierda a derecha y tiene prioridad sobre `table-width`.',
+            ],
+            False,
+          ),
+          (
+            'Cuando una tabla queda mal repartida',
+            [
+              'Da más proporción a las columnas cuyo contenido se divide en demasiadas líneas.',
+              'Reduce `cell-padding` y, si hace falta, `font-size`.',
+              'Una palabra más ancha que su columna exige ampliar esa columna o reducir la letra.',
+              'En Compacto, el ancho disponible es el de una columna del documento.',
+            ],
+            False,
+          ),
         ],
       )
     )
     layout.addWidget(
       self.create_help_card(
-        'Diseño: secciones modificables',
+        'Markdown: funciones especiales',
         [
-          'Plantilla visual define el punto de partida del documento.',
-          'Página controla márgenes, fondo y si el PDF se pagina o queda como documento continuo.',
-          'Texto controla fuente principal, tamaño, color, interlineado, espacio entre párrafos, títulos y énfasis.',
-          'Las viñetas y listas numeradas respetan el espaciado vertical del texto.',
-          'Código controla fuente, tamaño y fondo de los bloques de código.',
-          'Bloques controla citas o bloques destacados: espacio interno, texto, borde y fondo.',
-          'Tablas controla ancho, espacio de celdas, texto, bordes y colores de cabecera.',
+          (
+            'Índice y saltos',
+            [
+              'Escribe `[TOC]` en una línea aislada para generar el índice.',
+              'Escribe `<!-- pagebreak -->` en una línea aislada para forzar un salto de página o columna.',
+            ],
+            False,
+          ),
+          (
+            'Alertas tipo GitHub',
+            [
+              'Comienza una cita con `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` o `[!CAUTION]`.',
+              'Escribe cada línea del contenido con `>` para mantenerla dentro de la alerta.',
+            ],
+            False,
+          ),
         ],
       )
     )
     layout.addWidget(
       self.create_help_card(
-        'Diseño: botones',
+        'Vista previa PDF',
         [
-          'Crear nueva plantilla guarda los ajustes actuales como una plantilla personalizada.',
-          'Guardar cambios aparece con plantillas personalizadas y sobrescribe sus ajustes.',
-          'Los botones de color abren el selector para cambiar el color asociado.',
-          'Los controles numéricos se modifican con teclado o flechas, no con la rueda del ratón.',
-          'Después de cualquier cambio de diseño, vuelve a pulsar Generar PDF para actualizar la vista previa.',
+          (
+            'Localizar contenido',
+            [
+              'Con Markdown seleccionado, pulsa un bloque del PDF para localizarlo y resaltarlo en el editor.',
+              'En tablas, imágenes, listas y código se localiza el bloque completo.',
+              'En Diseño, pulsar un bloque no mueve el cursor ni cambia de sección.',
+              'Si editas el Markdown, vuelve a generar el PDF para actualizar la correspondencia.',
+            ],
+            False,
+          ),
+          (
+            'Enlaces',
+            [
+              'Los enlaces externos abren su destino.',
+              'Los enlaces internos navegan dentro del PDF.',
+              'Las zonas sin una correspondencia segura no producen un salto aproximado.',
+            ],
+            False,
+          ),
+        ],
+      )
+    )
+    layout.addWidget(
+      self.create_help_card(
+        'Diseño: secciones',
+        [
+          ('Plantilla visual', ['Selecciona el punto de partida y permite gestionar plantillas personalizadas.'], False),
+          ('Página', ['Controla márgenes, fondo y documento paginado o continuo.'], False),
+          ('Texto', ['Controla fuente, tamaño, color, interlineado, párrafos, títulos y énfasis.'], False),
+          ('Código', ['Controla fuente, tamaño y fondo de los bloques de código.'], False),
+          ('Bloques', ['Controla espacio interno, texto, borde y fondo de citas y alertas.'], False),
+          ('Tablas', ['Controla ancho general, espacio de celdas, texto, bordes y cabecera.'], False),
+        ],
+      )
+    )
+    layout.addWidget(
+      self.create_help_card(
+        'Diseño: plantillas',
+        [
+          (
+            'Crear una plantilla',
+            [
+              'Selecciona una plantilla base parecida al resultado que buscas.',
+              'Ajusta sus parámetros y genera el PDF para revisar el resultado.',
+              'Pulsa Crear nueva plantilla y escribe un nombre reconocible.',
+            ],
+            True,
+          ),
+          (
+            'Guardar y proteger cambios',
+            [
+              'Guardar cambios actualiza la plantilla personalizada seleccionada.',
+              'Las plantillas predefinidas no se sobrescriben desde la app.',
+              'La app avisa si una plantilla personalizada tiene cambios pendientes al cambiar de plantilla o cerrar.',
+            ],
+            False,
+          ),
+        ],
+      )
+    )
+    layout.addWidget(
+      self.create_help_card(
+        'Diseño: controles y actualización',
+        [
+          (
+            'Controles',
+            [
+              'Los botones de color abren el selector correspondiente.',
+              'Los controles numéricos se modifican con teclado o flechas, no con la rueda del ratón.',
+              'Los iconos muestran el nombre del parámetro mediante un tooltip.',
+            ],
+            False,
+          ),
+          (
+            'Aplicar cambios',
+            [
+              'Después de cambiar el diseño, pulsa Generar PDF para actualizar la vista previa.',
+              'Cuando el resultado sea definitivo, usa Guardar PDF como.',
+            ],
+            False,
+          ),
         ],
       )
     )
     layout.addStretch()
     return content
 
-  def create_help_card(self, title: str, items: list[str]) -> QFrame:
+  def create_help_card(
+    self,
+    title: str,
+    sections: list[tuple[str, list[str], bool]],
+  ) -> QFrame:
     '''Crea un bloque compacto de instrucciones para la seccion de ayuda.'''
 
     card = QFrame()
@@ -1233,15 +1401,41 @@ class MainWindow(QMainWindow):
     title_label.setObjectName('helpCardTitle')
     title_label.setWordWrap(True)
 
-    text_label = QLabel('\n'.join(f'- {item}' for item in items))
-    text_label.setObjectName('helpCardText')
-    text_label.setWordWrap(True)
-    text_label.setMinimumWidth(0)
-    text_label.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
-
     layout.addWidget(title_label)
-    layout.addWidget(text_label)
+    for section_title, items, ordered in sections:
+      if section_title:
+        section_label = QLabel(section_title)
+        section_label.setObjectName('helpCardSectionTitle')
+        section_label.setWordWrap(True)
+        layout.addWidget(section_label)
+
+      list_tag = 'ol' if ordered else 'ul'
+      item_html = ''.join(
+        f'<li>{self.format_help_text(item)}</li>'
+        for item in items
+      )
+      text_label = QLabel(
+        f'<{list_tag} style="margin: 2px 0 4px 18px; padding: 0;">'
+        f'{item_html}</{list_tag}>'
+      )
+      text_label.setObjectName('helpCardText')
+      text_label.setTextFormat(Qt.TextFormat.RichText)
+      text_label.setWordWrap(True)
+      text_label.setMinimumWidth(0)
+      text_label.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+      layout.addWidget(text_label)
     return card
+
+  @staticmethod
+  def format_help_text(text: str) -> str:
+    '''Convierte fragmentos entre acentos graves en código visual.'''
+
+    escaped = html.escape(text)
+    return re.sub(
+      r'`([^`]+)`',
+      r'<span style="font-family: Consolas; background-color: #f1f3f5;">\1</span>',
+      escaped,
+    )
 
   def create_template_group(self) -> QVBoxLayout:
     '''Crea la sección de selección y acciones de plantilla.'''

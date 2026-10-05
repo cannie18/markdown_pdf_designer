@@ -237,7 +237,7 @@ Los últimos ajustes importantes son:
 - `Generar PDF` actualiza una vista previa temporal y `Guardar PDF como` exporta el archivo final;
 - `Diseño` permite elegir modo paginado o documento continuo de altura automática;
 - las listas respetan el espaciado vertical configurado para el texto;
-- la ayuda combina una guía rápida con explicaciones detalladas de `Markdown` y `Diseño`;
+- la ayuda combina una guía rápida numerada con apartados independientes para archivos, escritura, imágenes, tablas, funciones especiales, vista previa, diseño y plantillas;
 - el visor vacío muestra una guía breve de primer uso;
 - en `Markdown`, la fila de ruta, `Nuevo` y `Abrir` permanece arriba aunque no haya documento abierto;
 - la versión portable por `.bat` no se ha tocado.
