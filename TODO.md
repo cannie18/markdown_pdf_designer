@@ -156,6 +156,10 @@
 
 ## Compatibilidad Markdown
 
+- Mejorar el reparto automático del ancho de tablas: permitir envolver
+  encabezados largos sin darles un ancho excesivo y reservar espacio para
+  palabras y valores de las filas. Evitar casos donde una columna numérica
+  con cabecera larga deja demasiado estrecha otra columna de texto.
 - Ampliar soporte de HTML si aparecen casos reales más complejos que el HTML inline básico.
 - Revisar si los colores internos de los iconos de alerta deben normalizarse con la paleta usada en el PDF.
 - Revisar el resultado visual del texto preformateado por sangría de cuatro espacios.

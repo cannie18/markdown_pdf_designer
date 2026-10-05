@@ -241,6 +241,19 @@ unidad, que se interpreta como puntos. `columns` requiere un número positivo
 por columna. Si lo indicas, sus proporciones tienen prioridad sobre
 `table-width` y ocupan el ancho disponible.
 
+Por ejemplo, `::: {.table-style font-size=8pt}` cambia solamente el tamaño de
+letra. Las opciones que omitas mantienen los valores generales de Diseño.
+Las proporciones de `columns` se indican en el mismo orden que las columnas
+de la tabla, de izquierda a derecha.
+
+En modo `auto`, el motor considera tanto los encabezados como el contenido.
+Una cabecera larga puede recibir demasiado ancho aunque sus filas contengan
+números cortos, mientras otra columna de texto queda estrecha. Evitar el
+guionado en los encabezados no corrige por sí solo ese reparto. Para controlar
+estos casos, usa `columns` y asigna más espacio a las columnas cuyo contenido
+se divide en demasiadas líneas. La mejora del reparto automático para este
+tipo de tablas sigue pendiente.
+
 Los encabezados de las tablas priorizan los saltos entre palabras y no usan
 guionado automático, tanto en tablas normales como en tablas con estilos
 locales. Si una palabra sola supera el ancho de la columna, debes ampliar
